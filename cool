@@ -1,0 +1,331 @@
+local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
+
+local Window = OrionLib:MakeWindow({Name = "Xeno Hub V3", HidePremium = false, SaveConfig = true, ConfigFolder = "OrionTest"})
+
+OrionLib:MakeNotification({
+    Name = "Xeno",
+    Content = "extracrazy3n the scripter",
+    Image = "rbxassetid://4483345998",
+    Time = 3
+})
+
+local WR_Tab = Window:MakeTab({
+    Name = "WR",
+    Icon = "rbxassetid://4483345998",
+    PremiumOnly = false
+})
+
+local maxFootballTeleportDistance = 0
+
+WR_Tab:AddSlider({
+    Name = "Legit Magnets Distance",
+    Min = 0,
+    Max = 20,
+    Default = 0,
+    Color = Color3.fromRGB(255, 255, 255),
+    Increment = 1,
+    ValueName = "Distance",
+    Callback = function(Value)
+        maxFootballTeleportDistance = Value
+        print("Legit Magnets Distance:", Value)
+    end
+})
+
+local function TeleportTheFootball()
+    if maxFootballTeleportDistance == 0 then return end
+    
+    local Players = game:GetService("Players")
+    local LocalPlayer = Players.LocalPlayer
+
+    local playerRoot = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+    if not playerRoot then return end
+
+    for _, football in ipairs(game.Workspace:GetChildren()) do
+        if football:IsA("BasePart") and football.Name == "Football" then
+            local distance = (football.Position - playerRoot.Position).Magnitude
+
+            if distance <= maxFootballTeleportDistance then
+                football.CFrame = CFrame.new(playerRoot.Position + Vector3.new(0, 3, 0))  
+            end
+        end
+    end
+end
+
+game:GetService("RunService").Heartbeat:Connect(TeleportTheFootball)
+
+local DB_Tab = Window:MakeTab({
+    Name = "DB",
+    Icon = "rbxassetid://4483345998",
+    PremiumOnly = false
+})
+
+local maxBlatantMagDistance = 0
+local CatchRange = 10
+
+DB_Tab:AddSlider({
+    Name = "Blatant Magnets Distance",
+    Min = 0,
+    Max = 20,
+    Default = 0,
+    Color = Color3.fromRGB(255, 255, 255),
+    Increment = 1,
+    ValueName = "Distance",
+    Callback = function(Value)
+        maxBlatantMagDistance = Value
+        print("Blatant Magnets Distance:", Value)
+    end
+})
+
+local function FootballMag()
+    if maxBlatantMagDistance == 0 then return end
+    
+    local Players = game:GetService("Players")
+    local LocalPlayer = Players.LocalPlayer
+
+    local playerRoot = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+    if not playerRoot then return end
+
+    for _, football in ipairs(game.Workspace:GetChildren()) do
+        if football:IsA("BasePart") and football.Name == "Football" then
+            local distance = (football.Position - playerRoot.Position).Magnitude
+
+            if distance <= maxBlatantMagDistance and distance <= CatchRange then
+                football.CFrame = CFrame.new(playerRoot.Position)
+            end
+        end
+    end
+end
+
+game:GetService("RunService").Heartbeat:Connect(FootballMag)
+
+local QB_Tab = Window:MakeTab({
+    Name = "QB",
+    Icon = "rbxassetid://4483345998",
+    PremiumOnly = false
+})
+
+local QBAimbotEnabled = false
+
+QB_Tab:AddToggle({
+    Name = "QB Aimbot",
+    Default = false,
+    Callback = function(Value)
+        QBAimbotEnabled = Value
+        print("QB Aimbot Enabled:", Value)
+    end
+})
+
+local Rusher_Tab = Window:MakeTab({
+    Name = "Rusher",
+    Icon = "rbxassetid://4483345998",
+    PremiumOnly = false
+})
+
+Rusher_Tab:AddSlider({
+    Name = "WalkSpeed",
+    Min = 16,
+    Max = 30,
+    Default = 16,
+    Color = Color3.fromRGB(255, 255, 255),
+    Increment = 1,
+    ValueName = "Speed",
+    Callback = function(Value)
+        local Players = game:GetService("Players")
+        local Player = Players.LocalPlayer
+        local Character = Player.Character
+        if Character and Character:FindFirstChild("Humanoid") then
+            Character.Humanoid.WalkSpeed = Value
+        end
+    end
+})
+
+Rusher_Tab:AddBind({
+    Name = "Ball Carrier Lock",
+    Default = Enum.KeyCode.L,
+    Hold = false,
+    Callback = function()
+        print("Ball Carrier Lock Enabled")
+    end
+})
+
+local teleportRange = 5
+
+local function TeleportForward()
+    local Players = game:GetService("Players")
+    local Player = Players.LocalPlayer
+    local character = Player.Character
+    if not character then return end
+
+    local rootPart = character:FindFirstChild("HumanoidRootPart")
+    if not rootPart then return end
+
+    local teleportDirection = rootPart.CFrame.LookVector
+    local teleportPosition = rootPart.Position + (teleportDirection * teleportRange)
+
+    local raycastParams = RaycastParams.new()
+    raycastParams.FilterDescendantsInstances = {Player.Character}
+    local raycastResult = game.Workspace:Raycast(rootPart.Position, teleportDirection * teleportRange, raycastParams)
+    if raycastResult then
+        teleportPosition = raycastResult.Position
+    end
+
+    rootPart.CFrame = CFrame.new(teleportPosition)
+end
+
+Rusher_Tab:AddBind({
+    Name = "Forward",
+    Default = Enum.KeyCode.F,
+    Hold = false,
+    Callback = function()
+        TeleportForward()
+    end
+})
+
+local Extra_Tab = Window:MakeTab({
+    Name = "Extra Stuff",
+    Icon = "rbxassetid://4483345998",
+    PremiumOnly = false
+})
+
+local pullVectorDistance = 0
+local pullVectorConnection
+
+local function findNearestFootball()
+    local nearestFootball = nil
+    local minDistance = pullVectorDistance + 1
+
+    for _, football in ipairs(game.Workspace:GetChildren()) do
+        if football.Name == "Football" and football:IsA("BasePart") then
+            local distance = (football.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude
+            if distance <= pullVectorDistance and distance < minDistance then
+                minDistance = distance
+                nearestFootball = football
+            end
+        end
+    end
+
+    return nearestFootball
+end
+
+local function teleportToFootball()
+    if pullVectorDistance == 0 then return end
+    local nearestFootball = findNearestFootball()
+
+    if nearestFootball then
+        game.Players.LocalPlayer.Character:SetPrimaryPartCFrame(CFrame.new(nearestFootball.Position))
+    end
+end
+
+Extra_Tab:AddSlider({
+    Name = "Pullvector Distance",
+    Min = 0,
+    Max = 20,
+    Default = 0,
+    Color = Color3.fromRGB(255, 255, 255),
+    Increment = 1,
+    ValueName = "Distance",
+    Callback = function(Value)
+        pullVectorDistance = Value
+        if pullVectorConnection then
+            pullVectorConnection:Disconnect()
+        end
+        if pullVectorDistance > 0 then
+            pullVectorConnection = game:GetService("RunService").Heartbeat:Connect(teleportToFootball)
+        end
+        print("Pullvector Distance:", Value)
+    end
+})
+
+local armSize = 1
+
+Extra_Tab:AddSlider({
+    Name = "Increased Arm Size",
+    Min = 1,
+    Max = 10,
+    Default = 1,
+    Color = Color3.fromRGB(255, 255, 255),
+    Increment = 1,
+    ValueName = "Size",
+    Callback = function(Value)
+        armSize = Value
+        print("Increased Arm Size:", Value)
+        -- Apply the arm size increase and set arms to massless
+        local Players = game:GetService("Players")
+        local Player = Players.LocalPlayer
+        local Character = Player.Character
+        if Character then
+            local leftArm = Character:FindFirstChild("Left Arm") or Character:FindFirstChild("LeftHand")
+            local rightArm = Character:FindFirstChild("Right Arm") or Character:FindFirstChild("RightHand")
+            if leftArm then
+                leftArm.Size = Vector3.new(leftArm.Size.X, armSize, armSize)
+                leftArm.Massless = true
+            end
+            if rightArm then
+                rightArm.Size = Vector3.new(rightArm.Size.X, armSize, armSize)
+                rightArm.Massless = true
+            end
+        end
+    end
+})
+
+local armTransparency = 0
+
+Extra_Tab:AddSlider({
+    Name = "Increased Hand Size Hitbox",
+    Min = 0,
+    Max = 1,
+    Default = 0,
+    Color = Color3.fromRGB(255, 255, 255),
+    Increment = 0.1,
+    ValueName = "Transparency",
+    Callback = function(Value)
+        armTransparency = Value
+        print("Arm Transparency:", Value)
+    
+        local Players = game:GetService("Players")
+        local Player = Players.LocalPlayer
+        local Character = Player.Character
+        if Character then
+            local leftArm = Character:FindFirstChild("Left Arm") or Character:FindFirstChild("LeftHand")
+            local rightArm = Character:FindFirstChild("Right Arm") or Character:FindFirstChild("RightHand")
+            if leftArm then
+                for _, part in pairs(leftArm:GetDescendants()) do
+                    if part:IsA("BasePart") then
+                        part.Transparency = armTransparency
+                    end
+                end
+            end
+            if rightArm then
+                for _, part in pairs(rightArm:GetDescendants()) do
+                    if part:IsA("BasePart") then
+                        part.Transparency = armTransparency
+                    end
+                end
+            end
+        end
+    end
+})
+
+local Blocking_Tab = Window:MakeTab({
+    Name = "Blocking",
+    Icon = "rbxassetid://4483345998",
+    PremiumOnly = false
+})
+
+Blocking_Tab:AddToggle({
+    Name = "Tackle Reach",
+    Default = false,
+    Callback = function(Value)
+        print("Tackle Reach Enabled:", Value)
+    end
+})
+
+Blocking_Tab:AddToggle({
+    Name = "Block Reach",
+    Default = false,
+    Callback = function(Value)
+        print("Block Reach Enabled:", Value)
+    end
+})
+
+OrionLib:Init()
