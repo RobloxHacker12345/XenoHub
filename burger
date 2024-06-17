@@ -1,1035 +1,318 @@
-------[[Kirby Morph made by: DoogleFox]]-------------------------------------------------------------------------------------------------------------------------------------------------
+local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
 
-user = "TrystinGB" 
+local Window = OrionLib:MakeWindow({Name = "Xeno Hub V3", HidePremium = false, SaveConfig = true, ConfigFolder = "OrionTest"})
 
-if script.Parent.className ~= "HopperBin" then 
-bin = Instance.new("HopperBin") 
-bin.Parent = game.Players[user].Backpack 
-bin.Name = "Kirby" 
-script.Parent = bin 
-end 
+OrionLib:MakeNotification({
+    Name = "Xeno",
+    Content = "extracrazy3n the scripter",
+    Image = "rbxassetid://4483345998",
+    Time = 3
+})
 
-bin = script.Parent 
+local Players = game:GetService("Players")
+local Workspace = game:GetService("Workspace")
+local RunService = game:GetService("RunService")
 
-m = Instance.new("Model") 
-m.Parent = bin.Parent.Parent.Character 
-m.Name = "KirbyMorph" 
+local WR_Tab = Window:MakeTab({
+    Name = "WR",
+    Icon = "rbxassetid://4483345998",
+    PremiumOnly = false
+})
 
-p = Instance.new("Part") 
-p.Parent = m 
-p.Name = "MainBody" 
-p.formFactor = ("Symmetric") 
-p.Size = Vector3.new(4,4,4) 
-p.CFrame = bin.Parent.Parent.Character.Torso.CFrame 
-p.BrickColor = BrickColor.new("Light reddish violet") 
-p.Locked = true 
-p.CanCollide = true 
-p.Shape = ("Ball") 
-p.TopSurface = ("Smooth") 
-p.BottomSurface = ("Smooth") 
+local maxFootballTeleportDistance = 12
+local legitMagEnabled = false
 
-d = Instance.new("Decal") 
-d.Parent = p 
-d.Face = ("Front") 
-d.Texture = ("http://www.roblox.com/asset/?id=5732750") 
+WR_Tab:AddToggle({
+    Name = "Legit Magnets",
+    Default = false,
+    Callback = function(Value)
+        legitMagEnabled = Value
+        print("Legit Magnets Enabled:", Value)
+    end
+})
 
-w = Instance.new("Weld") 
-w.Parent = p 
-w.Name = "BodyWeld" 
-w.Part0 = p 
-w.Part1 = bin.Parent.Parent.Character.Torso 
-w.C0 = CFrame.new(0,0.2,0) 
+local function TeleportTheFootball()
+    if not legitMagEnabled then return end
+    
+    local LocalPlayer = Players.LocalPlayer
+    local playerRoot = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+    if not playerRoot then return end
 
-a1 = Instance.new("Part") 
-a1.Parent = m 
-a1.Name = "Left Arm" 
-a1.formFactor = ("Symmetric") 
-a1.Size = Vector3.new(2,2,2) 
-a1.CFrame = bin.Parent.Parent.Character["Left Arm"].CFrame 
-a1.BrickColor = BrickColor.new("Light reddish violet") 
-a1.Locked = true 
-a1.CanCollide = true 
-a1.Shape = ("Ball") 
-a1.TopSurface = ("Smooth") 
-a1.BottomSurface = ("Smooth") 
+    for _, football in ipairs(Workspace:GetChildren()) do
+        if football:IsA("BasePart") and football.Name == "Football" then
+            local distance = (football.Position - playerRoot.Position).Magnitude
 
-a1w = Instance.new("Weld") 
-a1w.Parent = a1 
-a1w.Name = "ArmWeld1" 
-a1w.Part0 = a1 
-a1w.Part1 = bin.Parent.Parent.Character["Left Arm"] 
-a1w.C0 = CFrame.new(0.2,0.2,0) 
-
-a2 = Instance.new("Part") 
-a2.Parent = m 
-a2.Name = "Right Arm" 
-a2.formFactor = ("Symmetric") 
-a2.Size = Vector3.new(2,2,2) 
-a2.CFrame = bin.Parent.Parent.Character["Left Arm"].CFrame 
-a2.BrickColor = BrickColor.new("Light reddish violet") 
-a2.Locked = true 
-a2.CanCollide = true 
-a2.Shape = ("Ball") 
-a2.TopSurface = ("Smooth") 
-a2.BottomSurface = ("Smooth") 
-
-a2w = Instance.new("Weld") 
-a2w.Parent = a2 
-a2w.Name = "ArmWeld2" 
-a2w.Part0 = a2 
-a2w.Part1 = bin.Parent.Parent.Character["Right Arm"] 
-a2w.C0 = CFrame.new(-0.2,0.2,0) 
-
-l = Instance.new("Part") 
-l.Parent = m 
-l.Name = "Left Leg" 
-l.formFactor = ("Symmetric") 
-l.Size = Vector3.new(2,2,2) 
-l.CFrame = bin.Parent.Parent.Character["Left Leg"].CFrame 
-l.BrickColor = BrickColor.new("Dusty Rose") 
-l.Locked = true 
-l.CanCollide = true 
-l.Shape = ("Ball") 
-l.TopSurface = ("Smooth") 
-l.BottomSurface = ("Smooth") 
-
-lm = Instance.new("SpecialMesh") 
-lm.Parent = l 
-lm.Name = "LegMesh" 
-lm.MeshType = ("Sphere") 
-lm.Scale = Vector3.new(0.9,0.9,1.2) 
-
-lw = Instance.new("Weld") 
-lw.Parent = l 
-lw.Name = "LegWeld" 
-lw.Part0 = l 
-lw.Part1 = bin.Parent.Parent.Character["Left Leg"] 
-lw.C0 = CFrame.new(0.25,0.2,0) 
-
-l2 = Instance.new("Part") 
-l2.Parent = m 
-l2.Name = "Right Leg" 
-l2.formFactor = ("Symmetric") 
-l2.Size = Vector3.new(2,2,2) 
-l2.CFrame = bin.Parent.Parent.Character["Right Leg"].CFrame 
-l2.BrickColor = BrickColor.new("Dusty Rose") 
-l2.Locked = true 
-l2.CanCollide = true 
-l2.Shape = ("Ball") 
-l2.TopSurface = ("Smooth") 
-l2.BottomSurface = ("Smooth") 
-
-l2m = Instance.new("SpecialMesh") 
-l2m.Parent = l2 
-l2m.Name = "LegMesh" 
-l2m.MeshType = ("Sphere") 
-l2m.Scale = Vector3.new(0.9,0.9,1.2) 
-
-l2w = Instance.new("Weld") 
-l2w.Parent = l2 
-l2w.Name = "LegWeld2" 
-l2w.Part0 = l2 
-l2w.Part1 = bin.Parent.Parent.Character["Right Leg"] 
-l2w.C0 = CFrame.new(-0.25,0.2,0) 
-
-c = bin.Parent.Parent.Character:GetChildren() 
-for i = 1, #c do 
-if c[i].className == "Part" then 
-c[i].Transparency = 1 
-end 
-end 
-for ii = 1, #c do 
-if c[ii].className == "Hat" then 
-c[ii]:remove() 
-end 
-end 
-wait() 
-if bin.Parent.Parent.Character.Head:findFirstChild("face") ~= nil then 
-bin.Parent.Parent.Character.Head:findFirstChild("face"):remove() 
-end 
-
-
----------------------------------------------------------------------------------------------------------------------
-
-
-
-bp = Instance.new("BodyPosition") 
-bp.Parent = bin 
-bp.maxForce = Vector3.new(2000,2000,2000) 
-
-enabled = true 
-function onButton1Down(mouse) 
-if mouse.Target ~= nil then 
-if mouse.Target.Parent:findFirstChild("Humanoid") ~= nil then 
-if enabled == true then 
-enabled = false 
-name = mouse.Target.Parent.Name 
-bp.Parent = mouse.Target.Parent:findFirstChild("Torso") 
-mouse.Target.Parent.Humanoid.PlatformStand = true 
-bp.position = bin.Parent.Parent.Character.Torso.Position 
-function touch(hit) 
-if hit.Name == "MainBody" then 
-parts = workspace[name]:GetChildren() 
-for i = 1, #parts do 
-if parts[i].className == "Part" then 
-parts[i]:remove() 
-end 
-enabled = true 
-end 
-else 
-wait() 
-end 
-end 
-mouse.Target.Parent:findFirstChild("Torso").Touched:connect(touch) 
-else 
-wait() 
-end 
-end 
-end 
-end 
-
-bin.Selected:connect(function(mouse) 
-mouse.Icon = "rbxasset://textures\\GunCursor.png" 
-mouse.Button1Down:connect(function() onButton1Down(mouse) end) 
-end)
-
---//====================================================\\--
---||	this part was		   CREATED BY SHACKLUSTER, and then copied into this kirby script by trystingb
---\\====================================================//--
-
-
-
-wait(0.2)
-
-
-
-Player = game:GetService("Players").LocalPlayer
-PlayerGui = Player.PlayerGui
-Cam = workspace.CurrentCamera
-Backpack = Player.Backpack
-Character = Player.Character
-Humanoid = Character.Humanoid
-Mouse = Player:GetMouse()
-RootPart = Character["HumanoidRootPart"]
-Torso = Character["Torso"]
-Head = Character["Head"]
-RightArm = Character["Right Arm"]
-LeftArm = Character["Left Arm"]
-RightLeg = Character["Right Leg"]
-LeftLeg = Character["Left Leg"]
-RootJoint = RootPart["RootJoint"]
-Neck = Torso["Neck"]
-RightShoulder = Torso["Right Shoulder"]
-LeftShoulder = Torso["Left Shoulder"]
-RightHip = Torso["Right Hip"]
-LeftHip = Torso["Left Hip"]
-local sick = Instance.new("Sound",Torso)
-sick.SoundId = "rbxassetid://319444224"
-sick.Looped = true
-sick.Pitch = 1
-sick.Volume = 1
-local succing = {}
-
-IT = Instance.new
-CF = CFrame.new
-VT = Vector3.new
-RAD = math.rad
-C3 = Color3.new
-UD2 = UDim2.new
-BRICKC = BrickColor.new
-ANGLES = CFrame.Angles
-EULER = CFrame.fromEulerAnglesXYZ
-COS = math.cos
-ACOS = math.acos
-SIN = math.sin
-ASIN = math.asin
-ABS = math.abs
-MRANDOM = math.random
-FLOOR = math.floor
-
-function CreateMesh(MESH, PARENT, MESHTYPE, MESHID, TEXTUREID, SCALE, OFFSET)
-	local NEWMESH = IT(MESH)
-	if MESH == "SpecialMesh" then
-		NEWMESH.MeshType = MESHTYPE
-		if MESHID ~= "nil" and MESHID ~= "" then
-			NEWMESH.MeshId = "http://www.roblox.com/asset/?id="..MESHID
-		end
-		if TEXTUREID ~= "nil" and TEXTUREID ~= "" then
-			NEWMESH.TextureId = "http://www.roblox.com/asset/?id="..TEXTUREID
-		end
-	end
-	NEWMESH.Offset = OFFSET or VT(0, 0, 0)
-	NEWMESH.Scale = SCALE
-	NEWMESH.Parent = PARENT
-	return NEWMESH
+            if distance <= maxFootballTeleportDistance then
+                football.CFrame = CFrame.new(playerRoot.Position + Vector3.new(0, 3, 0))  
+            end
+        end
+    end
 end
 
-function CreatePart(FORMFACTOR, PARENT, MATERIAL, REFLECTANCE, TRANSPARENCY, BRICKCOLOR, NAME, SIZE)
-	local NEWPART = IT("Part")
-	NEWPART.formFactor = FORMFACTOR
-	NEWPART.Reflectance = REFLECTANCE
-	NEWPART.Transparency = TRANSPARENCY
-	NEWPART.CanCollide = false
-	NEWPART.Locked = true
-	NEWPART.BrickColor = BRICKC(tostring(BRICKCOLOR))
-	NEWPART.Name = NAME
-	NEWPART.Size = SIZE
-	NEWPART.Position = Torso.Position
-	NEWPART.Material = MATERIAL
-	NEWPART:BreakJoints()
-	NEWPART.Parent = PARENT
-	return NEWPART
+RunService.Heartbeat:Connect(TeleportTheFootball)
+
+WR_Tab:AddToggle({
+    Name = "Legit Mags V2",
+    Default = false,
+    Callback = function(Value)
+        legitMagEnabled = Value
+        print("Legit Mags V2 Enabled:", Value)
+    end
+})
+
+local DB_Tab = Window:MakeTab({
+    Name = "DB",
+    Icon = "rbxassetid://4483345998",
+    PremiumOnly = false
+})
+
+local FootballMagEnabled = false
+local MaxTeleportDistance = 10
+local CatchRange = 10
+
+DB_Tab:AddToggle({
+    Name = "Blatant Magnets",
+    Default = false,
+    Callback = function(Value)
+        FootballMagEnabled = Value
+        print("Blatant Magnets Enabled:", Value)
+    end
+})
+
+local function FootballMag()
+    if not FootballMagEnabled then return end
+    
+    local LocalPlayer = Players.LocalPlayer
+    local catchLeft = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+    if not catchLeft then return end
+    
+    local targetPositionLeft = catchLeft.Position
+
+    for _, football in ipairs(Workspace:GetChildren()) do
+        if football:IsA("BasePart") and football.Name == "Football" then
+            local distanceLeft = (football.Position - targetPositionLeft).Magnitude
+
+            if distanceLeft <= MaxTeleportDistance then
+                if distanceLeft <= CatchRange then
+                    football.CFrame = CFrame.new(targetPositionLeft)
+                end
+            end
+        end
+    end
 end
 
+RunService.Heartbeat:Connect(FootballMag)
 
---//=================================\\
---||		  CUSTOMIZATION
---\\=================================//
+DB_Tab:AddToggle({
+    Name = "Blatant Mags V2",
+    Default = false,
+    Callback = function(Value)
+        FootballMagEnabled = Value
+        print("Blatant Mags V2 Enabled:", Value)
+    end
+})
 
-Class_Name = "Template"
-Weapon_Name = "Add-ons"
+local QB_Tab = Window:MakeTab({
+    Name = "QB",
+    Icon = "rbxassetid://4483345998",
+    PremiumOnly = false
+})
 
-Custom_Colors = {
-	Custom_Color_1 = BRICKC("Institutional white"); --1st color for the weapon.
-	Custom_Color_2 = BRICKC("Institutional white"); --2nd color for the weapon.
+local QBAimbotEnabled = false
 
-	Custom_Color_3 = BRICKC("Institutional white"); --Color for the abilities.
-	Custom_Color_4 = BRICKC("Institutional white"); --Color for the secondary bar.
-	Custom_Color_5 = BRICKC("Institutional white"); --Color for the mana bar.
-	Custom_Color_6 = BRICKC("Institutional white"); --Color for the health bar.
-	Custom_Color_7 = BRICKC("Institutional white"); --Color for the stun bar.
+QB_Tab:AddToggle({
+    Name = "QB Aimbot",
+    Default = false,
+    Callback = function(Value)
+        QBAimbotEnabled = Value
+        print("QB Aimbot Enabled:", Value)
+    end
+})
 
-	Custom_Color_8 = BRICKC("Institutional white"); --Background for the mana bar.
-	Custom_Color_9 = BRICKC("Institutional white"); --Background for the secondary mana bar.
-	Custom_Color_10 = BRICKC("Institutional white"); --Background for the stun bar.
-	Custom_Color_11 = BRICKC("Institutional white"); --Background for the health bar.
-	Custom_Color_12 = BRICKC("Institutional white"); --Background for the abilities.
-}
+local Rusher_Tab = Window:MakeTab({
+    Name = "Rusher",
+    Icon = "rbxassetid://4483345998",
+    PremiumOnly = false
+})
 
+Rusher_Tab:AddSlider({
+    Name = "WalkSpeed",
+    Min = 16,
+    Max = 30,
+    Default = 16,
+    Color = Color3.fromRGB(255, 255, 255),
+    Increment = 1,
+    ValueName = "Speed",
+    Callback = function(Value)
+        local Player = Players.LocalPlayer
+        local Character = Player.Character
+        if Character and Character:FindFirstChild("Humanoid") then
+            Character.Humanoid.WalkSpeed = Value
+        end
+    end
+})
 
-Player_Size = 1 --Size of the player.
-Animation_Speed = 3
-Frame_Speed = 1 / 60 -- (1 / 30) OR (1 / 60)
+Rusher_Tab:AddBind({
+    Name = "Ball Carrier Lock",
+    Default = Enum.KeyCode.L,
+    Hold = false,
+    Callback = function()
+        print("Ball Carrier Lock Enabled")
+    end
+})
 
-local Speed = 16
-local Effects2 = {}
+local teleportRange = 5
 
---//=================================\\
---|| 	  END OF CUSTOMIZATION
---\\=================================//
+local function TeleportForward()
+    local Player = Players.LocalPlayer
+    local character = Player.Character
+    if not character then return end
 
-	local function weldBetween(a, b)
-	    local weldd = Instance.new("ManualWeld")
-	    weldd.Part0 = a
-	    weldd.Part1 = b
-	    weldd.C0 = CFrame.new()
-	    weldd.C1 = b.CFrame:inverse() * a.CFrame
-	    weldd.Parent = a
-	    return weldd
-	end
+    local rootPart = character:FindFirstChild("HumanoidRootPart")
+    if not rootPart then return end
 
-function createaccessory(attachmentpart,mesh,texture,scale,offset,color)
-local acs = Instance.new("Part")
-acs.CanCollide = false
-acs.Anchored = false
-acs.Size = Vector3.new(0,0,0)
-acs.CFrame = attachmentpart.CFrame
-acs.Parent = Character
-acs.BrickColor = color
-    local meshs = Instance.new("SpecialMesh")
-    meshs.MeshId = mesh
-    meshs.TextureId = texture
-    meshs.Parent = acs
-    meshs.Scale = scale
-    meshs.Offset = offset
-weldBetween(attachmentpart,acs)
+    local teleportDirection = rootPart.CFrame.LookVector
+    local teleportPosition = rootPart.Position + (teleportDirection * teleportRange)
+
+    local raycastParams = RaycastParams.new()
+    raycastParams.FilterDescendantsInstances = {Player.Character}
+    local raycastResult = Workspace:Raycast(rootPart.Position, teleportDirection * teleportRange, raycastParams)
+    if raycastResult then
+        teleportPosition = raycastResult.Position
+    end
+
+    rootPart.CFrame = CFrame.new(teleportPosition)
 end
 
-function createbodypart(TYPE,COLOR,PART,OFFSET,SIZE)
-if TYPE == "Gem" then
-	local acs = CreatePart(3, Character, "Plastic", 0, 0, COLOR, "Part", VT(0,0,0))
-	acs.Anchored = false
-    acs.CanCollide = false
-	acs.CFrame = PART.CFrame
-	local acs2 = CreateMesh("SpecialMesh", acs, "FileMesh", "9756362", "", SIZE, OFFSET)
-weldBetween(PART,acs)
-elseif TYPE == "Skull" then
-	local acs = CreatePart(3, Character, "Plastic", 0, 0, COLOR, "Part", VT(0,0,0))
-	acs.Anchored = false
-    acs.CanCollide = false
-	acs.CFrame = PART.CFrame
-	local acs2 = CreateMesh("SpecialMesh", acs, "FileMesh", "4770583", "", SIZE, OFFSET)
-weldBetween(PART,acs)
-elseif TYPE == "Eye" then
-	local acs = CreatePart(3, Character, "Neon", 0, 0, COLOR, "Part", VT(0,0,0))
-	acs.Anchored = false
-    acs.CanCollide = false
-	acs.CFrame = PART.CFrame
-	local acs2 = CreateMesh("SpecialMesh", acs, "Sphere", "", "", SIZE, OFFSET)
-weldBetween(PART,acs)
-end
-end
+Rusher_Tab:AddBind({
+    Name = "Forward",
+    Default = Enum.KeyCode.F,
+    Hold = false,
+    Callback = function()
+        TeleportForward()
+    end
+})
 
---//=================================\\
---|| 	      USEFUL VALUES
---\\=================================//
+local Extra_Tab = Window:MakeTab({
+    Name = "Extra Stuff",
+    Icon = "rbxassetid://4483345998",
+    PremiumOnly = false
+})
 
-local ROOTC0 = CF(0, 0, 0) * ANGLES(RAD(-90), RAD(0), RAD(180))
-local NECKC0 = CF(0, 1, 0) * ANGLES(RAD(-90), RAD(0), RAD(180))
-local RIGHTSHOULDERC0 = CF(-0.5, 0, 0) * ANGLES(RAD(0), RAD(90), RAD(0))
-local LEFTSHOULDERC0 = CF(0.5, 0, 0) * ANGLES(RAD(0), RAD(-90), RAD(0))
-local CO1 = 0
-local CO2 = 0
-local CO3 = 0
-local CO4 = 0
-local CHANGEDEFENSE = 0
-local CHANGEDAMAGE = 0
-local CHANGEMOVEMENT = 0
-local ANIM = "Idle"
-local ATTACK = false
-local EQUIPPED = false
-local HOLD = false
-local COMBO = 1
-local LASTPOINT = nil
-local BLCF = nil
-local SCFR = nil
-local STAGGERHITANIM = false
-local STAGGERANIM = false
-local STUNANIM = false
-local CRITCHANCENUMBER = 0
-local IDLENUMBER = 0
-local DONUMBER = 0
-local HANDIDLE = false
-local SINE = 0
-local CHANGE = 2 / Animation_Speed
-local WALKINGANIM = false
-local WALK = 0
-local DISABLEJUMPING = false
-local HASBEENBLOCKED = false
-local STUNDELAYNUMBER = 0
-local MANADELAYNUMBER = 0
-local SECONDARYMANADELAYNUMBER = 0
-local ROBLOXIDLEANIMATION = IT("Animation")
-ROBLOXIDLEANIMATION.Name = "Roblox Idle Animation"
-ROBLOXIDLEANIMATION.AnimationId = "http://www.roblox.com/asset/?id=180435571"
---ROBLOXIDLEANIMATION.Parent = Humanoid
-local WEAPONGUI = IT("ScreenGui", nil)
-WEAPONGUI.Name = "Weapon GUI"
-local WEAPONTOOL = IT("HopperBin", nil)
-WEAPONTOOL.Name = Weapon_Name
-local Weapon = IT("Model")
-Weapon.Name = Weapon_Name
-local Effects = IT("Folder", Weapon)
-Effects.Name = "Effects"
-local ANIMATOR = Humanoid.Animator
-local ANIMATE = Character.Animate
-local HITPLAYERSOUNDS = {--[["199149137", "199149186", "199149221", "199149235", "199149269", "199149297"--]]"263032172", "263032182", "263032200", "263032221", "263032252", "263033191"}
-local HITARMORSOUNDS = {"199149321", "199149338", "199149367", "199149409", "199149452"}
-local HITWEAPONSOUNDS = {"199148971", "199149025", "199149072", "199149109", "199149119"}
-local HITBLOCKSOUNDS = {"199148933", "199148947"}
-local UNANCHOR = true
-local MAGICPARTICLE = "655109389"
+local pullVectorEnabled = false
+local pullVectorConnection
 
---//=================================\\
---\\=================================//
+local function findNearestFootball()
+    local TeleportDistance = 7
+    local nearestFootball = nil
+    local minDistance = TeleportDistance + 1
 
+    for _, football in ipairs(Workspace:GetChildren()) do
+        if football.Name == "Football" and football:IsA("BasePart") then
+            local distance = (football.Position - Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude
+            if distance <= TeleportDistance and distance < minDistance then
+                minDistance = distance
+                nearestFootball = football
+            end
+        end
+    end
 
---//=================================\\
---|| 	     DEBUFFS / BUFFS
---\\=================================//
-
-local DEFENSECHANGE1 = IT("NumberValue", ChangeStat)
-DEFENSECHANGE1.Name = "ChangeDefense"
-DEFENSECHANGE1.Value = 0
-
-local MOVEMENTCHANGE1 = IT("NumberValue", nil)
-MOVEMENTCHANGE1.Name = "ChangeMovement"
-MOVEMENTCHANGE1.Value = 0
-
---//=================================\\
---\\=================================//
-
-
-
-
-
---//=================================\\
---|| SAZERENOS' ARTIFICIAL HEARTBEAT
---\\=================================//
-
-ArtificialHB = Instance.new("BindableEvent", script)
-ArtificialHB.Name = "ArtificialHB"
-
-script:WaitForChild("ArtificialHB")
-
-frame = Frame_Speed
-tf = 0
-allowframeloss = false
-tossremainder = false
-lastframe = tick()
-script.ArtificialHB:Fire()
-
-game:GetService("RunService").Heartbeat:connect(function(s, p)
-	tf = tf + s
-	if tf >= frame then
-		if allowframeloss then
-			script.ArtificialHB:Fire()
-			lastframe = tick()
-		else
-			for i = 1, math.floor(tf / frame) do
-				script.ArtificialHB:Fire()
-			end
-		lastframe = tick()
-		end
-		if tossremainder then
-			tf = 0
-		else
-			tf = tf - frame * math.floor(tf / frame)
-		end
-	end
-end)
-
---//=================================\\
---\\=================================//
-
-
-
-
-
---//=================================\\
---|| 	      SOME FUNCTIONS
---\\=================================//
-
-function Raycast(POSITION, DIRECTION, RANGE, IGNOREDECENDANTS)
-	return workspace:FindPartOnRay(Ray.new(POSITION, DIRECTION.unit * RANGE), IGNOREDECENDANTS)
+    return nearestFootball
 end
 
-function PositiveAngle(NUMBER)
-	if NUMBER >= 0 then
-		NUMBER = 0
-	end
-	return NUMBER
+local function teleportToFootball()
+    if not pullVectorEnabled then return end
+    local nearestFootball = findNearestFootball()
+
+    if nearestFootball then
+        Players.LocalPlayer.Character:SetPrimaryPartCFrame(CFrame.new(nearestFootball.Position))
+    end
 end
 
-function NegativeAngle(NUMBER)
-	if NUMBER <= 0 then
-		NUMBER = 0
-	end
-	return NUMBER
+Extra_Tab:AddToggle({
+    Name = "Pullvector",
+    Default = false,
+    Callback = function(Value)
+        pullVectorEnabled = Value
+        if pullVectorEnabled then
+            pullVectorConnection = RunService.Heartbeat:Connect(teleportToFootball)
+        else
+            if pullVectorConnection then
+                pullVectorConnection:Disconnect()
+                pullVectorConnection = nil
+            end
+        end
+        print("Pullvector Enabled:", Value)
+    end
+})
+
+Extra_Tab:AddToggle({
+    Name = "Bigger Hands",
+    Default = false,
+    Callback = function(Value)
+        print("Bigger Hands Enabled:", Value)
+    end
+})
+
+local Blocking_Tab = Window:MakeTab({
+    Name = "Blocking",
+    Icon = "rbxassetid://4483345998",
+    PremiumOnly = false
+})
+
+Blocking_Tab:AddToggle({
+    Name = "Tackle Reach",
+    Default = false,
+    Callback = function(Value)
+        print("Tackle Reach Enabled:", Value)
+    end
+})
+
+Blocking_Tab:AddToggle({
+    Name = "Block Reach",
+    Default = false,
+    Callback = function(Value)
+        print("Block Reach Enabled:", Value)
+    end
+})
+
+local customMagsEnabled = false
+
+local function getRandomPositionAround(part, radius)
+    local randomDirection = Vector3.new(math.random() - 0.5, math.random() - 0.5, math.random() - 0.5).Unit
+    local randomDistance = math.random() * radius
+    return part.Position + randomDirection * randomDistance
 end
 
-function Swait(NUMBER)
-	if NUMBER == 0 or NUMBER == nil then
-		ArtificialHB.Event:wait()
-	else
-		for i = 1, NUMBER do
-			ArtificialHB.Event:wait()
-		end
-	end
+local function instantTeleport()
+    if not customMagsEnabled then return end
+    
+    local TeleportDistance = 35
+    local Radius = 10 
+    local player = Players.LocalPlayer
+    local leftArm = player.Character and player.Character:FindFirstChild("Left Arm")
+    if not leftArm then return end
+    
+    for _, football in ipairs(Workspace:GetChildren()) do
+        if football.Name == "Football" and football:IsA("BasePart") then
+            local distance = (football.Position - leftArm.Position).Magnitude
+            if distance <= TeleportDistance then
+                local randomPosition = getRandomPositionAround(leftArm, Radius)
+                football.CFrame = CFrame.new(randomPosition)
+            end
+        end
+    end
 end
 
-function CreateLabel(PARENT, TEXT, TEXTCOLOR, TEXTFONTSIZE, TEXTFONT, TRANSPARENCY, BORDERSIZEPIXEL, STROKETRANSPARENCY, NAME)
-	local label = IT("TextLabel")
-	label.BackgroundTransparency = 1
-	label.Size = UD2(1, 0, 1, 0)
-	label.Position = UD2(0, 0, 0, 0)
-	label.TextColor3 = C3(255, 255, 255)
-	label.TextStrokeTransparency = STROKETRANSPARENCY
-	label.TextTransparency = TRANSPARENCY
-	label.FontSize = TEXTFONTSIZE
-	label.Font = TEXTFONT
-	label.BorderSizePixel = BORDERSIZEPIXEL
-	label.TextScaled = true
-	label.Text = TEXT
-	label.Name = NAME
-	label.Parent = PARENT
-	return label
-end
+RunService.Heartbeat:Connect(instantTeleport)
 
-function NoOutlines(PART)
-	PART.TopSurface, PART.BottomSurface, PART.LeftSurface, PART.RightSurface, PART.FrontSurface, PART.BackSurface = 10, 10, 10, 10, 10, 10
-end
+Extra_Tab:AddToggle({
+    Name = "Custom Mags",
+    Default = false,
+    Callback = function(Value)
+        customMagsEnabled = Value
+        print("Custom Mags Enabled:", Value)
+    end
+})
 
-
-function CreateWeldOrSnapOrMotor(TYPE, PARENT, PART0, PART1, C0, C1)
-	local NEWWELD = IT(TYPE)
-	NEWWELD.Part0 = PART0
-	NEWWELD.Part1 = PART1
-	NEWWELD.C0 = C0
-	NEWWELD.C1 = C1
-	NEWWELD.Parent = PARENT
-	return NEWWELD
-end
-
-function CreateSound(ID, PARENT, VOLUME, PITCH)
-	local NEWSOUND = nil
-	coroutine.resume(coroutine.create(function()
-		NEWSOUND = IT("Sound", PARENT)
-		NEWSOUND.Volume = VOLUME
-		NEWSOUND.Pitch = PITCH
-		NEWSOUND.SoundId = "http://www.roblox.com/asset/?id="..ID
-		Swait()
-		NEWSOUND:play()
-		game:GetService("Debris"):AddItem(NEWSOUND, 10)
-	end))
-	return NEWSOUND
-end
-
---//=================================\\
---\\=================================//
-
-
---//=================================\\
---||	     WEAPON CREATION
---\\=================================//
-
-if Player_Size ~= 1 then
-	for _, v in pairs (Weapon:GetChildren()) do
-		if v.ClassName == "Motor" or v.ClassName == "Weld" or v.ClassName == "Snap" then
-			local p1 = v.Part1
-			v.Part1 = nil
-			local cf1, cf2, cf3, cf4, cf5, cf6, cf7, cf8, cf9, cf10, cf11, cf12 = v.C1:components()
-			v.C1 = CF(cf1 * Player_Size, cf2 * Player_Size, cf3 * Player_Size, cf4, cf5, cf6, cf7, cf8, cf9, cf10, cf11, cf12)
-			v.Part1 = p1
-		elseif v.ClassName == "Part" then
-			for _, b in pairs (v:GetChildren()) do
-				if b.ClassName == "SpecialMesh" or b.ClassName == "BlockMesh" then
-					b.Scale = VT(b.Scale.x * Player_Size, b.Scale.y * Player_Size, b.Scale.z * Player_Size)
-				end
-			end
-		end
-	end
-end
-
-for _, c in pairs(Weapon:GetChildren()) do
-	if c.ClassName == "Part" then
-		c.CustomPhysicalProperties = PhysicalProperties.new(0, 0, 0, 0, 0)
-	end
-end
-
-Weapon.Parent = Character
-
-Humanoid.Died:connect(function()
-	ATTACK = true
-end)
-
-print(Class_Name.." loaded.")
-
---//=================================\\
---\\=================================//
-
-
-local backpack = IT("Part",Weapon)
-backpack.Size = VT(0.15,0.15,0.15)
-local mesh = IT("SpecialMesh",backpack)
-mesh.MeshId = "rbxassetid://84313478"
-mesh.TextureId = "http://www.roblox.com/asset/?id=84313638"
-backpack.CFrame = Torso.CFrame * CF(0,0.2,1)
-backpack.BrickColor = BRICKC("Black")
-weldBetween(Torso,backpack)
-
-local hose = IT("Part",Weapon)
-hose.Size = VT(0.15,0.15,0.15)
-local mesh = IT("SpecialMesh",hose)
-mesh.MeshId = "http://www.roblox.com/asset/?id=84313555"
-mesh.TextureId = "http://www.roblox.com/asset/?id=84313638"
-mesh.Scale = VT(2,2,2)
-mesh.Offset = VT(0, -0.4, -0.7)
-hose.CFrame = Torso.CFrame * CF(1.5,0.5,0.2) * ANGLES(RAD(90),RAD(35),RAD(180))
-hose.BrickColor = BRICKC("Black")
-weldBetween(Torso,hose)
-
-local succ = IT("Part",Weapon)
-succ.Size = VT(2,2,2)
-succ.CanCollide = false
-succ.CFrame = Torso.CFrame * CF(1.5,1.3,-4) * ANGLES(RAD(90),RAD(0),RAD(180))
-succ.Transparency = 1
-succ.BrickColor = BRICKC("Black")
-weldBetween(Torso,succ)
-
-for _, c in pairs(Weapon:GetChildren()) do
-	if c.ClassName == "Part" then
-		c.CustomPhysicalProperties = PhysicalProperties.new(0, 0, 0, 0, 0)
-	end
-end
-
-local EyeSizes={
-	NumberSequenceKeypoint.new(0,0.5,0),
-	NumberSequenceKeypoint.new(1,0.2,0)
-}
-local EyeTrans={
-	NumberSequenceKeypoint.new(0,0,0),
-	NumberSequenceKeypoint.new(1,1,0)
-}
-local PE=Instance.new("ParticleEmitter")
-PE.LightEmission=0.3
-PE.Size=NumberSequence.new(EyeSizes)
-PE.Transparency=NumberSequence.new(EyeTrans)
-PE.Rotation=NumberRange.new(0,360)
-PE.LockedToPart = false
-PE.Speed = NumberRange.new(0,0,0)
-PE.ZOffset = 0.3
-PE.Rate = 999
-PE.VelocitySpread = 25
-PE.Name = "Particles"
-
-function CreateParticles(art,accel,drag,lifetime,type,isenabledbydefault,locked,size,speed)
-	local particle = nil
-	coroutine.resume(coroutine.create(function(PART)
-		particle = PE:Clone()
-		Swait()
-		particle.Rate = 999
-		particle.Parent = art
-		particle.Acceleration = accel
-		if type == "Fire" then
-			local EyeSizes={
-				NumberSequenceKeypoint.new(0,size,size/2),
-				NumberSequenceKeypoint.new(1,size/4,size/8)
-			}
-			particle.Size = NumberSequence.new(EyeSizes)
-		elseif type == "Smoke" then
-			local EyeSizes={
-				NumberSequenceKeypoint.new(0,size/5,0),
-				NumberSequenceKeypoint.new(1,size*2,0.5)
-			}
-			particle.Size = NumberSequence.new(EyeSizes)
-		elseif type == "Solid" then
-			local EyeSizes={
-				NumberSequenceKeypoint.new(0,size,0),
-				NumberSequenceKeypoint.new(1,size,0)
-			}
-			particle.Size = NumberSequence.new(EyeSizes)
-		end
-		particle.Lifetime=NumberRange.new(lifetime)
-		particle.Drag = drag
-		if locked == true then
-			particle.LockedToPart = true
-		end
-		particle.Speed = NumberRange.new(speed*0.8,speed)
-		particle.Texture = "http://www.roblox.com/asset/?id=1179557490"
-		particle.Enabled = isenabledbydefault
-		particle.Color = ColorSequence.new(Color3.new(255/255, 176/255, 0))
-	end))
-return particle
-end
-
-local poop = CreateParticles(succ,VT(0,0,0),5,2,"Smoke",false,false,5,35)
-local poop2 = CreateParticles(succ,VT(0,0,0),5,1,"Smoke",false,false,2,15)
-
---//=================================\\
---||			DAMAGING
---\\=================================//
-
-function succnearest(position,range)
-	for i,v in ipairs(workspace:GetChildren()) do
-	local body = v:GetChildren()
-		for part = 1, #body do
-			if((body[part].ClassName == "Part" or body[part].ClassName == "MeshPart") and v ~= Character) then
-				if(body[part].Position - position).Magnitude < range then
-					local bv = Instance.new("BodyVelocity") 
-					bv.maxForce = Vector3.new(1e9, 1e9, 1e9)
-					bv.velocity = CF(body[part].Position,succ.Position).lookVector*80
-					bv.Parent = body[part]
-					bv.Name = "SUCC"
-					game:GetService("Debris"):AddItem(bv, 0.1)
-				end
-			end
-		end
-		if v.ClassName == "Part" then
-			if v.Anchored == false and (v.Position - position).Magnitude < range then
-				local bv = Instance.new("BodyVelocity") 
-				bv.maxForce = Vector3.new(1e9, 1e9, 1e9)
-				bv.velocity = CF(v.Position,succ.Position).lookVector*80
-				bv.Parent = v
-				bv.Name = "SUCC"
-				game:GetService("Debris"):AddItem(bv, 0.1)
-			end
-		end
-	end
-end
-
-function cover(position,range)
-	for i,v in ipairs(workspace:GetChildren()) do
-	local body = v:GetChildren()
-		for part = 1, #body do
-			if((body[part].ClassName == "Part" or body[part].ClassName == "MeshPart") and v ~= Character) then
-				if(body[part].Position - position).Magnitude < range then
-					CreateParticles(body[part],VT(0,-2,0),5,1,"Smoke",true,false,0.3,0)
-					if v:FindFirstChild("Humanoid") then
-						v.Humanoid.PlatformStand = true
-					end
-				end
-			end
-		end
-		if v.ClassName == "Part" then
-			if v.Anchored == false and (v.Position - position).Magnitude < range then
-				CreateParticles(v,VT(0,-2,0),5,1,"Smoke",true,false,0.3,0)
-			end
-		end
-	end
-end
-
-function cough()
-	CreateSound("328460122", succ, 3, 1)
-	poop.VelocitySpread = 25
-	poop:Emit(150)
-	cover(CF(succ.Position)*CF(0,0,-1).p,15)
-end
-
---//=================================\\
---||	ATTACK FUNCTIONS AND STUFF
---\\=================================//
-
-function CheckTableForString(Table, String)
-	for i, v in pairs(Table) do
-		if string.find(string.lower(String), string.lower(v)) then
-			return true
-		end
-	end
-	return false
-end
-
-function CheckIntangible(Hit)
-	local ProjectileNames = {"Water", "Arrow", "Projectile", "Effect", "Rail", "Lightning", "Bullet"}
-	if Hit and Hit.Parent then
-		if ((not Hit.CanCollide or CheckTableForString(ProjectileNames, Hit.Name)) and not Hit.Parent:FindFirstChild("Humanoid")) then
-			return true
-		end
-	end
-	return false
-end
-
-Debris = game:GetService("Debris")
-
-function CastRay(StartPos, Vec, Length, Ignore, DelayIfHit)
-	local Direction = CFrame.new(StartPos, Vec).lookVector
-	local Ignore = ((type(Ignore) == "table" and Ignore) or {Ignore})
-	local RayHit, RayPos, RayNormal = game:GetService("Workspace"):FindPartOnRayWithIgnoreList(Ray.new(StartPos, Direction * Length), Ignore)
-	if RayHit and CheckIntangible(RayHit) then
-		if DelayIfHit then
-			wait()
-		end
-		RayHit, RayPos, RayNormal = CastRay((RayPos + (Vec * 0.01)), Vec, (Length - ((StartPos - RayPos).magnitude)), Ignore, DelayIfHit)
-	end
-	return RayHit, RayPos, RayNormal
-end
-
-function turnto(pos,part)
-	part.CFrame = CF(part.Position,VT(pos.X,RootPart.Position.Y,pos.Z))
-end
-
-function vacuum()
-	sick:Play()
-	local nado = IT("Part")
-	local mesh = IT("SpecialMesh",nado)
-	mesh.MeshId = "http://www.roblox.com/asset/?id=102638417"
-	nado.Transparency = 0.5
-	nado.CanCollide = false
-	nado.Anchored = true
-	local loop = 0
-	succing = {}
-	local harm = succ.Touched:Connect(function(hit)
-		if hit.Anchored == false then
-			hit:remove()
-			CreateSound("261732529", succ, 3, 1)
-			poop2:Emit(1)
-		end
-	end)
-	repeat
-		Swait()
-		loop = loop + 75
-		nado.Parent = Effects
-		local RayHit,RayPos = CastRay(succ.Position, Mouse.Hit.p, 1000, Character, false)
-		local distance = (succ.Position - RayPos).magnitude
-		mesh.Scale = VT(distance/12,distance/3.2,distance/12)
-		nado.CFrame = CFrame.new(succ.Position, RayPos) * CFrame.new(0, 0, -distance/2) * ANGLES(RAD(-90),RAD(loop),RAD(0))
-		turnto(Mouse.Hit.p,RootPart)
-		succnearest(RayPos,distance/2.5)
-		if RayHit ~= nil then
-			if RayHit.Anchored == false then
-				local bv = Instance.new("BodyVelocity") 
-				bv.maxForce = Vector3.new(1e9, 1e9, 1e9)
-				bv.velocity = CF(RayHit.Position,succ.Position).lookVector*80
-				bv.Parent = RayHit
-				bv.Name = "SUCC"
-				game:GetService("Debris"):AddItem(bv, 0.1)
-			end
-		end
-		local TotalSuccs = math.ceil(distance / 65)
-		local Direction = CFrame.new(RayPos, succ.Position).lookVector
-		for i = 1, TotalSuccs do
-			local NewPos = (RayPos + (Direction * (distance * (i / TotalSuccs))))
-			succnearest(NewPos,distance/(i*2.5))
-		end
-	until HOLD == false
-	if #succing>0 then
-	for e=1,#succing do
-	if succing[e]~=nil then
-	local Thing=succing[e]
-	Thing:remove()
-	table.remove(succing,e)
-	end
-	end
-	end
-	succing = {}
-	harm:disconnect()
-	nado:remove()
-	sick:Stop()
-end
-
---//=================================\\
---||	  ASSIGN THINGS TO KEYS
---\\=================================//
-
-Humanoid.Changed:connect(function(Jump)
-	if Jump == "Jump" and (Disable_Jump == true or DISABLEJUMPING == true) then
-		Humanoid.Jump = false
-	end
-end)
-
-function MouseDown(Mouse)
-	HOLD = true
-	vacuum()
-end
-
-function MouseUp(Mouse)
-HOLD = false
-end
-
-function KeyDown(Key)
-	if Key == "t" and ATTACK == false then
-		CreateSound("743953262", Head, 3, 1)
-	end
-	if Key == "e" and ATTACK == false then
-		cough()
-	end
-end
-
-function KeyUp(Key)
-end
-
-	Mouse.Button1Down:connect(function(NEWKEY)
-		MouseDown(NEWKEY)
-	end)
-	Mouse.Button1Up:connect(function(NEWKEY)
-		MouseUp(NEWKEY)
-	end)
-	Mouse.KeyDown:connect(function(NEWKEY)
-		KeyDown(NEWKEY)
-	end)
-	Mouse.KeyUp:connect(function(NEWKEY)
-		KeyUp(NEWKEY)
-	end)
-
---//=================================\\
---\\=================================//
-
-
-function unanchor()
-	if UNANCHOR == true then
-		g = Character:GetChildren()
-		for i = 1, #g do
-			if g[i].ClassName == "Part" then
-				g[i].Anchored = false
-			end
-		end
-	end
-end
-
-
---//=================================\\
---||	WRAP THE WHOLE SCRIPT UP
---\\=================================//
-
-Humanoid.Changed:connect(function(Jump)
-	if Jump == "Jump" and (Disable_Jump == true or DISABLEJUMPING == true) then
-		Humanoid.Jump = false
-	end
-end)
-
-while true do
-	Swait()
-if #Effects2>0 then
-for e=1,#Effects2 do
-if Effects2[e]~=nil then
-local Thing=Effects2[e]
-if Thing~=nil then
-local Part=Thing[1]
-local Mode=Thing[2]
-local Delay=Thing[3]
-local IncX=Thing[4]
-local IncY=Thing[5]
-local IncZ=Thing[6]
-local Part2=Thing[8]
-if Thing[1].Transparency<=1 then
-if Thing[2]=="Block1" then
-Thing[1].CFrame=Thing[1].CFrame
-Mesh=Thing[1].Mesh
-Mesh.Scale=Mesh.Scale+VT(Thing[4],Thing[5],Thing[6])
-Thing[1].Transparency=Thing[1].Transparency+Thing[3]
-elseif Thing[2]=="Cylinder" then
-Mesh=Thing[1].Mesh
-Mesh.Scale=Mesh.Scale+VT(Thing[4],Thing[5],Thing[6])
-Thing[1].Transparency=Thing[1].Transparency+Thing[3]
-elseif Thing[2]=="Blood" then
-Mesh=Thing[7]
-Thing[1].CFrame=Thing[1].CFrame*CF(0,.5,0)
-Mesh.Scale=Mesh.Scale+VT(Thing[4],Thing[5],Thing[6])
-Thing[1].Transparency=Thing[1].Transparency+Thing[3]
-elseif Thing[2]=="Elec" then
-Mesh=Thing[1].Mesh
-Mesh.Scale=Mesh.Scale+VT(Thing[7],Thing[8],Thing[9])
-Thing[1].Transparency=Thing[1].Transparency+Thing[3]
-elseif Thing[2]=="Disappear" then
-Thing[1].Transparency=Thing[1].Transparency+Thing[3]
-end
-else
-Part.Parent=nil
-table.remove(Effects2,e)
-end
-end
-end
-end
-end
-unanchor()
-Humanoid.MaxHealth = "inf"
-Humanoid.Health = "inf"
-if Rooted == false then
-	Disable_Jump = false
-	Humanoid.WalkSpeed = Speed
-elseif Rooted == true then
-	Disable_Jump = true
-	Humanoid.WalkSpeed = 0
-end
-if sick == nil then
-	sick = Instance.new("Sound",Torso)
-	sick.SoundId = "rbxassetid://319444224"
-	sick.Looped = true
-	sick.Pitch = 1
-	sick.Volume = 1
-end
-if #succing>0 then
-for e=1,#succing do
-if succing[e]~=nil then
-local Thing=succing[e]
-Thing.velocity = CF(Thing.Parent.Position,succ.Position).lookVector*80
-if HOLD == false then
-	Thing.velocity = CF(Thing.Parent.Position,succ.Position).lookVector*0
-	Thing:remove()
-	table.remove(succing,e)
-end
-end
-end
-end
-end
-
---//=================================\\
---\\=================================//
-
-
-
-
-
---//====================================================\\--
---||			  		 END OF SCRIPT
---\\====================================================//--
+OrionLib:Init()
