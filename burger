@@ -254,6 +254,48 @@ Extra_Tab:AddToggle({
     end
 })
 
+local customMagsEnabled = false
+
+local function getRandomPositionAround(part, minRadius, maxRadius)
+    local randomDirection = Vector3.new(math.random() - 0.5, math.random() - 0.5, math.random() - 0.5).Unit
+    local randomDistance = minRadius + math.random() * (maxRadius - minRadius)
+    return part.Position + randomDirection * randomDistance
+end
+
+local function instantTeleport()
+    if not customMagsEnabled then return end
+
+    local TeleportDistance = 35
+    local MinRadius = 1  
+    local MaxRadius = 5  
+
+    local player = Players.LocalPlayer
+    local leftArm = player.Character and player.Character:FindFirstChild("Left Arm")
+
+    if not leftArm then return end
+
+    for _, football in ipairs(Workspace:GetChildren()) do
+        if football.Name == "Football" and football:IsA("BasePart") then
+            local distance = (football.Position - leftArm.Position).Magnitude
+            if distance <= TeleportDistance then
+                local randomPosition = getRandomPositionAround(leftArm, MinRadius, MaxRadius)
+                football.CFrame = CFrame.new(randomPosition)
+            end
+        end
+    end
+end
+
+RunService.Heartbeat:Connect(instantTeleport)
+
+Extra_Tab:AddToggle({
+    Name = "Custom Mags",
+    Default = false,
+    Callback = function(Value)
+        customMagsEnabled = Value
+        print("Custom Mags Enabled:", Value)
+    end
+})
+
 local Blocking_Tab = Window:MakeTab({
     Name = "Blocking",
     Icon = "rbxassetid://4483345998",
@@ -276,43 +318,5 @@ Blocking_Tab:AddToggle({
     end
 })
 
-local customMagsEnabled = false
-
-local function getRandomPositionAround(part, radius)
-    local randomDirection = Vector3.new(math.random() - 0.5, math.random() - 0.5, math.random() - 0.5).Unit
-    local randomDistance = math.random() * radius
-    return part.Position + randomDirection * randomDistance
-end
-
-local function instantTeleport()
-    if not customMagsEnabled then return end
-    
-    local TeleportDistance = 35
-    local Radius = 10 
-    local player = Players.LocalPlayer
-    local leftArm = player.Character and player.Character:FindFirstChild("Left Arm")
-    if not leftArm then return end
-    
-    for _, football in ipairs(Workspace:GetChildren()) do
-        if football.Name == "Football" and football:IsA("BasePart") then
-            local distance = (football.Position - leftArm.Position).Magnitude
-            if distance <= TeleportDistance then
-                local randomPosition = getRandomPositionAround(leftArm, Radius)
-                football.CFrame = CFrame.new(randomPosition)
-            end
-        end
-    end
-end
-
-RunService.Heartbeat:Connect(instantTeleport)
-
-Extra_Tab:AddToggle({
-    Name = "Custom Mags",
-    Default = false,
-    Callback = function(Value)
-        customMagsEnabled = Value
-        print("Custom Mags Enabled:", Value)
-    end
-})
-
 OrionLib:Init()
+
