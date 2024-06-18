@@ -3,7 +3,7 @@ local player = Players.LocalPlayer
 local mouse = player:GetMouse()
 
 
-local ball = workspace:WaitForChild("Ball")
+local football = workspace:WaitForChild("Football")
 
 
 local function passBallToTeammate(teammatePosition)
