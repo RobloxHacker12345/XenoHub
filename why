@@ -1,40 +1,50 @@
 local Players = game:GetService("Players")
-local player = Players.LocalPlayer
-local mouse = player:GetMouse()
-
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local football = workspace:WaitForChild("Football")
 
 
-local function passBallToTeammate(teammatePosition)
-    local ballPosition = ball.Position
-    local direction = (teammatePosition - ballPosition).unit
-    local distance = (teammatePosition - ballPosition).magnitude
+local function throwFootballToPlayer(targetPlayer, power)
+    local qbPosition = football.Position
+    local targetPosition = targetPlayer.Character.HumanoidRootPart.Position
+    local direction = (targetPosition - qbPosition).unit
+    local force = direction * power
 
-    -- Adjust the force based on the distance
-    local force = direction * (distance * 5) 
-
-    ball:ApplyImpulse(force)
+    football:SetNetworkOwner(targetPlayer)  
+    football:ApplyImpulse(force)
 end
 
--- Event handler for mouse click to pass the ball
-mouse.Button1Down:Connect(function()
-    local targetPlayer = nil
+local function findClosestTeammate()
+    local localPlayer = Players.LocalPlayer
     local closestDistance = math.huge
+    local targetPlayer = nil
 
     for _, teammate in pairs(Players:GetPlayers()) do
-        if teammate ~= player and teammate.Team == player.Team then
-            if teammate.Character then
-                local distance = (teammate.Character.HumanoidRootPart.Position - mouse.Hit.p).magnitude
-                if distance < closestDistance then
-                    closestDistance = distance
-                    targetPlayer = teammate
-                end
+        if teammate ~= localPlayer and teammate.Team == localPlayer.Team then
+            local distance = (teammate.Character.HumanoidRootPart.Position - football.Position).magnitude
+            if distance < closestDistance then
+                closestDistance = distance
+                targetPlayer = teammate
             end
         end
     end
 
+    return targetPlayer
+end
+
+
+local function aimbotThrow()
+    local targetPlayer = findClosestTeammate()
     if targetPlayer then
-        passBallToTeammate(targetPlayer.Character.HumanoidRootPart.Position)
+        -- Adjust the power range from 5 to 95 as needed
+        local power = math.random(5, 95)
+        throwFootballToPlayer(targetPlayer, power)
     end
+end
+
+
+local aimbotButton = script.Parent  
+
+aimbotButton.TouchTap:Connect(function()
+    aimbotThrow()
 end)
