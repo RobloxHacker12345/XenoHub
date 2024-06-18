@@ -7,117 +7,34 @@ local ball = workspace:WaitForChild("Ball")
 
 
 local function passBallToTeammate(teammatePosition)
-	local ballPosition = ball.Position
-	local direction = (teammatePosition - ballPosition).unit
-	local distance = (teammatePosition - ballPosition).magnitude
+    local ballPosition = ball.Position
+    local direction = (teammatePosition - ballPosition).unit
+    local distance = (teammatePosition - ballPosition).magnitude
 
+    -- Adjust the force based on the distance
+    local force = direction * (distance * 5) 
 
-	local force = direction * (distance * 5) 
-
-	ball:ApplyImpulse(force)
+    ball:ApplyImpulse(force)
 end
 
-
+-- Event handler for mouse click to pass the ball
 mouse.Button1Down:Connect(function()
-	local targetPlayer = nil
-	local closestDistance = math.huge
+    local targetPlayer = nil
+    local closestDistance = math.huge
 
-	for _, teammate in pairs(Players:GetPlayers()) do
-		if teammate ~= player and teammate.Team == player.Team then
-			if teammate.Character then
-				local distance = (teammate.Character.HumanoidRootPart.Position - mouse.Hit.p).magnitude
-				if distance < closestDistance then
-					closestDistance = distance
-					targetPlayer = teammate
-				end
-			end
-		end
-	end
+    for _, teammate in pairs(Players:GetPlayers()) do
+        if teammate ~= player and teammate.Team == player.Team then
+            if teammate.Character then
+                local distance = (teammate.Character.HumanoidRootPart.Position - mouse.Hit.p).magnitude
+                if distance < closestDistance then
+                    closestDistance = distance
+                    targetPlayer = teammate
+                end
+            end
+        end
+    end
 
-	if targetPlayer then
-		passBallToTeammate(targetPlayer.Character.HumanoidRootPart.Position)
-	end
-end)
-
-
-local Players = game:GetService("Players")
-local UIS = game:GetService("UserInputService")
-local mouse = Players.LocalPlayer:GetMouse()
-
-
-local hitbox = workspace:WaitForChild("Hitbox")
-
-
-local function outlinePlayersOnTeam(team)
-	for _, player in pairs(Players:GetPlayers()) do
-		if player ~= Players.LocalPlayer and player.Team == team then
-			
-			for _, part in ipairs(player.Character:GetChildren()) do
-				if part:IsA("BasePart") then
-					part.BrickColor = BrickColor.new("Bright yellow")
-				end
-			end
-		end
-	end
-end
-
-
-local function removePlayerOutlines()
-	for _, player in pairs(Players:GetPlayers()) do
-		if player ~= Players.LocalPlayer then
-		
-			for _, part in ipairs(player.Character:GetChildren()) do
-				if part:IsA("BasePart") then
-					part.BrickColor = player.Team.TeamColor
-				end
-			end
-		end
-	end
-end
-
-
-local function isMouseInHitbox()
-	local hitboxPos = hitbox.Position
-	local hitboxSize = hitbox.Size
-	local mousePos = mouse.Hit.p
-
-	local halfSize = hitboxSize / 2
-	local hitboxMin = hitboxPos - halfSize
-	local hitboxMax = hitboxPos + halfSize
-
-	return mousePos.X >= hitboxMin.X and mousePos.X <= hitboxMax.X and
-		mousePos.Y >= hitboxMin.Y and mousePos.Y <= hitboxMax.Y and
-		mousePos.Z >= hitboxMin.Z and mousePos.Z <= hitboxMax.Z
-end
-
-
-UIS.InputBegan:Connect(function(input)
-	if input.UserInputType == Enum.UserInputType.MouseMovement then
-		if isMouseInHitbox() then
-		
-			outlinePlayersOnTeam(Players.LocalPlayer.Team)
-		else
-			
-			removePlayerOutlines()
-		end
-	end
-end)
-
-UIS.InputChanged:Connect(function(input)
-	if input.UserInputType == Enum.UserInputType.MouseMovement then
-		if isMouseInHitbox() then
-			
-			outlinePlayersOnTeam(Players.LocalPlayer.Team)
-		else
-			
-			removePlayerOutlines()
-		end
-	end
-end)
-
-
-UIS.InputEnded:Connect(function(input)
-	if input.UserInputType == Enum.UserInputType.MouseMovement then
-		removePlayerOutlines()
-	end
+    if targetPlayer then
+        passBallToTeammate(targetPlayer.Character.HumanoidRootPart.Position)
+    end
 end)
