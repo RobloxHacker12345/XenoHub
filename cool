@@ -24,7 +24,7 @@ local maxFootballTeleportDistance = 0
 WR_Tab:AddSlider({
     Name = "Legit Mags",
     Min = 0,
-    Max = 20,
+    Max = 25,
     Default = 0,
     Color = Color3.fromRGB(255, 255, 255),
     Increment = 1,
@@ -32,6 +32,19 @@ WR_Tab:AddSlider({
     Callback = function(Value)
         maxFootballTeleportDistance = Value
         print("Legit Mags Distance:", Value)
+    end
+})
+
+WR_Tab:AddSlider({
+    Name = "Legit Mags V2",
+    Min = 0,
+    Max = 25,
+    Default = 0,
+    Color = Color3.fromRGB(255, 255, 255),
+    Increment = 1,
+    ValueName = "Enabled",
+    Callback = function(Value)
+        print("Legit Mags V2 Enabled", Value)
     end
 })
 
@@ -170,12 +183,20 @@ Rusher_Tab:AddSlider({
     end
 })
 
-Rusher_Tab:AddBind({
-    Name = "Ball Carrier Lock",
-    Default = Enum.KeyCode.L,
-    Hold = false,
-    Callback = function()
-        print("Ball Carrier Lock Enabled")
+Rusher_Tab:AddSlider({
+    Name = "JumpPower",
+    Min = 16,
+    Max = 250,
+    Default = 16,
+    Color = Color3.fromRGB(255, 255, 255),
+    Increment = 1,
+    ValueName = "Power",
+    Callback = function(Value)
+        local Player = Players.LocalPlayer
+        local Character = Player.Character
+        if Character and Character:FindFirstChild("Humanoid") then
+            Character.Humanoid.JumpPower = Value
+        end
     end
 })
 
@@ -208,6 +229,69 @@ Rusher_Tab:AddBind({
     Hold = false,
     Callback = function()
         TeleportForward()
+    end
+})
+
+local teleportToBallCarrierDistance = 0
+
+Rusher_Tab:AddSlider({
+    Name = "Tp to Ball Carrier",
+    Min = 0,
+    Max = 25,
+    Default = 0,
+    Color = Color3.fromRGB(255, 255, 255),
+    Increment = 1,
+    ValueName = "Distance",
+    Callback = function(Value)
+        teleportToBallCarrierDistance = Value
+        print("Tp to Ball Carrier Enabled:", Value)
+    end
+})
+
+local function findPlayerWithFootball()
+    for _, player in ipairs(Players:GetPlayers()) do
+        local character = player.Character
+        if character then
+            local football = character:FindFirstChild("Football")
+            if football then
+                return player
+            end
+        end
+    end
+    return nil
+end
+
+local function teleportToPlayerWithFootball()
+    local localPlayer = Players.LocalPlayer
+    local localCharacter = localPlayer.Character
+    local localRootPart = localCharacter and localCharacter:FindFirstChild("HumanoidRootPart")
+
+    if not localRootPart then
+        return
+    end
+
+    local playerWithFootball = findPlayerWithFootball()
+
+    if playerWithFootball and playerWithFootball ~= localPlayer then
+        local targetCharacter = playerWithFootball.Character
+        local targetRootPart = targetCharacter and targetCharacter:FindFirstChild("HumanoidRootPart")
+
+        if targetRootPart then
+            local distance = (targetRootPart.Position - localRootPart.Position).Magnitude
+            if distance <= teleportToBallCarrierDistance then
+                localRootPart.CFrame = targetRootPart.CFrame
+            end
+        end
+    end
+end
+
+RunService.Heartbeat:Connect(teleportToPlayerWithFootball)
+
+Rusher_Tab:AddToggle({
+    Name = "Tackle Reach",
+    Default = false,
+    Callback = function(Value)
+        print("Tackle Reach Enabled:", Value)
     end
 })
 
@@ -334,25 +418,11 @@ Extra_Tab:AddSlider({
     end
 })
 
-local Blocking_Tab = Window:MakeTab({
-    Name = "Blocking",
-    Icon = "rbxassetid://4483345998",
-    PremiumOnly = false
-})
-
-Blocking_Tab:AddToggle({
-    Name = "Tackle Reach",
+Extra_Tab:AddToggle({
+    Name = "Anti Jam",
     Default = false,
     Callback = function(Value)
-        print("Tackle Reach Enabled:", Value)
-    end
-})
-
-Blocking_Tab:AddToggle({
-    Name = "Block Reach",
-    Default = false,
-    Callback = function(Value)
-        print("Block Reach Enabled:", Value)
+        print("Anti Jam Enabled:", Value)
     end
 })
 
