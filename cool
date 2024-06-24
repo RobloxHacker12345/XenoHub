@@ -12,6 +12,7 @@ OrionLib:MakeNotification({
 local Players = game:GetService("Players")
 local Workspace = game:GetService("Workspace")
 local RunService = game:GetService("RunService")
+local LocalPlayer = Players.LocalPlayer
 
 local WR_Tab = Window:MakeTab({
     Name = "WR",
@@ -200,6 +201,15 @@ Rusher_Tab:AddSlider({
     end
 })
 
+Rusher_Tab:AddBind({
+    Name = "Ball Carrier Lock",
+    Default = Enum.KeyCode.L,
+    Hold = false,
+    Callback = function()
+        print("Ball Carrier Lock Enabled")
+    end
+})
+
 local teleportRange = 5
 
 local function TeleportForward()
@@ -232,68 +242,39 @@ Rusher_Tab:AddBind({
     end
 })
 
-local teleportToBallCarrierDistance = 0
+local tackleReachDistance = 250
 
 Rusher_Tab:AddSlider({
-    Name = "Tp to Ball Carrier",
-    Min = 0,
-    Max = 25,
-    Default = 0,
+    Name = "Tackle Reach",
+    Min = 1,
+    Max = 50,
+    Default = 1,
     Color = Color3.fromRGB(255, 255, 255),
     Increment = 1,
     ValueName = "Distance",
     Callback = function(Value)
-        teleportToBallCarrierDistance = Value
-        print("Tp to Ball Carrier Enabled:", Value)
+        tackleReachDistance = Value
+        print("Tackle Reach Distance:", Value)
+        _G.reach = tackleReachDistance
     end
 })
 
-local function findPlayerWithFootball()
-    for _, player in ipairs(Players:GetPlayers()) do
-        local character = player.Character
-        if character then
-            local football = character:FindFirstChild("Football")
-            if football then
-                return player
-            end
-        end
-    end
-    return nil
+local function resizeHumanoidRootPart(hrp, newSize)
+    hrp.Size = Vector3.new(newSize.X, hrp.Size.Y, newSize.Z)
 end
 
-local function teleportToPlayerWithFootball()
-    local localPlayer = Players.LocalPlayer
-    local localCharacter = localPlayer.Character
-    local localRootPart = localCharacter and localCharacter:FindFirstChild("HumanoidRootPart")
+RunService.Stepped:Connect(function()
+    if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+        local humanoidRootPart = LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
 
-    if not localRootPart then
-        return
-    end
+        humanoidRootPart.CustomPhysicalProperties = PhysicalProperties.new(0, 0.3, 0.5, 0.3, 0.5)
 
-    local playerWithFootball = findPlayerWithFootball()
-
-    if playerWithFootball and playerWithFootball ~= localPlayer then
-        local targetCharacter = playerWithFootball.Character
-        local targetRootPart = targetCharacter and targetCharacter:FindFirstChild("HumanoidRootPart")
-
-        if targetRootPart then
-            local distance = (targetRootPart.Position - localRootPart.Position).Magnitude
-            if distance <= teleportToBallCarrierDistance then
-                localRootPart.CFrame = targetRootPart.CFrame
-            end
+        local newSize = Vector3.new(_G.reach, humanoidRootPart.Size.Y, _G.reach)
+        if humanoidRootPart.Size ~= newSize then
+            resizeHumanoidRootPart(humanoidRootPart, newSize)
         end
     end
-end
-
-RunService.Heartbeat:Connect(teleportToPlayerWithFootball)
-
-Rusher_Tab:AddToggle({
-    Name = "Tackle Reach",
-    Default = false,
-    Callback = function(Value)
-        print("Tackle Reach Enabled:", Value)
-    end
-})
+end)
 
 local Extra_Tab = Window:MakeTab({
     Name = "Extra Stuff",
@@ -425,5 +406,50 @@ Extra_Tab:AddToggle({
         print("Anti Jam Enabled:", Value)
     end
 })
+
+local League_Tab = Window:MakeTab({
+    Name = "LFG Main",
+    Icon = "rbxassetid://4483345998",
+    PremiumOnly = false
+})
+
+local function resizeHitbox(newSize)
+    local character = LocalPlayer.Character
+    if character then
+        local hitbox = character:FindFirstChild("CatchLeft")
+        if hitbox and hitbox:IsA("BasePart") then
+            hitbox.Size = newSize
+            hitbox.Massless = true
+        end
+    end
+end
+
+local function resizeHitboxLoop()
+    while true do
+        resizeHitbox(hitboxSize)
+        wait(0.1)
+    end
+end
+
+
+local hitboxSize = Vector3.new(5, 5, 5)
+
+
+League_Tab:AddSlider({
+    Name = "LeagueMagsv2",
+    Min = 1,
+    Max = 100,
+    Default = 5,
+    Color = Color3.fromRGB(255, 255, 255),
+    Increment = 1,
+    ValueName = "Size",
+    Callback = function(Value)
+        hitboxSize = Vector3.new(Value, Value, Value)
+        resizeHitbox(hitboxSize)
+        print("Hitbox Size:", hitboxSize)
+    end
+})
+
+spawn(resizeHitboxLoop)
 
 OrionLib:Init()
