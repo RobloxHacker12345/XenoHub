@@ -20,10 +20,20 @@ local WR_Tab = Window:MakeTab({
     PremiumOnly = false
 })
 
+local legitMagsEnabled = false
 local maxFootballTeleportDistance = 0
 
-WR_Tab:AddSlider({
+WR_Tab:AddToggle({
     Name = "Legit Mags",
+    Default = false,
+    Callback = function(Value)
+        legitMagsEnabled = Value
+        print("Legit Mags Enabled:", Value)
+    end
+})
+
+WR_Tab:AddSlider({
+    Name = "Legit Mags Power",
     Min = 0,
     Max = 25,
     Default = 0,
@@ -36,21 +46,32 @@ WR_Tab:AddSlider({
     end
 })
 
-WR_Tab:AddSlider({
+local legitMagsV2Enabled = false
+
+WR_Tab:AddToggle({
     Name = "Legit Mags V2",
+    Default = false,
+    Callback = function(Value)
+        legitMagsV2Enabled = Value
+        print("Legit Mags V2 Enabled:", Value)
+    end
+})
+
+WR_Tab:AddSlider({
+    Name = "Legit Mags V2 Power",
     Min = 0,
     Max = 25,
     Default = 0,
     Color = Color3.fromRGB(255, 255, 255),
     Increment = 1,
-    ValueName = "Enabled",
+    ValueName = "Distance",
     Callback = function(Value)
-        print("Legit Mags V2 Enabled", Value)
+        print("Legit Mags V2 Distance:", Value)
     end
 })
 
 local function TeleportTheFootball()
-    if maxFootballTeleportDistance == 0 then return end
+    if not legitMagsEnabled or maxFootballTeleportDistance == 0 then return end
 
     local player = Players.LocalPlayer
     local playerRoot = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
@@ -74,11 +95,21 @@ local DB_Tab = Window:MakeTab({
     PremiumOnly = false
 })
 
+local blatantMagsEnabled = false
 local maxBlatantMagDistance = 0
 local CatchRange = 10
 
-DB_Tab:AddSlider({
+DB_Tab:AddToggle({
     Name = "Blatant Mags",
+    Default = false,
+    Callback = function(Value)
+        blatantMagsEnabled = Value
+        print("Blatant Mags Enabled:", Value)
+    end
+})
+
+DB_Tab:AddSlider({
+    Name = "Blatant Mags Power",
     Min = 0,
     Max = 50,
     Default = 0,
@@ -92,7 +123,7 @@ DB_Tab:AddSlider({
 })
 
 local function FootballMag()
-    if maxBlatantMagDistance == 0 then return end
+    if not blatantMagsEnabled or maxBlatantMagDistance == 0 then return end
 
     local player = Players.LocalPlayer
     local playerRoot = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
@@ -110,8 +141,19 @@ end
 
 RunService.Heartbeat:Connect(FootballMag)
 
-DB_Tab:AddSlider({
+local blatantMagsV2Enabled = false
+
+DB_Tab:AddToggle({
     Name = "Blatant Mags V2",
+    Default = false,
+    Callback = function(Value)
+        blatantMagsV2Enabled = Value
+        print("Blatant Mags V2 Enabled:", Value)
+    end
+})
+
+DB_Tab:AddSlider({
+    Name = "Blatant Mags V2 Power",
     Min = 0,
     Max = 50,
     Default = 0,
@@ -125,7 +167,7 @@ DB_Tab:AddSlider({
 })
 
 local function instantTeleport()
-    if maxBlatantMagDistance == 0 then return end
+    if not blatantMagsV2Enabled or maxBlatantMagDistance == 0 then return end
 
     local player = Players.LocalPlayer
     local leftArm = player.Character and (player.Character:FindFirstChild("Left Arm") or player.Character:FindFirstChild("LeftHand"))
@@ -167,36 +209,62 @@ local Rusher_Tab = Window:MakeTab({
     PremiumOnly = false
 })
 
+local walkSpeedEnabled = false
+
+Rusher_Tab:AddToggle({
+    Name = "WalkSpeed",
+    Default = false,
+    Callback = function(Value)
+        walkSpeedEnabled = Value
+        print("WalkSpeed Enabled:", Value)
+    end
+})
+
 Rusher_Tab:AddSlider({
     Name = "WalkSpeed",
     Min = 16,
-    Max = 30,
-    Default = 16,
+    Max = 50,
+    Default = 20,
     Color = Color3.fromRGB(255, 255, 255),
     Increment = 1,
     ValueName = "Speed",
     Callback = function(Value)
-        local player = Players.LocalPlayer
-        local character = player.Character
-        if character and character:FindFirstChild("Humanoid") then
-            character.Humanoid.WalkSpeed = Value
+        if walkSpeedEnabled then
+            local player = Players.LocalPlayer
+            local character = player.Character
+            if character and character:FindFirstChild("Humanoid") then
+                character.Humanoid.WalkSpeed = Value
+            end
         end
+    end
+})
+
+local jumpPowerEnabled = false
+
+Rusher_Tab:AddToggle({
+    Name = "JumpPower",
+    Default = false,
+    Callback = function(Value)
+        jumpPowerEnabled = Value
+        print("JumpPower Enabled:", Value)
     end
 })
 
 Rusher_Tab:AddSlider({
     Name = "JumpPower",
-    Min = 16,
+    Min = 50,
     Max = 250,
-    Default = 16,
+    Default = 50,
     Color = Color3.fromRGB(255, 255, 255),
     Increment = 1,
     ValueName = "Power",
     Callback = function(Value)
-        local Player = Players.LocalPlayer
-        local Character = Player.Character
-        if Character and Character:FindFirstChild("Humanoid") then
-            Character.Humanoid.JumpPower = Value
+        if jumpPowerEnabled then
+            local Player = Players.LocalPlayer
+            local Character = Player.Character
+            if Character and Character:FindFirstChild("Humanoid") then
+                Character.Humanoid.JumpPower = Value
+            end
         end
     end
 })
@@ -226,6 +294,7 @@ local function TeleportForward()
     local raycastParams = RaycastParams.new()
     raycastParams.FilterDescendantsInstances = {character}
     local raycastResult = Workspace:Raycast(rootPart.Position, teleportDirection * teleportRange, raycastParams)
+
     if raycastResult then
         teleportPosition = raycastResult.Position
     end
@@ -234,47 +303,13 @@ local function TeleportForward()
 end
 
 Rusher_Tab:AddBind({
-    Name = "Forward",
+    Name = "QuickTP",
     Default = Enum.KeyCode.F,
     Hold = false,
     Callback = function()
         TeleportForward()
     end
 })
-
-local tackleReachDistance = 250
-
-Rusher_Tab:AddSlider({
-    Name = "Tackle Reach",
-    Min = 1,
-    Max = 50,
-    Default = 1,
-    Color = Color3.fromRGB(255, 255, 255),
-    Increment = 1,
-    ValueName = "Distance",
-    Callback = function(Value)
-        tackleReachDistance = Value
-        print("Tackle Reach Distance:", Value)
-        _G.reach = tackleReachDistance
-    end
-})
-
-local function resizeHumanoidRootPart(hrp, newSize)
-    hrp.Size = Vector3.new(newSize.X, hrp.Size.Y, newSize.Z)
-end
-
-RunService.Stepped:Connect(function()
-    if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
-        local humanoidRootPart = LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-
-        humanoidRootPart.CustomPhysicalProperties = PhysicalProperties.new(0, 0.3, 0.5, 0.3, 0.5)
-
-        local newSize = Vector3.new(_G.reach, humanoidRootPart.Size.Y, _G.reach)
-        if humanoidRootPart.Size ~= newSize then
-            resizeHumanoidRootPart(humanoidRootPart, newSize)
-        end
-    end
-end)
 
 local Extra_Tab = Window:MakeTab({
     Name = "Extra Stuff",
@@ -407,16 +442,79 @@ Extra_Tab:AddToggle({
     end
 })
 
+local tackleReachDistance = 250
+
+Rusher_Tab:AddSlider({
+    Name = "Tackle Reach",
+    Min = 1,
+    Max = 50,
+    Default = 1,
+    Color = Color3.fromRGB(255, 255, 255),
+    Increment = 1,
+    ValueName = "Distance",
+    Callback = function(Value)
+        tackleReachDistance = Value
+        print("Tackle Reach Distance:", Value)
+        _G.reach = tackleReachDistance
+    end
+})
+
+local function resizeHumanoidRootPart(hrp, newSize)
+    hrp.Size = Vector3.new(newSize.X, hrp.Size.Y, newSize.Z)
+end
+
+RunService.Stepped:Connect(function()
+    if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+        local humanoidRootPart = LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+
+        humanoidRootPart.CustomPhysicalProperties = PhysicalProperties.new(0, 0.3, 0.5, 0.3, 0.5)
+
+        local newSize = Vector3.new(_G.reach, humanoidRootPart.Size.Y, _G.reach)
+        if humanoidRootPart.Size ~= newSize then
+            resizeHumanoidRootPart(humanoidRootPart, newSize)
+        end
+    end
+end)
+
 local League_Tab = Window:MakeTab({
     Name = "LFG Main",
     Icon = "rbxassetid://4483345998",
     PremiumOnly = false
 })
 
+local hitboxSize = Vector3.new(5, 5, 5)
+local hitboxResizeEnabled = false
+
+League_Tab:AddToggle({
+    Name = "LeagueMagsV2",
+    Default = false,
+    Callback = function(Value)
+        hitboxResizeEnabled = Value
+        print("LeagueMagsV2 Toggle Enabled:", Value)
+    end
+})
+
+League_Tab:AddSlider({
+    Name = "LeagueMagsV2",
+    Min = 1,
+    Max = 100,
+    Default = 5,
+    Color = Color3.fromRGB(255, 255, 255),
+    Increment = 1,
+    ValueName = "Size",
+    Callback = function(Value)
+        hitboxSize = Vector3.new(Value, Value, Value)
+        if hitboxResizeEnabled then
+            resizeHitbox(hitboxSize)
+        end
+        print("Hitbox Size:", hitboxSize)
+    end
+})
+
 local function resizeHitbox(newSize)
     local character = LocalPlayer.Character
     if character then
-        local hitbox = character:FindFirstChild("CatchLeft")
+        local hitbox = character:FindFirstChild("Hitbox")
         if hitbox and hitbox:IsA("BasePart") then
             hitbox.Size = newSize
             hitbox.Massless = true
@@ -426,29 +524,12 @@ end
 
 local function resizeHitboxLoop()
     while true do
-        resizeHitbox(hitboxSize)
+        if hitboxResizeEnabled then
+            resizeHitbox(hitboxSize)
+        end
         wait(0.1)
     end
 end
-
-
-local hitboxSize = Vector3.new(5, 5, 5)
-
-
-League_Tab:AddSlider({
-    Name = "LeagueMagsv2",
-    Min = 1,
-    Max = 100,
-    Default = 5,
-    Color = Color3.fromRGB(255, 255, 255),
-    Increment = 1,
-    ValueName = "Size",
-    Callback = function(Value)
-        hitboxSize = Vector3.new(Value, Value, Value)
-        resizeHitbox(hitboxSize)
-        print("Hitbox Size:", hitboxSize)
-    end
-})
 
 spawn(resizeHitboxLoop)
 
