@@ -1110,6 +1110,7 @@ Mobile_Tab:AddToggle({
         print("Block Reach Enabled:", Value)
     end
 })
+
 local Other_Tab = Window:MakeTab({
 	Name = "Other",
 	Icon = "rbxassetid://4483345998",
