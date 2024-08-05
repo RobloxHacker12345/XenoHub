@@ -303,57 +303,6 @@ local function instantTeleport()
         end
     end
 
-    local legitMagsEnabled = false
-    local maxFootballTeleportDistance = 0
-    
-    WR_Tab:AddToggle({
-        Name = "Legit Mags",
-        Default = false,
-        Callback = function(Value)
-            legitMagsEnabled = Value
-            print("Legit Mags Enabled:", Value)
-        end
-    })
-    
-    WR_Tab:AddSlider({
-        Name = "Legit Mags Power",
-        Min = 0,
-        Max = 25,
-        Default = 0,
-        Color = Color3.fromRGB(135, 206, 250),
-        Increment = 1,
-        ValueName = "Distance",
-        Callback = function(Value)
-            maxFootballTeleportDistance = Value
-            print("Legit Mags Distance:", Value)
-        end
-    })
-    
-    local Players = game:GetService("Players")
-    local Workspace = game:GetService("Workspace")
-    local RunService = game:GetService("RunService")
-    
-    local function TeleportTheFootball()
-        if not legitMagsEnabled then return end
-        
-        local LocalPlayer = Players.LocalPlayer
-        local playerRoot = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-        if not playerRoot then return end
-    
-        for _, football in ipairs(Workspace:GetChildren()) do
-            if football:IsA("BasePart") and football.Name == "Football" then
-                local distance = (football.Position - playerRoot.Position).Magnitude
-    
-                if distance <= maxFootballTeleportDistance then
-                    football.CFrame = CFrame.new(playerRoot.Position + Vector3.new(0, 3, 0))  
-                end
-            end
-        end
-    end
-    
-    RunService.Heartbeat:Connect(TeleportTheFootball)
-    
-    
     
     
     local setFootballSizeEnabled = false
