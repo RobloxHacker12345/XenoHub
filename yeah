@@ -1,630 +1,1456 @@
-local CX = game:GetService("ContentProvider")
-local isComingFromExecutor = checkcaller()
-local PreloadAsync = CX.PreloadAsync
+local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
 
-local ErrorScript = game:GetService("ReplicatedFirst"):FindFirstChild("LocalScript")
+local Window = OrionLib:MakeWindow({Name = "Xeno Hub V3", HidePremium = false, SaveConfig = true, ConfigFolder = "OrionTest"})
 
-if ErrorScript then
-    ErrorScript:Destroy()
-end
-
-local Old;
-
-Old = hookfunction(PreloadAsync, function(...) -- // hook function // --
-    if not (isComingFromExecutor) then -- // is not coming from our executor // --
-        warn("Tried to detect your UI")
-        return wait(9e9) --// will wait infinietly instead of actually detecting //--
-    end
-    return Old(...) ---// return the spoofed value //---
-end)
+OrionLib:MakeNotification({
+    Name = "Xeno",
+    Content = "extracrazy3n the scripter",
+    Image = "rbxassetid://4483345998",
+    Time = 4
+})
 
 local Players = game:GetService("Players")
+local Workspace = game:GetService("Workspace")
 local RunService = game:GetService("RunService")
-local localPlr = Players.LocalPlayer
-local ScreenGui = Instance.new("ScreenGui")
-local MainFrame = Instance.new("Frame")
-local UICorner = Instance.new("UICorner")
-local DropShadowHolder = Instance.new("Frame")
-local DropShadow = Instance.new("ImageLabel")
-local ThrowType = Instance.new("Frame")
-local Line = Instance.new("Frame")
-local AirTime = Instance.new("Frame")
-local UIAspectRatioConstraint = Instance.new("UIAspectRatioConstraint")
-local JusAText = Instance.new("TextLabel")
-local ThrowType_2 = Instance.new("TextLabel")
-local Z = Instance.new("TextLabel")
-local Angle = Instance.new("Frame")
-local Line_2 = Instance.new("Frame")
-local UIAspectRatioConstraint_2 = Instance.new("UIAspectRatioConstraint")
-local JustAText_2 = Instance.new("TextLabel")
-local AngleNumber = Instance.new("TextLabel")
-local R = Instance.new("TextLabel")
-local F = Instance.new("TextLabel")
-local UIAspectRatioConstraint_3 = Instance.new("UIAspectRatioConstraint")
-local Power = Instance.new("Frame")
-local Line_3 = Instance.new("Frame")
-local UIAspectRatioConstraint_4 = Instance.new("UIAspectRatioConstraint")
-local JustAText_3 = Instance.new("TextLabel")
-local PowerNumber = Instance.new("TextLabel")
-local X = Instance.new("TextLabel")
-local Z_2 = Instance.new("TextLabel")
-local JustAText = Instance.new("TextLabel")
-local TargetPlayer = Instance.new("Frame")
-local Line_4 = Instance.new("Frame")
-local UIAspectRatioConstraint_5 = Instance.new("UIAspectRatioConstraint")
-local JustAText_4 = Instance.new("TextLabel")
-local Playerrr = Instance.new("TextLabel")
-local Route = Instance.new("Frame")
-local Line_5 = Instance.new("Frame")
-local UIAspectRatioConstraint_6 = Instance.new("UIAspectRatioConstraint")
-local JustAText_5 = Instance.new("TextLabel")
-local RouteOK = Instance.new("TextLabel")
-local Int = Instance.new("Frame")
-local Line_6 = Instance.new("Frame")
-local UIAspectRatioConstraint_7 = Instance.new("UIAspectRatioConstraint")
-local JustAText_6 = Instance.new("TextLabel")
-local Intable = Instance.new("TextLabel")
-local Catchable = Instance.new("Frame")
-local JustAText_7 = Instance.new("TextLabel")
-local Intable_2 = Instance.new("TextLabel")
-local AirTimeTEXT = Instance.new("TextLabel")
-local UICorner_2 = Instance.new("UICorner")
-
--- Properties
-
-ScreenGui.Parent = game:GetService("CoreGui")
-ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-ScreenGui.Enabled = false
-MainFrame.Name = "MainFrame"
-MainFrame.Parent = ScreenGui
-MainFrame.BackgroundColor3 = Color3.new(0.156863, 0.156863, 0.156863)
-MainFrame.BorderColor3 = Color3.new(0, 0, 0)
-MainFrame.BorderSizePixel = 0
-MainFrame.Position = UDim2.new(0.2319296, 0, 0, 0)
-MainFrame.Size = UDim2.new(0.575757563, 0, 0.0843672454, 0)
-
-UICorner.Parent = MainFrame
-UICorner.CornerRadius = UDim.new(0, 3)
-
-DropShadowHolder.Name = "DropShadowHolder"
-DropShadowHolder.Parent = MainFrame
-DropShadowHolder.BackgroundTransparency = 1
-DropShadowHolder.BorderSizePixel = 0
-DropShadowHolder.Size = UDim2.new(1, 0, 1, 0)
-DropShadowHolder.ZIndex = 0
-
-DropShadow.Name = "DropShadow"
-DropShadow.Parent = DropShadowHolder
-DropShadow.AnchorPoint = Vector2.new(0.5, 0.5)
-DropShadow.BackgroundTransparency = 1
-DropShadow.BorderSizePixel = 0
-DropShadow.Position = UDim2.new(0.5, 0, 0.5, 0)
-DropShadow.Size = UDim2.new(1, 47, 1, 47)
-DropShadow.ZIndex = 0
---DropShadow.Image = "rbxassetid://6015897843"--
-DropShadow.ImageColor3 = Color3.new(0, 0, 0)
-DropShadow.ImageTransparency = 0.5
-DropShadow.ScaleType = Enum.ScaleType.Slice
-DropShadow.SliceCenter = Rect.new(49, 49, 450, 450)
-
-ThrowType.Name = "ThrowType"
-ThrowType.Parent = MainFrame
-ThrowType.BackgroundColor3 = Color3.new(1, 1, 1)
-ThrowType.BackgroundTransparency = 1
-ThrowType.BorderColor3 = Color3.new(0, 0, 0)
-ThrowType.BorderSizePixel = 0
-ThrowType.Size = UDim2.new(0.155746505, 0, 1, 0)
-
-Line.Name = "Line"
-Line.Parent = ThrowType
-Line.BackgroundColor3 = Color3.new(0.3451, 0.3961, 0.9490)
-Line.BorderColor3 = Color3.new(0, 0, 0)
-Line.BorderSizePixel = 0
-Line.Position = UDim2.new(1, 0, 0, 0)
-Line.Size = UDim2.new(0.0068965517, 0, 1, 0)
-
-UIAspectRatioConstraint.Parent = Line
-UIAspectRatioConstraint.AspectRatio = 0.014705882407724857
-
-JustAText.Name = "Just A Text"
-JustAText.Parent = ThrowType
-JustAText.BackgroundColor3 = Color3.new(1, 1, 1)
-JustAText.BackgroundTransparency = 1
-JustAText.BorderColor3 = Color3.new(0, 0, 0)
-JustAText.BorderSizePixel = 0
-JustAText.Position = UDim2.new(0.255172402, 0, 0, 0)
-JustAText.Size = UDim2.new(0, 72, 0, 22)
-JustAText.Font = Enum.Font.SourceSans
-JustAText.Text = "Throw Type:"
-JustAText.TextColor3 = Color3.new(1, 1, 1)
-JustAText.TextSize = 20
-
-ThrowType_2.Name = "ThrowType"
-ThrowType_2.Parent = ThrowType
-ThrowType_2.BackgroundColor3 = Color3.new(1, 1, 1)
-ThrowType_2.BackgroundTransparency = 1
-ThrowType_2.BorderColor3 = Color3.new(0, 0, 0)
-ThrowType_2.BorderSizePixel = 0
-ThrowType_2.Position = UDim2.new(0.331034482, 0, 0.411764711, 0)
-ThrowType_2.Size = UDim2.new(0, 49, 0, 24)
-ThrowType_2.Font = Enum.Font.SourceSans
-ThrowType_2.Text = "Mag"
-ThrowType_2.TextColor3 = Color3.new(0.3451, 0.3961, 0.9490)
-ThrowType_2.TextSize = 40
-
-Z.Name = "Z"
-Z.Parent = ThrowType
-Z.BackgroundColor3 = Color3.new(1, 1, 1)
-Z.BackgroundTransparency = 1
-Z.BorderColor3 = Color3.new(0, 0, 0)
-Z.BorderSizePixel = 0
-Z.Position = UDim2.new(0.0620689653, 0, 0.558823526, 0)
-Z.Size = UDim2.new(0, 28, 0, 23)
-Z.Font = Enum.Font.SourceSans
-Z.Text = "C"
-Z.TextColor3 = Color3.new(0.3451, 0.3961, 0.9490)
-Z.TextSize = 30
-
-Angle.Name = "Angle"
-Angle.Parent = MainFrame
-Angle.BackgroundColor3 = Color3.new(1, 1, 1)
-Angle.BackgroundTransparency = 1
-Angle.BorderColor3 = Color3.new(0, 0, 0)
-Angle.BorderSizePixel = 0
-Angle.Position = UDim2.new(0.156820625, 0, 0, 0)
-Angle.Size = UDim2.new(0.155746505, 0, 1, 0)
-
-Line_2.Name = "Line"
-Line_2.Parent = Angle
-Line_2.BackgroundColor3 = Color3.new(0.3451, 0.3961, 0.9490)
-Line_2.BorderColor3 = Color3.new(0, 0, 0)
-Line_2.BorderSizePixel = 0
-Line_2.Position = UDim2.new(1, 0, 0, 0)
-Line_2.Size = UDim2.new(0.0068965517, 0, 1, 0)
-
-UIAspectRatioConstraint_2.Parent = Line_2
-UIAspectRatioConstraint_2.AspectRatio = 0.014705882407724857
-
-JustAText_2.Name = "Just A Text"
-JustAText_2.Parent = Angle
-JustAText_2.BackgroundColor3 = Color3.new(1, 1, 1)
-JustAText_2.BackgroundTransparency = 1
-JustAText_2.BorderColor3 = Color3.new(0, 0, 0)
-JustAText_2.BorderSizePixel = 0
-JustAText_2.Position = UDim2.new(0.255172402, 0, 0, 0)
-JustAText_2.Size = UDim2.new(0, 72, 0, 22)
-JustAText_2.Font = Enum.Font.SourceSans
-JustAText_2.Text = "Angle:"
-JustAText_2.TextColor3 = Color3.new(1, 1, 1)
-JustAText_2.TextSize = 20
-
-AngleNumber.Name = "AngleNumber"
-AngleNumber.Parent = Angle
-AngleNumber.BackgroundColor3 = Color3.new(1, 1, 1)
-AngleNumber.BackgroundTransparency = 1
-AngleNumber.BorderColor3 = Color3.new(0, 0, 0)
-AngleNumber.BorderSizePixel = 0
-AngleNumber.Position = UDim2.new(0.331034482, 0, 0.411764711, 0)
-AngleNumber.Size = UDim2.new(0, 49, 0, 24)
-AngleNumber.Font = Enum.Font.SourceSans
-AngleNumber.Text = "35"
-AngleNumber.TextColor3 = Color3.new(0.3451, 0.3961, 0.9490)
-AngleNumber.TextSize = 40
-
-R.Name = "R"
-R.Parent = Angle
-R.BackgroundColor3 = Color3.new(1, 1, 1)
-R.BackgroundTransparency = 1
-R.BorderColor3 = Color3.new(0, 0, 0)
-R.BorderSizePixel = 0
-R.Position = UDim2.new(0.710344851, 0, 0.558823526, 0)
-R.Size = UDim2.new(0, 28, 0, 23)
-R.Font = Enum.Font.SourceSans
-R.Text = "R"
-R.TextColor3 = Color3.new(0.3451, 0.3961, 0.9490)
-R.TextSize = 30
-
-F.Name = "F"
-F.Parent = Angle
-F.BackgroundColor3 = Color3.new(1, 1, 1)
-F.BackgroundTransparency = 1
-F.BorderColor3 = Color3.new(0, 0, 0)
-F.BorderSizePixel = 0
-F.Position = UDim2.new(0.0620689653, 0, 0.558823526, 0)
-F.Size = UDim2.new(0, 28, 0, 23)
-F.Font = Enum.Font.SourceSans
-F.Text = "F"
-F.TextColor3 = Color3.new(0.3451, 0.3961, 0.9490)
-F.TextSize = 30
-
-UIAspectRatioConstraint_3.Parent = MainFrame
-UIAspectRatioConstraint_3.AspectRatio = 13.691176414489746
-
-Power.Name = "Power"
-Power.Parent = MainFrame
-Power.BackgroundColor3 = Color3.new(1, 1, 1)
-Power.BackgroundTransparency = 1
-Power.BorderColor3 = Color3.new(0, 0, 0)
-Power.BorderSizePixel = 0
-Power.Position = UDim2.new(0.31364125, 0, 0, 0)
-Power.Size = UDim2.new(0.155746505, 0, 1, 0)
-
-Line_3.Name = "Line"
-Line_3.Parent = Power
-Line_3.BackgroundColor3 = Color3.new(0.3451, 0.3961, 0.9490)
-Line_3.BorderColor3 = Color3.new(0, 0, 0)
-Line_3.BorderSizePixel = 0
-Line_3.Position = UDim2.new(1, 0, 0, 0)
-Line_3.Size = UDim2.new(0.0068965517, 0, 1, 0)
-
-UIAspectRatioConstraint_4.Parent = Line_3
-UIAspectRatioConstraint_4.AspectRatio = 0.014705882407724857
-
-JustAText_3.Name = "Just A Text"
-JustAText_3.Parent = Power
-JustAText_3.BackgroundColor3 = Color3.new(1, 1, 1)
-JustAText_3.BackgroundTransparency = 1
-JustAText_3.BorderColor3 = Color3.new(0, 0, 0)
-JustAText_3.BorderSizePixel = 0
-JustAText_3.Position = UDim2.new(0.255172402, 0, 0, 0)
-JustAText_3.Size = UDim2.new(0, 72, 0, 22)
-JustAText_3.Font = Enum.Font.SourceSans
-JustAText_3.Text = "Power:"
-JustAText_3.TextColor3 = Color3.new(1, 1, 1)
-JustAText_3.TextSize = 20
-
-AirTime.Name = "AirTime"
-AirTime.Parent = MainFrame
-AirTime.BackgroundColor3 = Color3.new(0.0901961, 0.0901961, 0.0901961)
-AirTime.BorderColor3 = Color3.new(0, 0, 0)
-AirTime.BorderSizePixel = 0
-AirTime.Position = UDim2.new(-0.192266405, 0, 0, 0)
-AirTime.Size = UDim2.new(0, 155, 0, 68)
+local LocalPlayer = Players.LocalPlayer
 
 
+local WR_Tab = Window:MakeTab({
+    Name = "WR",
+    Icon = "rbxassetid://4483345998",
+    PremiumOnly = false
+})
 
-AirTimeTEXT.Name = "AirTimeTEXT"
-AirTimeTEXT.Parent = AirTime
-AirTimeTEXT.BackgroundColor3 = Color3.new(1, 1, 1)
-AirTimeTEXT.BackgroundTransparency = 1
-AirTimeTEXT.BorderColor3 = Color3.new(0, 0, 0)
-AirTimeTEXT.BorderSizePixel = 0
-AirTimeTEXT.Position = UDim2.new(0.354838699, 0, 0.357142866, 0)
-AirTimeTEXT.Size = UDim2.new(0, 45, 0, 30)
-AirTimeTEXT.Font = Enum.Font.SourceSans
-AirTimeTEXT.Text = "1.50"
-AirTimeTEXT.TextColor3 = Color3.new(0.3451, 0.3961, 0.9490)
-AirTimeTEXT.TextSize = 40
+local legitMagsEnabled = false
+local maxFootballTeleportDistance = 0
 
+WR_Tab:AddToggle({
+    Name = "Legit Mags",
+    Default = false,
+    Callback = function(Value)
+        legitMagsEnabled = Value
+        print("Legit Mags Enabled:", Value)
+    end
+})
 
-UICorner_2.Parent = AirTime
-UICorner_2.CornerRadius = UDim.new(0, 2)
+WR_Tab:AddSlider({
+    Name = "Legit Mags Power",
+    Min = 0,
+    Max = 25,
+    Default = 0,
+    Color = Color3.fromRGB(135, 206, 250),
+    Increment = 1,
+    ValueName = "Distance",
+    Callback = function(Value)
+        maxFootballTeleportDistance = Value
+        print("Legit Mags Distance:", Value)
+    end
+})
 
-JusAText.Name = "JusAText"
-JusAText.Parent = AirTime
-JusAText.BackgroundColor3 = Color3.new(1, 1, 1)
-JusAText.BackgroundTransparency = 1
-JusAText.BorderColor3 = Color3.new(0, 0, 0)
-JusAText.BorderSizePixel = 0
-JusAText.Position = UDim2.new(-0.148387089, 0, -0.200000003, 0)
-JusAText.Size = UDim2.new(0, 200, 0, 50)
-JusAText.Font = Enum.Font.SourceSans
-JusAText.Text = "Airtime:"
-JusAText.TextColor3 = Color3.new(1, 1, 1)
-JusAText.TextSize = 25
+local Players = game:GetService("Players")
+local Workspace = game:GetService("Workspace")
+local RunService = game:GetService("RunService")
 
+local function TeleportTheFootball()
+    if not legitMagsEnabled then return end
+    
+    local LocalPlayer = Players.LocalPlayer
+    local playerRoot = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+    if not playerRoot then return end
 
-PowerNumber.Name = "PowerNumber"
-PowerNumber.Parent = Power
-PowerNumber.BackgroundColor3 = Color3.new(1, 1, 1)
-PowerNumber.BackgroundTransparency = 1
-PowerNumber.BorderColor3 = Color3.new(0, 0, 0)
-PowerNumber.BorderSizePixel = 0
-PowerNumber.Position = UDim2.new(0.331034482, 0, 0.411764711, 0)
-PowerNumber.Size = UDim2.new(0, 49, 0, 24)
-PowerNumber.Font = Enum.Font.SourceSans
-PowerNumber.Text = "60"
-PowerNumber.TextColor3 = Color3.new(0.3451, 0.3961, 0.9490)
-PowerNumber.TextSize = 40
+    for _, football in ipairs(Workspace:GetChildren()) do
+        if football:IsA("BasePart") and football.Name == "Football" then
+            local distance = (football.Position - playerRoot.Position).Magnitude
 
-X.Name = "X"
-X.Parent = Power
-X.BackgroundColor3 = Color3.new(1, 1, 1)
-X.BackgroundTransparency = 1
-X.BorderColor3 = Color3.new(0, 0, 0)
-X.BorderSizePixel = 0
-X.Position = UDim2.new(0.751724124, 0, 0.558823526, 0)
-X.Size = UDim2.new(0, 28, 0, 23)
-X.Font = Enum.Font.SourceSans
-X.Text = "X"
-X.TextColor3 = Color3.new(0.3451, 0.3961, 0.9490)
-X.TextSize = 30
-
-Z_2.Name = "Z"
-Z_2.Parent = Power
-Z_2.BackgroundColor3 = Color3.new(1, 1, 1)
-Z_2.BackgroundTransparency = 1
-Z_2.BorderColor3 = Color3.new(0, 0, 0)
-Z_2.BorderSizePixel = 0
-Z_2.Position = UDim2.new(0.0620689653, 0, 0.558823526, 0)
-Z_2.Size = UDim2.new(0, 28, 0, 23)
-Z_2.Font = Enum.Font.SourceSans
-Z_2.Text = "Z"
-Z_2.TextColor3 = Color3.new(0.3451, 0.3961, 0.9490)
-Z_2.TextSize = 30
-
-TargetPlayer.Name = "TargetPlayer"
-TargetPlayer.Parent = MainFrame
-TargetPlayer.BackgroundColor3 = Color3.new(1, 1, 1)
-TargetPlayer.BackgroundTransparency = 1
-TargetPlayer.BorderColor3 = Color3.new(0, 0, 0)
-TargetPlayer.BorderSizePixel = 0
-TargetPlayer.Position = UDim2.new(0.46938777, 0, 0, 0)
-TargetPlayer.Size = UDim2.new(0.155746505, 0, 1, 0)
-
-Line_4.Name = "Line"
-Line_4.Parent = TargetPlayer
-Line_4.BackgroundColor3 = Color3.new(0.3451, 0.3961, 0.9490)
-Line_4.BorderColor3 = Color3.new(0, 0, 0)
-Line_4.BorderSizePixel = 0
-Line_4.Position = UDim2.new(1, 0, 0, 0)
-Line_4.Size = UDim2.new(0.0068965517, 0, 1, 0)
-
-UIAspectRatioConstraint_5.Parent = Line_4
-UIAspectRatioConstraint_5.AspectRatio = 0.014705882407724857
-
-JustAText_4.Name = "Just A Text"
-JustAText_4.Parent = TargetPlayer
-JustAText_4.BackgroundColor3 = Color3.new(1, 1, 1)
-JustAText_4.BackgroundTransparency = 1
-JustAText_4.BorderColor3 = Color3.new(0, 0, 0)
-JustAText_4.BorderSizePixel = 0
-JustAText_4.Position = UDim2.new(0.255172402, 0, 0, 0)
-JustAText_4.Size = UDim2.new(0, 72, 0, 22)
-JustAText_4.Font = Enum.Font.SourceSans
-JustAText_4.Text = "TargetPlayer:"
-JustAText_4.TextColor3 = Color3.new(1, 1, 1)
-JustAText_4.TextSize = 20
-
-Playerrr.Name = "Player"
-Playerrr.Parent = TargetPlayer
-Playerrr.BackgroundColor3 = Color3.new(1, 1, 1)
-Playerrr.BackgroundTransparency = 1
-Playerrr.BorderColor3 = Color3.new(0, 0, 0)
-Playerrr.BorderSizePixel = 0
-Playerrr.Position = UDim2.new(0.331034482, 0, 0.411764711, 0)
-Playerrr.Size = UDim2.new(0, 49, 0, 24)
-Playerrr.Font = Enum.Font.SourceSans
-Playerrr.Text = "RedX_12890"
-Playerrr.TextColor3 = Color3.new(0.3451, 0.3961, 0.9490)
-Playerrr.TextSize = 20
-
-Route.Name = "Route"
-Route.Parent = MainFrame
-Route.BackgroundColor3 = Color3.new(1, 1, 1)
-Route.BackgroundTransparency = 1
-Route.BorderColor3 = Color3.new(0, 0, 0)
-Route.BorderSizePixel = 0
-Route.Position = UDim2.new(0.626208365, 0, 0, 0)
-Route.Size = UDim2.new(0.155746505, 0, 1, 0)
-
-Line_5.Name = "Line"
-Line_5.Parent = Route
-Line_5.BackgroundColor3 = Color3.new(0.3451, 0.3961, 0.9490)
-Line_5.BorderColor3 = Color3.new(0, 0, 0)
-Line_5.BorderSizePixel = 0
-Line_5.Position = UDim2.new(1, 0, 0, 0)
-Line_5.Size = UDim2.new(0.0068965517, 0, 1, 0)
-
-UIAspectRatioConstraint_6.Parent = Line_5
-UIAspectRatioConstraint_6.AspectRatio = 0.014705882407724857
-
-JustAText_5.Name = "Just A Text"
-JustAText_5.Parent = Route
-JustAText_5.BackgroundColor3 = Color3.new(1, 1, 1)
-JustAText_5.BackgroundTransparency = 1
-JustAText_5.BorderColor3 = Color3.new(0, 0, 0)
-JustAText_5.BorderSizePixel = 0
-JustAText_5.Position = UDim2.new(0.255172402, 0, 0, 0)
-JustAText_5.Size = UDim2.new(0, 72, 0, 22)
-JustAText_5.Font = Enum.Font.SourceSans
-JustAText_5.Text = "Route:"
-JustAText_5.TextColor3 = Color3.new(1, 1, 1)
-JustAText_5.TextSize = 20
-
-RouteOK.Name = "RouteType"
-RouteOK.Parent = Route
-RouteOK.BackgroundColor3 = Color3.new(1, 1, 1)
-RouteOK.BackgroundTransparency = 1
-RouteOK.BorderColor3 = Color3.new(0, 0, 0)
-RouteOK.BorderSizePixel = 0
-RouteOK.Position = UDim2.new(0.331034482, 0, 0.411764711, 0)
-RouteOK.Size = UDim2.new(0, 49, 0, 24)
-RouteOK.Font = Enum.Font.SourceSans
-RouteOK.Text = "Slant"
-RouteOK.TextColor3 = Color3.new(0.3451, 0.3961, 0.9490)
-RouteOK.TextSize = 40
-
-Int.Name = "Int"
-Int.Parent = MainFrame
-Int.BackgroundColor3 = Color3.new(1, 1, 1)
-Int.BackgroundTransparency = 1
-Int.BorderColor3 = Color3.new(0, 0, 0)
-Int.BorderSizePixel = 0
-Int.Position = UDim2.new(0.78302902, 0, 0, 0)
-Int.Size = UDim2.new(0.111707851, 0, 1, 0)
-
-Line_6.Name = "Line"
-Line_6.Parent = Int
-Line_6.BackgroundColor3 = Color3.new(0.3451, 0.3961, 0.9490)
-Line_6.BorderColor3 = Color3.new(0, 0, 0)
-Line_6.BorderSizePixel = 0
-Line_6.Position = UDim2.new(1.00000226, 0, 0, 0)
-Line_6.Size = UDim2.new(0.0742001384, 0, 1, 0)
-
-UIAspectRatioConstraint_7.Parent = Line_6
-UIAspectRatioConstraint_7.AspectRatio = 0.014705882407724857
-
-JustAText_6.Name = "Just A Text"
-JustAText_6.Parent = Int
-JustAText_6.BackgroundColor3 = Color3.new(1, 1, 1)
-JustAText_6.BackgroundTransparency = 1
-JustAText_6.BorderColor3 = Color3.new(0, 0, 0)
-JustAText_6.BorderSizePixel = 0
-JustAText_6.Position = UDim2.new(0.207095787, 0, 0, 0)
-JustAText_6.Size = UDim2.new(0, 72, 0, 22)
-JustAText_6.Font = Enum.Font.SourceSans
-JustAText_6.Text = "Intable"
-JustAText_6.TextColor3 = Color3.new(1, 1, 1)
-JustAText_6.TextSize = 20
-
-Intable.Name = "Intable"
-Intable.Parent = Int
-Intable.BackgroundColor3 = Color3.new(1, 1, 1)
-Intable.BackgroundTransparency = 1
-Intable.BorderColor3 = Color3.new(0, 0, 0)
-Intable.BorderSizePixel = 0
-Intable.Position = UDim2.new(0.311803937, 0, 0.411764711, 0)
-Intable.Size = UDim2.new(0, 49, 0, 24)
-Intable.Font = Enum.Font.SourceSans
-Intable.Text = "Yes"
-Intable.TextColor3 = Color3.new(0.3451, 0.3961, 0.9490)
-Intable.TextSize = 40
-
-Catchable.Name = "Catchable"
-Catchable.Parent = MainFrame
-Catchable.BackgroundColor3 = Color3.new(1, 1, 1)
-Catchable.BackgroundTransparency = 1
-Catchable.BorderColor3 = Color3.new(0, 0, 0)
-Catchable.BorderSizePixel = 0
-Catchable.Position = UDim2.new(0.8958112, 0, 0, 0)
-Catchable.Size = UDim2.new(0.14188792, 0, 1, 0)
-
-JustAText_7.Name = "Just A Text"
-JustAText_7.Parent = Catchable
-JustAText_7.BackgroundColor3 = Color3.new(1, 1, 1)
-JustAText_7.BackgroundTransparency = 1
-JustAText_7.BorderColor3 = Color3.new(0, 0, 0)
-JustAText_7.BorderSizePixel = 0
-JustAText_7.Position = UDim2.new(0.076477333, 0, 0, 0)
-JustAText_7.Size = UDim2.new(0, 72, 0, 22)
-JustAText_7.Font = Enum.Font.SourceSans
-JustAText_7.Text = "Catchable"
-JustAText_7.TextColor3 = Color3.new(1, 1, 1)
-JustAText_7.TextSize = 20
-
-Intable_2.Name = "Intable"
-Intable_2.Parent = Catchable
-Intable_2.BackgroundColor3 = Color3.new(1, 1, 1)
-Intable_2.BackgroundTransparency = 1
-Intable_2.BorderColor3 = Color3.new(0, 0, 0)
-Intable_2.BorderSizePixel = 0
-Intable_2.Position = UDim2.new(0.111803937, 0, 0.411764711, 0)
-Intable_2.Size = UDim2.new(0, 49, 0, 24)
-Intable_2.Font = Enum.Font.SourceSans
-Intable_2.Text = "No"
-Intable_2.TextColor3 = Color3.new(0.3451, 0.3961, 0.9490)
-Intable_2.TextSize = 40
-
-local HASH9 = game:GetService("CoreGui"):FindFirstChild("HASH9")
-
-if HASH9 then
-    HASH9:Destroy()
+            if distance <= maxFootballTeleportDistance then
+                football.CFrame = CFrame.new(playerRoot.Position + Vector3.new(0, 3, 0))  
+            end
+        end
+    end
 end
 
-local Library = loadstring(game:HttpGet('https://raw.githubusercontent.com/4d9Qk2a8RzY1Xw5/H9/main/UI/genesis.lua'))()
-local Flags = Library.Flags
-
-local Window = Library:Window({
-   Text = "discord.gg/hash9"
-})
-
-local Tab = Window:Tab({
-   Text = "Main"
-})
-
-local TabE = Window:Tab({
-   Text = "Extra"
-})
+RunService.Heartbeat:Connect(TeleportTheFootball)
 
 
-local Tab2 = Window:Tab({
-   Text = "Support"
-})
 
-local Section = Tab:Section({
-   Text = "QB Settings"
-})
 
-local Section2 = Tab:Section({
-   Text = "Catch Settings"
-})
+local setFootballSizeEnabled = false
+local footballSizeValue = 1  
 
-local Section3 = Tab:Section({
-   Text = "Defense Settings",
-   Side = "Right"
-})
 
-local Section4 = Tab:Section({
-   Text = "Visual Settings",
-   Side = "Right"
-})
-
-local Section5 = Tab2:Section({
-   Text = "Keybind Support"
-})
-
-Section5:Label({
-   Text = "Throw Keybind: T",
-})
-
-Section5:Label({
-   Text = "Cycle Throw Type Keybind: C",
-})
-
-Section5:Label({
-   Text = "Manual Angle Keybind: F (Decrease) R (Increase)",
-})
-
-Section5:Label({
-   Text = "Manual Power Keybind: Z (Decrease) X (Increase)",
+WR_Tab:AddToggle({
+    Name = "Legit Mags V2",
+    Default = false,
+    Callback = function(Value)
+        setFootballSizeEnabled = Value
+        print("Legit Mags V2 Enabled:", Value)
+    end
 })
 
 
-Section5:Label({
-   Text = "Player Lock Keybind: Q",
+WR_Tab:AddSlider({
+    Name = "Legit Mags V2 Power",
+    Min = 0,
+    Max = 20,
+    Default = 1,
+    Color = Color3.fromRGB(135, 206, 250),
+    Increment = 1,
+    ValueName = "Distance",
+    Callback = function(Value)
+        footballSizeValue = Value
+        print("Legit Mags V2 Distance:", Value)
+    end
 })
 
-Section5:Label({
-   Text = "Toggle UI Keybind: RightAlt",
+local RunService = game:GetService("RunService")
+local Workspace = game:GetService("Workspace")
+
+
+local function setFootballSize(Value)
+    for _, football in ipairs(Workspace:GetChildren()) do
+        if football.Name == "Football" and football:IsA("BasePart") then
+            football.Size = Vector3.new(Value, Value, Value)
+        end
+    end
+end
+
+
+RunService.Heartbeat:Connect(function()
+    if setFootballSizeEnabled then
+        setFootballSize(footballSizeValue)
+    end
+end)
+
+local RunService = game:GetService("RunService")
+local Workspace = game:GetService("Workspace")
+
+local createHitboxesEnabled = false
+
+local function createHitboxForFootball(football)
+    
+    local hitbox = Instance.new("Part")
+    hitbox.Name = "FootballHitbox"
+    hitbox.Anchored = true
+    hitbox.CanCollide = false
+    hitbox.Transparency = 0.6
+    hitbox.Size = football.Size
+    hitbox.Material = "Cardboard"
+    hitbox.Position = football.Position
+    hitbox.Parent = Workspace
+   
+
+   
+    local connection
+    connection = RunService.Heartbeat:Connect(function()
+        if not createHitboxesEnabled then
+            hitbox:Destroy()
+            connection:Disconnect()
+            return
+        end
+
+        if football.Parent then
+            hitbox.Size = football.Size
+            hitbox.Position = football.Position
+        else
+            hitbox:Destroy()
+            connection:Disconnect()
+        end 
+    end)
+end
+
+
+local function createHitboxes()
+    for _, football in ipairs(Workspace:GetChildren()) do
+        if football:IsA("BasePart") and football.Name == "Football" then
+            createHitboxForFootball(football)
+        end
+    end
+end
+
+
+WR_Tab:AddToggle({
+    Name = "Legit Mags V2 Mag Hitbox",
+    Default = false,
+    Callback = function(Value)
+        createHitboxesEnabled = Value
+        print("Legit Mags V2 Mag Hitbox Enabled:", Value)
+        
+        if Value then
+            
+            createHitboxes()
+        else
+            
+            for _, hitbox in ipairs(Workspace:GetChildren()) do
+                if hitbox:IsA("BasePart") and hitbox.Name == "FootballHitbox" then
+                    hitbox:Destroy()
+                end
+            end
+        end
+    end    
 })
 
-local config = {
-    FOVEnabled = true,
-    MagsEnabled = false,
-    AutoCatch = false,
-    FOVCircleRadius = 145,
-    FOVCircleThickness = 2,
-    FOVCircleTransparency = 0.7,
-    FOVColorDefault = Color3.new(1, 1, 1),
-    FOVColorInRange = Color3.new(0.5098, 0.5098, 0.7059),
-    CircleOffsetY = 35,
-}
 
-local AutoAngie;
-local AutoPowa;
-local Catchy;
-local CatchS
-local magRange = 20
-local magRangeS = 6
+Workspace.ChildAdded:Connect(function(child)
+    if createHitboxesEnabled and child:IsA("BasePart") and child.Name == "Football" then
+        createHitboxForFootball(child)
 
-Section:Check({
-    Text = "QB Aimbot",
-    Flag = "Aimbot",
+    end
+end)
+
+
+
+
+local DB_Tab = Window:MakeTab({
+    Name = "DB",
+    Icon = "rbxassetid://4483345998",
+    PremiumOnly = false
+})
+
+local blatantMagsEnabled = false
+local maxBlatantMagDistance = 0
+local CatchRange = 10
+
+DB_Tab:AddToggle({
+    Name = "Blatant Mags",
+    Default = false,
+    Callback = function(Value)
+        blatantMagsEnabled = Value
+        print("Blatant Mags Enabled:", Value)
+    end
+})
+
+DB_Tab:AddSlider({
+    Name = "Blatant Mags Power",
+    Min = 0,
+    Max = 50,
+    Default = 0,
+    Color = Color3.fromRGB(135, 206, 250),
+    Increment = 1,
+    ValueName = "Distance",
+    Callback = function(Value)
+        maxBlatantMagDistance = Value
+        print("Blatant Mags Distance:", Value)
+    end
+})
+
+local function FootballMag()
+    if not blatantMagsEnabled or maxBlatantMagDistance == 0 then return end
+
+    local player = Players.LocalPlayer
+    local playerRoot = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+    if not playerRoot then return end
+
+    for _, football in ipairs(Workspace:GetChildren()) do
+        if football:IsA("BasePart") and football.Name == "Football" then
+            local distance = (football.Position - playerRoot.Position).Magnitude
+            if distance <= maxBlatantMagDistance and distance <= CatchRange then
+                football.CFrame = CFrame.new(playerRoot.Position)
+            end
+        end
+    end
+end
+
+RunService.Heartbeat:Connect(FootballMag)
+
+local blatantMagsV2Enabled = false
+
+DB_Tab:AddToggle({
+    Name = "Blatant Mags V2",
+    Default = false,
+    Callback = function(Value)
+        blatantMagsV2Enabled = Value
+        print("Blatant Mags V2 Enabled:", Value)
+    end
+})
+
+DB_Tab:AddSlider({
+    Name = "Blatant Mags V2 Power",
+    Min = 0,
+    Max = 50,
+    Default = 0,
+    Color = Color3.fromRGB(135, 206, 250),
+    Increment = 1,
+    ValueName = "Distance",
+    Callback = function(Value)
+        maxBlatantMagDistance = Value
+        print("Blatant Mags V2 Distance:", Value)
+    end
+})
+
+local function instantTeleport()
+    
+    if not blatantMagsV2Enabled or maxBlatantMagDistance == 0 then return end
+
+    local plr = Players.LocalPlayer
+    local plrs = game:GetService("Players")
+    local LA = plr.Character and (plr.Character:FindFirstChild("Left Arm") or plr.Character:FindFirstChild("LeftHand"))
+    local RA = plr.Character and (plr.Character:FindFirstChild("Right Arm") or plr.Character:FindFirstChild("RightHand"))
+    local l = plr.Character:FindFirstChild("Left Leg")
+    local hrp = plr.Character and (plr.Character:FindFirstChild("HumanoidRootPart"))
+    if not LA and RA then return end
+
+    for _, football in ipairs(Workspace:GetChildren()) do
+        if football:IsA("BasePart") and football.Name == "Football" then
+            local distance = (football.Position - LA.Position).Magnitude and (football.Position - RA.Position).Magnitude
+            if distance <= maxBlatantMagDistance then
+                football.CFrame = CFrame.new(LA.Position)
+                football.CFrame = CFrame.new(RA.Position)
+                football.Position = CFrame.new(hrp.CFrame)
+                football.CFrame = CFrame.new(l.Position)
+               end
+            end
+        end
+    end
+
+RunService.Heartbeat:Connect(instantTeleport)
+
+local QB_Tab = Window:MakeTab({
+    Name = "QB",
+    Icon = "rbxassetid://4483345998",
+    PremiumOnly = false
+})
+
+local QBAimbotEnabled = false
+
+QB_Tab:AddToggle({
+    Name = "QB Aimbot",
+    Default = false,
+    Callback = function(Value)
+        QBAimbotEnabled = Value
+        print("QB Aimbot Enabled:", Value)
+    end
+})
+
+local Rusher_Tab = Window:MakeTab({
+    Name = "Rusher",
+    Icon = "rbxassetid://4483345998",
+    PremiumOnly = false
+})
+
+local walkSpeedEnabled = false
+
+Rusher_Tab:AddToggle({
+    Name = "WalkSpeed",
+    Default = false,
+    Callback = function(Value)
+        walkSpeedEnabled = Value
+        print("WalkSpeed Enabled:", Value)
+    end
+})
+
+Rusher_Tab:AddSlider({
+    Name = "WalkSpeed",
+    Min = 16,
+    Max = 50,
+    Default = 20,
+    Color = Color3.fromRGB(135, 206, 250),
+    Increment = 1,
+    ValueName = "Speed",
+    Callback = function(Value)
+        if walkSpeedEnabled then
+            while true do
+            local player = Players.LocalPlayer
+            local character = player.Character
+            if character and character:FindFirstChild("Humanoid") then
+                character.Humanoid.WalkSpeed = Value
+            end
+        end
+        wait(1)
+    end
+end   
+
+})
+
+local JP = false
+
+Rusher_Tab:AddToggle({
+    Name = "JumpPower",
+    Default = false,
+    Callback = function(Value)
+        JP = Value
+        print("JumpPower Enabled:", Value)
+    end
+})
+
+Rusher_Tab:AddSlider({
+    Name = "JumpPower",
+    Min = 50,
+    Max = 250,
+    Default = 50,
+    Color = Color3.fromRGB(135, 206, 250),
+    Increment = 1,
+    ValueName = "Power",
+    Callback = function(Value)
+
+        local Players = game:GetService("Players")
+
+        local function AJP()
+            local plr = Players.LocalPlayer
+            local c = plr.Character
+            
+            if c and c:FindFirstChild("Humanoid") then
+                c.Humanoid.JumpPower = Value
+            end
+        end
+        
+        local function onCharacterAdded(character)
+            AJP()  
+        end
+        
+        Players.LocalPlayer.CharacterAdded:Connect(onCharacterAdded)  
+        
+        
+        AJP()
+        
+        
+        local function ROR()
+            AJP()
+        end
+        
+        spawn(ROR)  
+
+    end 
+
+        
+})
+
+Rusher_Tab:AddBind({
+    Name = "Ball Carrier Lock",
+    Default = Enum.KeyCode.L,
+    Hold = false,
+    Callback = function()
+        print("Ball Carrier Lock Enabled")
+    end
+})
+
+local teleportRange = 5
+
+local function TeleportForward()
+    local player = Players.LocalPlayer
+    local character = player.Character
+    if not character then return end
+
+    local rootPart = character:FindFirstChild("HumanoidRootPart")
+    if not rootPart then return end
+
+    local teleportDirection = rootPart.CFrame.LookVector
+    local teleportPosition = rootPart.Position + (teleportDirection * teleportRange)
+
+    local raycastParams = RaycastParams.new()
+    raycastParams.FilterDescendantsInstances = {character}
+    local raycastResult = Workspace:Raycast(rootPart.Position, teleportDirection * teleportRange, raycastParams)
+
+    if raycastResult then
+        teleportPosition = raycastResult.Position
+    end
+
+    rootPart.CFrame = CFrame.new(teleportPosition)
+end
+
+Rusher_Tab:AddBind({
+    Name = "QuickTP",
+    Default = Enum.KeyCode.F,
+    Hold = false,
+    Callback = function()
+        TeleportForward()
+    end
+})
+
+local Extra_Tab = Window:MakeTab({
+    Name = "Extra Stuff",
+    Icon = "rbxassetid://4483345998",
+    PremiumOnly = false
+})
+
+
+local pullVectorDistance = 0
+local pullVectorConnection
+
+local function findNearestFootball()
+    local nearestFootball = nil
+    local minDistance = pullVectorDistance + 1
+
+    for _, football in ipairs(Workspace:GetChildren()) do
+        if football:IsA("BasePart") and football.Name == "Football" then
+            local distance = (football.Position - Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude
+            if distance <= pullVectorDistance and distance < minDistance then
+                minDistance = distance
+                nearestFootball = football
+            end
+        end
+    end
+
+    return nearestFootball
+end
+
+local function teleportToFootball()
+    if pullVectorDistance == 0 then return end
+    local nearestFootball = findNearestFootball()
+
+    if nearestFootball then
+        Players.LocalPlayer.Character:SetPrimaryPartCFrame(CFrame.new(nearestFootball.Position))
+    end
+end
+
+
+
+Extra_Tab:AddSlider({
+    Name = "Pullvector",
+    Min = 0,
+    Max = 20,
+    Default = 0,
+    Color = Color3.fromRGB(135, 206, 250),
+    Increment = 1,
+    ValueName = "Distance",
+    Callback = function(Value)
+        pullVectorDistance = Value 
+      if pullVectorConnection then
+            pullVectorConnection:Disconnect()
+        end
+        if pullVectorDistance > 0 then
+            pullVectorConnection = RunService.Heartbeat:Connect(teleportToFootball)
+        end
+        print("Pullvector Distance:", Value)
+    end
+})
+
+local armSize = 1
+
+Extra_Tab:AddSlider({
+    Name = "Increased Arm Size",
+    Min = 1,
+    Max = 10,
+    Default = 1,
+    Color = Color3.fromRGB(135, 206, 250),
+    Increment = 1,
+    ValueName = "Size",
+    Callback = function(Value)
+        armSize = Value
+        print("Increased Arm Size:", Value)
+
+        local RunService = game:GetService("RunService")
+
+        local player = Players.LocalPlayer
+        local character = player.Character
+        if character then
+            local leftArm = character:FindFirstChild("Left Arm") or character:FindFirstChild("LeftHand")
+            local rightArm = character:FindFirstChild("Right Arm") or character:FindFirstChild("RightHand")
+            if leftArm then
+                leftArm.Size = Vector3.new(leftArm.Size.X, armSize, armSize)
+                leftArm.Massless = true
+            end
+            if rightArm then
+                rightArm.Size = Vector3.new(rightArm.Size.X, armSize, armSize)
+                rightArm.Massless = true
+
+                RunService.Heartbeat:Connect(armSize)
+            end
+        end
+    end
+})
+
+local armTransparency = 0
+
+Extra_Tab:AddSlider({
+    Name = "Arm Transparency",
+    Min = 0,
+    Max = 1,
+    Default = 0,
+    Color = Color3.fromRGB(135, 206, 250),
+    Increment = 0.1,
+    ValueName = "Transparency",
+    Callback = function(Value)
+        armTransparency = Value
+        print("Arm Transparency:", Value)
+        
+        local RunService = game:GetService("RunService")
+        local player = Players.LocalPlayer
+        local character = player.Character
+        if character then
+            local leftArm = character:FindFirstChild("Left Arm") 
+            local rightArm = character:FindFirstChild("Right Arm")
+            if leftArm then
+                for _, part in pairs(leftArm:GetDescendants()) do
+                    if part:IsA("BasePart") then
+                        part.Transparency = armTransparency
+                    end
+                end
+            end
+            if rightArm then
+                for _, part in pairs(rightArm:GetDescendants()) do
+                    if part:IsA("BasePart") then
+                        part.Transparency = armTransparency
+
+                        RunService.Heartbeat:Connect(armTransparency)
+                        
+                    end
+                end
+            end
+        end
+    end
+})
+
+local maxDistance = 0
+
+
+Extra_Tab:AddSlider({
+    Name = "AutoBoost",
+    Min = 0,
+    Max = 20,
+    Default = maxDistance,  
+    Color = Color3.fromRGB(135, 206, 250),
+    Increment = 1,  
+    ValueName = "bananas",
+    Callback = function(Value)
+        maxDistance = Value
+        print("New maxDistance set to:", maxDistance)
+    end    
+})
+
+local plrs = game:GetService("Players")
+local plr = plrs.LocalPlayer
+
+local nearesthead = nil
+
+local function moveToHead(nearestHead, maxDist)
+    if nearestHead then
+        local character = plr.Character
+        if character then
+            local hrp = character:FindFirstChild("HumanoidRootPart")
+            if hrp then
+                local distance = (nearestHead.Position - plr.Character.Head.Position).magnitude
+                if distance <= maxDist then
+                    hrp.CFrame = CFrame.new(nearestHead.Position + Vector3.new(0, 3, 0))  
+                else
+                    print("Nearest head is too far away.")
+                end
+            else
+                print("HumanoidRootPart not found in character.")
+            end
+        else
+            print("Local player's character not found.")
+        end
+    else
+        print("No nearest head found.")
+    end
+end
+
+local function findNearestHead()
+    local nearestHead = nil
+    local shortestDistance = math.huge
+
+    for _, player in pairs(plrs:GetPlayers()) do
+        if player ~= plr then
+            local c = player.Character
+            if c then
+                local h = c:FindFirstChild("Head")
+                if h then
+                    local distance = (h.Position - plr.Character.Head.Position).magnitude
+                    if distance < shortestDistance then
+                        shortestDistance = distance
+                        nearesthead = h
+                    end
+                end
+            end
+        end
+    end
+
+    return nearesthead
+end
+
+game:GetService("RunService").Heartbeat:Connect(function()
+    nearesthead = findNearestHead()
+    moveToHead(nearesthead, maxDistance)
+end)
+
+
+local player = game.Players.LocalPlayer
+local humanoid = player.Character and player.Character:FindFirstChildOfClass("Humanoid")
+
+local sliderEnabled = false 
+
+
+local function updateHipHeight(value)
+    if humanoid and sliderEnabled then
+        humanoid.HipHeight = value
+    end
+end
+
+
+Extra_Tab:AddToggle({
+    Name = "HipHeight",
+    Default = false,
     Callback = function(state)
-     if state then
+        sliderEnabled = state
+        print("HipHeight adjustment enabled: " .. tostring(state))
+    end
+})
 
-                                local beam = Instance.new("Beam", workspace.Terrain)
+
+Extra_Tab:AddSlider({
+    Name = "HipHeight",
+    Min = 0,
+    Max = 10.0,
+    Default = 1,
+    Color = Color3.fromRGB(135, 206, 250),
+    Increment = 1,
+    ValueName = "Height",
+    Callback = function(value)
+        updateHipHeight(value)
+        print("HipHeight set to: " .. value)
+    end    
+})
+
+
+
+
+local AJe = false
+
+local function EAJ(c)
+    local t = c:FindFirstChild("Torso")
+    local h = c:FindFirstChild("Head")
+
+    if t and h then
+        t.CanCollide = not AJe
+        h.CanCollide = not AJe
+    end
+end
+
+local function onCharacterAdded(plr)
+    plr.CharacterAdded:Connect(function(c)
+        EAJ(c)
+    end)
+end
+
+
+local function enableAntiJam()
+    for _, plr in ipairs(game:GetService("Players"):GetPlayers()) do
+        if plr.Character then
+            EAJ(plr.Character)
+        end
+    end
+end
+
+
+for _, plr in ipairs(game:GetService("Players"):GetPlayers()) do
+    onCharacterAdded(plr)
+end
+
+
+game:GetService("Players").PlayerAdded:Connect(onCharacterAdded)
+
+
+
+
+Extra_Tab:AddToggle({
+    Name = "Anti Jam",
+    Default = false,
+    Callback = function(Value)
+        AJe = Value
+        enableAntiJam()
+    end
+})
+
+
+enableAntiJam()
+
+
+
+
+
+local tackleReachDistance = 250
+
+Rusher_Tab:AddSlider({
+    Name = "Tackle Reach",
+    Min = 1,
+    Max = 50,
+    Default = 1,
+    Color = Color3.fromRGB(135, 206, 250),
+    Increment = 1,
+    ValueName = "Distance",
+    Callback = function(Value)
+        tackleReachDistance = Value
+        print("Tackle Reach Distance:", Value)
+        _G.reach = tackleReachDistance
+    end
+})
+
+local function resizeHumanoidRootPart(hrp, newSize)
+    hrp.Size = Vector3.new(newSize.X, hrp.Size.Y, newSize.Z)
+end
+
+RunService.Stepped:Connect(function()
+    if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+        local humanoidRootPart = LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+
+        humanoidRootPart.CustomPhysicalProperties = PhysicalProperties.new(0, 0.3, 0.5, 0.3, 0.5)
+
+        local newSize = Vector3.new(_G.reach, humanoidRootPart.Size.Y, _G.reach)
+        if humanoidRootPart.Size == newSize then
+            resizeHumanoidRootPart(humanoidRootPart, newSize)
+        end
+    end
+end)
+
+local League_Tab = Window:MakeTab({
+    Name = "LFG Main",
+    Icon = "rbxassetid://4483345998",
+    PremiumOnly = false
+})
+
+local Section = League_Tab:AddSection({
+	Name = "League Mags V2"
+})
+
+
+local hitboxSize = Vector3.new(5, 5, 5)
+local hitboxResizeEnabled = false
+
+League_Tab:AddToggle({
+    Name = "LFGV2",
+    Default = false,
+    Callback = function(Value)
+        hitboxResizeEnabled = Value
+        print("LFGV2 Toggle Enabled:", Value)
+    end
+})
+
+League_Tab:AddSlider({
+    Name = "LFGMagsV2",
+    Min = 1,
+    Max = 100,
+    Default = 1,
+    Color = Color3.fromRGB(	135, 206, 250),
+    Increment = 1,
+    ValueName = "Size",
+    Callback = function(Value)
+        hitboxSize = Vector3.new(Value, Value, Value)
+        if hitboxResizeEnabled then
+            resizeHitbox(hitboxSize)
+        end
+        print("Hitbox Size:", hitboxSize)
+    end
+})
+
+local function resizeHitbox(newSize)
+    local character = LocalPlayer.Character
+    if character then
+        local hitbox = character:FindFirstChild("Hitbox")
+        if hitbox and hitbox:IsA("BasePart") then
+            hitbox.Size = newSize
+            hitbox.Massless = true
+        end
+    end
+end
+
+local function resizeHitboxLoop()
+    while true do
+        if hitboxResizeEnabled then
+            resizeHitbox(hitboxSize)
+        end
+        wait(0.1)
+    end
+end
+
+spawn(resizeHitboxLoop)
+
+
+local Config_Tab = Window:MakeTab({
+	Name = "Configs",
+	Icon = "rbxassetid://4483345998",
+	PremiumOnly = false
+})
+
+local Section = Config_Tab:AddSection({
+	Name = "Jerrick's Config"
+})
+
+
+Config_Tab:AddToggle({
+    Name = "BigDaddyJerrick Config",
+    Default = false,
+    Callback = function(Value)
+        if Value then
+            pullVectorDistance = 7.5
+            pullVectorConnection = RunService.Heartbeat:Connect(teleportToFootball)
+            
+            
+            local Player = Players.LocalPlayer
+            local Character = Player.Character
+            if Character and Character:FindFirstChild("Humanoid") then
+                Character.Humanoid.JumpPower = 60
+            end
+        else
+            pullVectorDistance = 0
+            if pullVectorConnection then
+                pullVectorConnection:Disconnect()
+                pullVectorConnection = nil
+            end
+
+           
+            local Player = Players.LocalPlayer
+            local Character = Player.Character
+            if Character and Character:FindFirstChild("Humanoid") then
+                Character.Humanoid.JumpPower = 50
+            end
+        end
+    end
+
+})
+
+Extra_Tab:AddToggle({
+    Name = "No Jump Cooldown",
+    Default = false,
+    Callback = function(Value)
+
+        print("No Jump Cooldown Enabled:", Value)
+    end
+})
+
+local Section = Config_Tab:AddSection({
+	Name = "For D1 Players"
+})
+
+
+
+
+Config_Tab:AddToggle({
+    Name = "LFGMain Config",
+    Default = false,
+    Callback = function(Value)
+        print("LFG Config Enabled")
+    end
+})     
+
+local mags = Instance.new("Part")
+mags.Name = "Mags"
+mags.Anchored = true
+mags.CanCollide = false
+mags.Transparency = 0.65
+
+local t = game.Workspace:FindFirstChild("Torso")
+
+if t then
+    mags.Size = t.Size
+    mags.Position = t.Position
+    mags.Parent = game.Workspace  
+
+    
+
+    end
+
+
+
+
+
+
+
+Config_Tab:AddToggle({
+    Name = "Blatant Config",
+    Default = false,
+    Callback = function(Value)
+    print("Blatant Config Enabled")
+    end
+})    
+
+local Section = Config_Tab:AddSection({
+	Name = "Fat Ahh"
+})
+
+
+Config_Tab:AddToggle({
+    Name = "XXL Config",
+    Default = false,
+    Callback = function(Value)
+    print("XXL Config Enabled")
+    end
+})    
+
+local Mobile_Tab = Window:MakeTab({
+	Name = "Mobile Support",
+	Icon = "rbxassetid://4483345998",
+	PremiumOnly = false
+})
+
+
+local maxFootballTeleportDistance = 12
+local legitMagEnabled = false
+
+Mobile_Tab:AddToggle({
+    Name = "Legit Magnets",
+    Default = false,
+    Callback = function(Value)
+        legitMagEnabled = Value
+        print("Legit Magnets Enabled:", Value)
+    end
+})
+
+local function TeleportTheFootball()
+    if not legitMagEnabled then return end
+    
+    local LocalPlayer = Players.LocalPlayer
+    local playerRoot = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+    if not playerRoot then return end
+
+    for _, football in ipairs(Workspace:GetChildren()) do
+        if football:IsA("BasePart") and football.Name == "Football" then
+            local distance = (football.Position - playerRoot.Position).Magnitude
+
+            if distance <= maxFootballTeleportDistance then
+                football.CFrame = CFrame.new(playerRoot.Position + Vector3.new(0, 3, 0))  
+            end
+        end
+    end
+end
+
+RunService.Heartbeat:Connect(TeleportTheFootball)
+
+Mobile_Tab:AddToggle({
+    Name = "Legit Mags V2",
+    Default = false,
+    Callback = function(Value)
+        legitMagEnabled = Value
+        print("Legit Mags V2 Enabled:", Value)
+    end
+})
+
+
+
+local FootballMagEnabled = false
+local MaxTeleportDistance = 10
+local CatchRange = 10
+
+Mobile_Tab:AddToggle({
+    Name = "Blatant Magnets",
+    Default = false,
+    Callback = function(Value)
+        FootballMagEnabled = Value
+        print("Blatant Magnets Enabled:", Value)
+    end
+})
+
+local function FootballMag()
+    if not FootballMagEnabled then return end
+    
+    local LocalPlayer = Players.LocalPlayer
+    local catchLeft = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+    if not catchLeft then return end
+    
+    local targetPositionLeft = catchLeft.Position
+
+    for _, football in ipairs(Workspace:GetChildren()) do
+        if football:IsA("BasePart") and football.Name == "Football" then
+            local distanceLeft = (football.Position - targetPositionLeft).Magnitude
+
+            if distanceLeft <= MaxTeleportDistance then
+                if distanceLeft <= CatchRange then
+                    football.CFrame = CFrame.new(targetPositionLeft)
+                end
+            end
+        end
+    end
+end
+
+RunService.Heartbeat:Connect(FootballMag)
+
+Mobile_Tab:AddToggle({
+    Name = "Blatant Mags V2",
+    Default = false,
+    Callback = function(Value)
+        FootballMagEnabled = Value
+        print("Blatant Mags V2 Enabled:", Value)
+    end
+})
+
+
+
+local teleportRange = 5
+
+local function TeleportForward()
+    local Player = Players.LocalPlayer
+    local character = Player.Character
+    if not character then return end
+
+    local rootPart = character:FindFirstChild("Head")
+    if not rootPart then return end
+
+    local teleportDirection = rootPart.CFrame.LookVector
+    local teleportPosition = rootPart.Position + (teleportDirection * teleportRange)
+
+    local raycastParams = RaycastParams.new()
+    raycastParams.FilterDescendantsInstances = {Player.Character}
+    local raycastResult = Workspace:Raycast(rootPart.Position, teleportDirection * teleportRange, raycastParams)
+    if raycastResult then
+        teleportPosition = raycastResult.Position
+    end
+
+    rootPart.CFrame = CFrame.new(teleportPosition)
+end
+
+Mobile_Tab:AddToggle({
+    Name = "QuickTP",
+    Default = Enum.KeyCode.F,
+    Default = false,
+    Hold = false,
+    Callback = function()
+        TeleportForward()
+    end
+})
+
+Mobile_Tab:AddToggle({
+    Name = "Ball Carrier Lock",
+    Default = Enum.KeyCode.L,
+    Default = false,
+    Hold = false,
+    Callback = function()
+        print("Ball Carrier Lock Enabled")
+    end
+})
+
+
+
+local pullVectorEnabled = false
+local pullVectorConnection
+
+local function findNearestFootball()
+    local TeleportDistance = 7
+    local nearestFootball = nil
+    local minDistance = TeleportDistance + 1
+
+    for _, football in ipairs(Workspace:GetChildren()) do
+        if football.Name == "Football" and football:IsA("BasePart") then
+            local distance = (football.Position - Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude
+            if distance <= TeleportDistance and distance < minDistance then
+                minDistance = distance
+                nearestFootball = football
+            end
+        end
+    end
+
+    return nearestFootball
+end
+
+local function teleportToFootball()
+    if not pullVectorEnabled then return end
+    local nearestFootball = findNearestFootball()
+
+    if nearestFootball then
+        Players.LocalPlayer.Character:SetPrimaryPartCFrame(CFrame.new(nearestFootball.Position))
+    end
+end
+
+Mobile_Tab:AddToggle({
+    Name = "Pullvector",
+    Default = false,
+    Callback = function(Value)
+        pullVectorEnabled = Value
+        if pullVectorEnabled then
+            pullVectorConnection = RunService.Heartbeat:Connect(teleportToFootball)
+        else
+            if pullVectorConnection then
+                pullVectorConnection:Disconnect()
+                pullVectorConnection = nil
+            end
+        end
+        print("Pullvector Enabled:", Value)
+    end
+})
+
+local biggerHandsEnabled = false
+
+local function toggleBiggerHands(enabled)
+    biggerHandsEnabled = enabled
+    print("Bigger Hands Enabled:", enabled)
+
+    local plrs = game:GetService("Players")
+    local plr = plrs.LocalPlayer
+    local c = plr.Character
+
+    if c then
+        local la = c:FindFirstChild("Left Arm")
+        local ra = c:FindFirstChild("Right Arm")
+
+        if la then
+            la.Size = enabled and Vector3.new(7, 7, 7) or Vector3.new(1, 1, 1)
+            la.Massless = enabled
+        end
+
+        if ra then
+            ra.Size = enabled and Vector3.new(7, 7, 7) or Vector3.new(1, 1, 1)
+            ra.Massless = enabled
+        end
+    end
+end
+
+Mobile_Tab:AddToggle({
+    Name = "Bigger Hands",
+    Default = false,
+    Callback = toggleBiggerHands
+})
+
+
+
+local customMagsEnabled = false
+
+local function getRandomPositionAround(part, minRadius, maxRadius)
+    local randomDirection = Vector3.new(math.random() - 0.5, math.random() - 0.5, math.random() - 0.5).Unit
+    local randomDistance = minRadius + math.random() * (maxRadius - minRadius)
+    return part.Position + randomDirection * randomDistance  
+    
+end
+
+local function instantTeleport()
+    if not customMagsEnabled then return end
+
+    local TeleportDistance = 35
+    local MinRadius = 1  
+    local MaxRadius = 5  
+
+    local player = Players.LocalPlayer
+    local leftArm = player.Character and player.Character:FindFirstChild("Left Arm")
+    local rightArm = player.Character and player.Character:FindFirstChild("Right Arm")
+
+    if not leftArm then return end
+
+    for _, football in ipairs(Workspace:GetChildren()) do
+        if football.Name == "Football" and football:IsA("BasePart") then
+            local distance = (football.Position - leftArm.Position).Magnitude and (football.Position - rightArm.Position).Magnitude
+            if distance <= TeleportDistance then
+                local randomPosition = getRandomPositionAround(leftArm, MinRadius, MaxRadius) 
+                football.CFrame = CFrame.new(randomPosition)
+            end
+        end
+    end
+end
+
+RunService.Heartbeat:Connect(instantTeleport)
+
+Mobile_Tab:AddToggle({
+    Name = "Custom Mags",
+    Default = false,
+    Callback = function(Value)
+        customMagsEnabled = Value
+        print("Custom Mags Enabled:", Value)
+    end
+})
+
+Mobile_Tab:AddToggle({
+    Name = "Tackle Reach",
+    Default = false,
+    Callback = function(Value)
+        print("Tackle Reach Enabled:", Value)
+    end
+})
+
+
+
+
+
+Mobile_Tab:AddToggle({
+    Name = "Block Reach",
+    Default = false,
+    Callback = function(Value)
+        print("Block Reach Enabled:", Value)
+    end
+})
+
+local Other_Tab = Window:MakeTab({
+	Name = "Other",
+	Icon = "rbxassetid://4483345998",
+	PremiumOnly = false
+})
+
+local buttonEnabled = false
+
+Other_Tab:AddButton({
+    Name = "Anti Lag",
+    Callback = function()
+        buttonEnabled = not buttonEnabled
+        print("Button Clicked! Current State:", buttonEnabled)
+        
+        local decalsyeeted = true 
+local g = game
+local w = g.Workspace
+local l = g.Lighting
+local t = w.Terrain
+t.WaterWaveSize = 0
+t.WaterWaveSpeed = 0
+t.WaterReflectance = 0
+t.WaterTransparency = 0
+l.GlobalShadows = false
+l.FogEnd = 9e9
+l.Brightness = 0
+settings().Rendering.QualityLevel = "Level02"
+for i, v in pairs(g:GetDescendants()) do
+    if v:IsA("Part") or v:IsA("Union") or v:IsA("CornerWedgePart") or v:IsA("TrussPart") then
+        v.Material = "Plastic"
+        v.Reflectance = 0
+    elseif v:IsA("Decal") or v:IsA("Texture") and decalsyeeted then
+        v.Transparency = 1
+    elseif v:IsA("ParticleEmitter") or v:IsA("Trail") then
+        v.Lifetime = NumberRange.new(0)
+    elseif v:IsA("Explosion") then
+        v.BlastPressure = 1
+        v.BlastRadius = 1
+    elseif v:IsA("Fire") or v:IsA("SpotLight") or v:IsA("Smoke") then
+        v.Enabled = false
+    elseif v:IsA("MeshPart") then
+        v.Material = "Plastic"
+        v.Reflectance = 0
+        v.TextureID = 10385902758728957
+    end
+end
+for i, e in pairs(l:GetChildren()) do
+    if e:IsA("BlurEffect") or e:IsA("SunRaysEffect") or e:IsA("ColorCorrectionEffect") or e:IsA("BloomEffect") or e:IsA("DepthOfFieldEffect") then
+        e.Enabled = false
+    end
+end
+
+    end
+
+
+})
+
+local be = false
+
+Other_Tab:AddButton({
+    Name = "No Blue Line Barrier",
+    Callback = function()
+        be = not be
+        print("Blue Line Barrier Removed", be)
+        
+    end
+})
+
+
+local plr = game.Players.LocalPlayer
+local Workspace = game:GetService("Workspace")
+local l2 = game.Workspace.Line2
+
+l2.Name = "Line2"
+
+l2:Destroy()
+
+
+
+local function rj()
+
+    game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId,  game.JobId, Players.LocalPlayer)
+    
+end
+
+Other_Tab:AddButton({
+    Name = "Rejoin",
+    Callback = function()
+        print("Rejoined The Game")
+        rj()
+    end
+})
+
+Other_Tab:AddButton({
+    Name = "No OOB",
+    Default = false,
+    Callback = function(Value)
+     print("click it 3 times if your reading this", Value)
+    end
+})
+
+    local plr = game.Players.LocalPlayer
+    local Workspace = game:GetService("Workspace")
+    local outofbounds = game.Workspace.OOB_Line
+
+     if outofbounds then
+        outofbounds.Name = "OOB_Line"  
+        outofbounds:Destroy()
+    end
+
+    local followCarrierEnabled = false
+
+    Rusher_Tab:AddToggle({
+        Name = "Follow Football Carrier",
+        Default = false,
+        Callback = function(Value)
+            followCarrierEnabled = Value
+            print("Follow Football Carrier Enabled:", Value)
+        end
+    })
+    
+    local Players = game:GetService("Players")
+    local RunService = game:GetService("RunService")
+    local Workspace = game:GetService("Workspace")
+    
+    local function findFootballCarrier()
+        for _, player in pairs(Players:GetPlayers()) do
+            if player.Character and player.Character:FindFirstChild("Football") then
+                return player
+            end
+        end
+        return nil
+    end
+    
+    local function followFootballCarrier()
+        if not followCarrierEnabled then return end
+        
+        local LocalPlayer = Players.LocalPlayer
+        local playerRoot = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+        if not playerRoot then return end
+    
+        local carrier = findFootballCarrier()
+        if carrier and carrier.Character then
+            local carrierRoot = carrier.Character:FindFirstChild("HumanoidRootPart")
+            if carrierRoot then
+                playerRoot.CFrame = playerRoot.CFrame:Lerp(carrierRoot.CFrame, 0.09) 
+            end
+        end
+    end
+    
+    RunService.Heartbeat:Connect(followFootballCarrier)
+
+
+
+    local toggle = false
+    local noclip = false
+    
+    local uis = game:GetService("UserInputService")
+    
+    local function toggleclip()
+        noclip = not noclip
+        print("Noclip is now:", noclip)
+    end
+    
+    uis.InputBegan:Connect(function(input, gameProcessedEvent)
+        if input.KeyCode == Enum.KeyCode.B and not gameProcessedEvent then
+            toggleclip()
+        end
+    end)
+    
+    Extra_Tab:AddToggle({
+        Name = "Noclip",
+        Default = false,
+        Callback = function(Value)
+            toggle = Value
+            toggleclip()
+        end    
+    })
+    
+    game:GetService("RunService").RenderStepped:Connect(function()
+        if noclip then
+            game.Players.LocalPlayer.Character.Humanoid:ChangeState(11)
+        end
+    end)
+
+local togglev2 = false
+
+QB_Tab:AddToggle({
+     Name = "QB Aimbot",
+     Default = false,
+     Callback = function(Value)
+      togglev2 = Value
+      
+     end
+})
+
+local beam = Instance.new("Beam", workspace.Terrain)
                                 local Attach0 = Instance.new("Attachment", workspace.Terrain)
                                 local Attach1 = Instance.new("Attachment", workspace.Terrain)
 								local isLocked = false
@@ -1816,263 +2642,36 @@ end
 										ScreenGui.Enabled = false
 										beam.Width0 = 0
 										beam.Width1 = 0
-									end
-								end)
-								
-							else
-								ScreenGui.Enabled = false
-						end
-				end
-     })
+                                    end
+                                end)  
 
-Section:Check({
-   Text = "Auto Angle",
-   Flag = "AimbotAngle",
-Callback = function(bool)
-    AutoAngie = bool
-   end
-})
+                          
 
-Section:Check({
-   Text = "Auto Power",
-   Flag = "AimbotPower",
-Callback = function(bool)
-    AutoPowa = bool
-   end
-})
+                                    
+                            if ScreenGui then
+                                ScreenGui.Enabled = false
+                                
+                        end
 
-local function magBall(ball)
-    if ball and localPlr.Character then
-        local leftArm = localPlr.Character:FindFirstChild("Left Arm")
-        local rightArm = localPlr.Character:FindFirstChild("Right Arm")
-        
-        if leftArm and rightArm then
-            local function touchBall(arm, part, toggle)
-                firetouchinterest(arm, part, toggle)
-            end
-            
-            touchBall(leftArm, ball, 0)
-            touchBall(rightArm, ball, 0)
-            task.wait()
-            touchBall(leftArm, ball, 1)
-            touchBall(rightArm, ball, 1)
-        end
-    end
-end
-
-RunService.Stepped:Connect(function()
-    if Catchy then
-        for _, v in pairs(workspace:GetChildren()) do
-            if v.Name == "Football" and v:IsA("BasePart") then
-                local mag = (localPlr.Character.HumanoidRootPart.Position - v.Position).Magnitude
-                if mag <= magRange  then -- Adjust the range as needed
-                    magBall(v)
-                end
-            end
-        end
-    end
-end)
-
-local identityLevel = getidentity()
-
-local Players = game:GetService("Players")
-local lp = Players.LocalPlayer
-local char = lp.Character or lp.CharacterAdded:Wait()
-local CL = char:FindFirstChild("CatchLeft")
-local hrp = char:FindFirstChild("HumanoidRootPart")
-local max = magRangeS
-
-local function autoCatchBalls()
-    while CatchS do
-        wait()
-        if CatchS then
-            for _, child in ipairs(workspace:GetChildren()) do
-                if child.Name == "Football" and child:IsA("BasePart") then
-                    local D = (child.Position - hrp.Position).magnitude
-                    if D < max then
-                        child.CanCollide = false
-                        child.CFrame = hrp.CFrame + Vector3.new(0.5, 0.3, 0.5)
-                    end
-                end
-            end
-        end
-    end
-end
-
-if identityLevel == 3 then
-Section2:Label({
-   Text = "Solara Detected: <font color=\"rgb(252, 15, 31)\">Not Supported</font>",
-})
-
-else
-Section2:Check({
-    Text = "Auto Catch",
-    Flag = "MagsCatch",
-    Callback = function(bool)
-        config.AutoCatch = bool
-    end
-})
-Section2:Check({
-   Text = "Ball Mags",
-   Flag = "Mags",
-Callback = function(bool)
-    Catchy = bool
-   end
-})
-
-Section2:Slider({
-   Text = "Mag Range",
-   Minimum = 1,
-   Default = 20,
-   Maximum = 20,
-   Postfix = " Studs",
-   Incrementation = 0.1,
-   Callback = function(state)
-    magRange = state
-   end
-})
-                                            end
-
-Section3:Check({
-   Text = "Auto Rush",
-   Flag = "Rush",
-   Callback = function(bool)
-       print(bool)
-   end
-})
-
-Section3:Check({
-   Text = "Auto Cover",
-   Flag = "Rush",
-   Callback = function(bool)
-       print(bool)
-   end
-})
-
-Section3:Slider({
-   Text = "Cover Proximity",
-   Minimum = 1,
-   Default = 4,
-   Maximum = 7,
-   Postfix = " Studs",
-   Incrementation = 0.1,
-   Callback = function(state)
-    magRange = state
-   end
-})
-
-Section4:Check({
-   Text = "Ball Hitbox",
-   Flag = "BallBox",
-   Callback = function(bool)
-       print(bool)
-   end
-})
-
-Section4:Check({
-   Text = "Ball Predicition",
-   Flag = "BallPred",
-   Callback = function(bool)
-       print(bool)
-   end
-})
-
-Section4:Slider({
-   Text = "Transparency",
-   Minimum = 0,
-   Default = 0.7,
-   Maximum = 1,
-   Incrementation = 0.1,
-   Callback = function(state)
-   end
-})
-
-local Section7 = TabE:Section({
-   Text = "Kicker Settings"
-})
-
-Section7:Check({
-   Text = "Kicker Aimbot",
-   Flag = "KickAim",
-   Callback = function(bool)
-       print(bool)
-   end
-})
-
-Section7:Slider({
-   Text = "Release 1",
-   Minimum = 0,
-   Default = 0.89,
-   Maximum = 1,
-   Incrementation = 0.01,
-   Callback = function(state)
-   end
-})
-
-Section7:Slider({
-   Text = "Release 2",
-   Minimum = 0,
-   Default = 0.03,
-   Maximum = 1,
-   Incrementation = 0.01,
-   Callback = function(state)
-   end
-})
+                
 
 
-local Section8 = TabE:Section({
-   Text = "Misc Settings",
-   Side = "Right"
-})
-
-local RunService = game:GetService("RunService")
-local Players = game:GetService("Players")
-local LocalPlayer = Players.LocalPlayer
-
-local function setCollision(enabled)
-    for _, player in pairs(Players:GetPlayers()) do
-        if player and player.Character and player ~= LocalPlayer then
-            for _, bodypart in pairs(player.Character:GetChildren()) do
-                if bodypart:IsA("BasePart") or bodypart:IsA("MeshPart") and bodypart.CanCollide then
-                    bodypart.CanCollide = enabled
-                end
-            end
-        end
-    end
-end
-
-local connection
-Section8:Check({
-    Text = "Anti Jam",
-    Flag = "AntiJ",
-    Callback = function(enabled)
-        if enabled then
-            connection = RunService.RenderStepped:Connect(function()
-                setCollision(false)
-            end)
-        else
-            if connection then
-                connection:Disconnect()
-                setCollision(true)
-            end
-        end
-    end
-})
+   
 
 
-Tab:Select()
 
-local NewHASH9 = game:GetService("CoreGui"):WaitForChild("HASH9")
-local UserInputService = game:GetService("UserInputService")
 
-local function toggleHASH9()
-    NewHASH9.Enabled = not NewHASH9.Enabled
-end
 
-UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
-    if input.KeyCode == Enum.KeyCode.RightAlt and not gameProcessedEvent then
-        toggleHASH9()
-    end
-end)
+OrionLib:Init()
 
-NewHASH9.Main.Console:Destroy()
+
+
+
+    
+
+
+    
+
+
+
+
