@@ -1594,6 +1594,20 @@ QB_Tab:AddToggle({
 })
 
 
+local togglev3 = false
+
+Other_Tab:AddToggle({
+	Name = "Freeze",
+	Default = false,
+	Callback = function(Value)
+		print(Value)
+FREEZEBRO()
+
+	end    
+})
+
+if not togglev3 then
+
 local plrs = game:GetService("Players")
 local plr = plr.LocalPlayer 
 local c - plr.Character or plr.CharacterAdded:Wait()
@@ -1607,9 +1621,20 @@ if h then
 h.WalkSpeed = 0
 h.JumpPower = 0
 
+if togglev3 then
+
+h.WalkSpeed = 20
+h.JumpPower = 50
+
+
+
+
+   end
+ end
 end
 
-FREEZEBRO()
+
+
 
 
 
