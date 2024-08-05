@@ -88,39 +88,23 @@ WR_Tab:AddToggle({
 })
 
 
-local footballSizeValue = 1  
 
-WR_Tab:AddSlider({
-    Name = "Legit Mags V2 Power",
-    Min = 0,
-    Max = 20,
-    Default = 1,
-    Color = Color3.fromRGB(135, 206, 250),
-    Increment = 1,
-    ValueName = "Distance",
-    Callback = function(Value)
-        footballSizeValue = math.clamp(Value, 0, 7)
-        print("Legit Mags V2 Distance:", footballSizeValue)
-    end
-})
 
+local game = game
+local Workspace = game.Workspace
 local RunService = game:GetService("RunService")
-local Workspace = game:GetService("Workspace")
 
-local function setFootballSize()
+local footballSizeValue = 1 
+
+local function setFootballSize(Value)
     for _, football in ipairs(Workspace:GetChildren()) do
         if football.Name == "Football" and football:IsA("BasePart") then
-            local clampedValue = math.clamp(footballSizeValue, 0, 7)
-            football.Size = Vector3.new(clampedValue, clampedValue, clampedValue)
+            football.Size = Vector3.new(Value, Value, Value)
         end
     end
 end
 
-RunService.Heartbeat:Connect(function()
-    if setFootballSizeEnabled then
-        setFootballSize()
-    end
-end)
+local createHitboxesEnabled = false
 
 local function createHitboxForFootball(football)
     local hitbox = Instance.new("Part")
@@ -128,10 +112,7 @@ local function createHitboxForFootball(football)
     hitbox.Anchored = true
     hitbox.CanCollide = false
     hitbox.Transparency = 0.6
-    
-    local clampedValue = math.clamp(footballSizeValue, 0, 7)
-    hitbox.Size = Vector3.new(clampedValue, clampedValue, clampedValue)
-    
+    hitbox.Size = football.Size
     hitbox.Material = "Cardboard"
     hitbox.Position = football.Position
     hitbox.Parent = Workspace
@@ -145,7 +126,7 @@ local function createHitboxForFootball(football)
         end
 
         if football.Parent then
-            hitbox.Size = Vector3.new(clampedValue, clampedValue, clampedValue)
+            hitbox.Size = football.Size
             hitbox.Position = football.Position
         else
             hitbox:Destroy()
@@ -162,11 +143,30 @@ local function createHitboxes()
     end
 end
 
+
+WR_Tab:AddSlider({
+    Name = "Legit Mags V2 Power",
+    Min = 0,
+    Max = 20,
+    Default = 1,
+    Color = Color3.fromRGB(135, 206, 250),
+    Increment = 1,
+    ValueName = "Power",
+    Callback = function(Value)
+        footballSizeValue = Value * 0.35 + 1
+        print("Legit Mags V2 Distance:", footballSizeValue)
+        setFootballSize(footballSizeValue)
+    end
+})
+
+setFootballSize(footballSizeValue)
 createHitboxes()
 
-setFootballSizeEnabled = true
-createHitboxesEnabled = true
-
+RunService.Heartbeat:Connect(function()
+    if setFootballSizeEnabled then 
+        setFootballSize(footballSizeValue)
+    end
+end)
 
 
 WR_Tab:AddToggle({
@@ -464,6 +464,7 @@ local Extra_Tab = Window:MakeTab({
 })
 
 
+
 local pullVectorDistance = 0
 local pullVectorConnection
 
@@ -591,6 +592,7 @@ Extra_Tab:AddSlider({
     end
 })
 
+
 local maxDistance = 0
 
 
@@ -665,6 +667,14 @@ game:GetService("RunService").Heartbeat:Connect(function()
 end)
 
 
+
+
+
+
+
+
+
+
 local player = game.Players.LocalPlayer
 local humanoid = player.Character and player.Character:FindFirstChildOfClass("Humanoid")
 
@@ -701,6 +711,8 @@ Extra_Tab:AddSlider({
         print("HipHeight set to: " .. value)
     end    
 })
+
+
 
 
 
@@ -1450,26 +1462,6 @@ QB_Tab:AddToggle({
       
      end
 })
-
-
-wait()
-
-game.Workspace.Gravity = 196.2
-
-Extra_Tab:AddSlider({
-    Name = "Gravity",
-    Min = 196.2,
-    Max = 100,
-    Default = 5,
-    Color = Color3.fromRGB(255,255,255),
-    Increment = 1,
-    ValueName = "bananas",
-    Callback = function(Value)
-        print("New Gravity Value:", Value)
-        game.Workspace.Gravity = Value  
-    end    
-})
-
 
 
 
