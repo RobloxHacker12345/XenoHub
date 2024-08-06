@@ -1,69 +1,82 @@
-local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
+local OrionLib = loadstring(game:HttpGet(("https://raw.githubusercontent.com/shlexware/Orion/main/source")))()
 
-local Window = OrionLib:MakeWindow({Name = "Xeno Hub V3", HidePremium = false, SaveConfig = true, ConfigFolder = "OrionTest"})
+local Window =
+    OrionLib:MakeWindow({Name = "Xeno Hub V3", HidePremium = false, SaveConfig = true, ConfigFolder = "OrionTest"})
 
-OrionLib:MakeNotification({
-    Name = "Xeno",
-    Content = "extracrazy3n the scripter",
-    Image = "rbxassetid://4483345998",
-    Time = 4
-})
+OrionLib:MakeNotification(
+    {
+        Name = "Xeno",
+        Content = "extracrazy3n the scripter",
+        Image = "rbxassetid://4483345998",
+        Time = 4
+    }
+)
 
 local Players = game:GetService("Players")
 local Workspace = game:GetService("Workspace")
 local RunService = game:GetService("RunService")
 local LocalPlayer = Players.LocalPlayer
 
-
-local WR_Tab = Window:MakeTab({
-    Name = "WR",
-    Icon = "rbxassetid://4483345998",
-    PremiumOnly = false
-})
+local WR_Tab =
+    Window:MakeTab(
+    {
+        Name = "WR",
+        Icon = "rbxassetid://4483345998",
+        PremiumOnly = false
+    }
+)
 
 local legitMagsEnabled = false
 local maxFootballTeleportDistance = 0
 
-WR_Tab:AddToggle({
-    Name = "Legit Mags",
-    Default = false,
-    Callback = function(Value)
-        legitMagsEnabled = Value
-        print("Legit Mags Enabled:", Value)
-    end
-})
+WR_Tab:AddToggle(
+    {
+        Name = "Legit Mags",
+        Default = false,
+        Callback = function(Value)
+            legitMagsEnabled = Value
+            print("Legit Mags Enabled:", Value)
+        end
+    }
+)
 
-WR_Tab:AddSlider({
-    Name = "Legit Mags Power",
-    Min = 0,
-    Max = 25,
-    Default = 0,
-    Color = Color3.fromRGB(135, 206, 250),
-    Increment = 1,
-    ValueName = "Distance",
-    Callback = function(Value)
-        maxFootballTeleportDistance = Value
-        print("Legit Mags Distance:", Value)
-    end
-})
+WR_Tab:AddSlider(
+    {
+        Name = "Legit Mags Power",
+        Min = 0,
+        Max = 25,
+        Default = 0,
+        Color = Color3.fromRGB(135, 206, 250),
+        Increment = 1,
+        ValueName = "Distance",
+        Callback = function(Value)
+            maxFootballTeleportDistance = Value
+            print("Legit Mags Distance:", Value)
+        end
+    }
+)
 
 local Players = game:GetService("Players")
 local Workspace = game:GetService("Workspace")
 local RunService = game:GetService("RunService")
 
 local function TeleportTheFootball()
-    if not legitMagsEnabled then return end
-    
+    if not legitMagsEnabled then
+        return
+    end
+
     local LocalPlayer = Players.LocalPlayer
     local playerRoot = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-    if not playerRoot then return end
+    if not playerRoot then
+        return
+    end
 
     for _, football in ipairs(Workspace:GetChildren()) do
         if football:IsA("BasePart") and football.Name == "Football" then
             local distance = (football.Position - playerRoot.Position).Magnitude
 
             if distance <= maxFootballTeleportDistance then
-                football.CFrame = CFrame.new(playerRoot.Position + Vector3.new(0, 3, 0))  
+                football.CFrame = CFrame.new(playerRoot.Position + Vector3.new(0, 3, 0))
             end
         end
     end
@@ -71,30 +84,25 @@ end
 
 RunService.Heartbeat:Connect(TeleportTheFootball)
 
-
-
-
 local setFootballSizeEnabled = false
-local footballSizeValue = 1  
+local footballSizeValue = 1
 
-
-WR_Tab:AddToggle({
-    Name = "Legit Mags V2",
-    Default = false,
-    Callback = function(Value)
-        setFootballSizeEnabled = Value
-        print("Legit Mags V2 Enabled:", Value)
-    end
-})
-
-
-
+WR_Tab:AddToggle(
+    {
+        Name = "Legit Mags V2",
+        Default = false,
+        Callback = function(Value)
+            setFootballSizeEnabled = Value
+            print("Legit Mags V2 Enabled:", Value)
+        end
+    }
+)
 
 local game = game
 local Workspace = game.Workspace
 local RunService = game:GetService("RunService")
 
-local footballSizeValue = 1 
+local footballSizeValue = 1
 
 local function setFootballSize(Value)
     for _, football in ipairs(Workspace:GetChildren()) do
@@ -118,21 +126,24 @@ local function createHitboxForFootball(football)
     hitbox.Parent = Workspace
 
     local connection
-    connection = RunService.Heartbeat:Connect(function()
-        if not createHitboxesEnabled then
-            hitbox:Destroy()
-            connection:Disconnect()
-            return
-        end
+    connection =
+        RunService.Heartbeat:Connect(
+        function()
+            if not createHitboxesEnabled then
+                hitbox:Destroy()
+                connection:Disconnect()
+                return
+            end
 
-        if football.Parent then
-            hitbox.Size = football.Size
-            hitbox.Position = football.Position
-        else
-            hitbox:Destroy()
-            connection:Disconnect()
-        end 
-    end)
+            if football.Parent then
+                hitbox.Size = football.Size
+                hitbox.Position = football.Position
+            else
+                hitbox:Destroy()
+                connection:Disconnect()
+            end
+        end
+    )
 end
 
 local function createHitboxes()
@@ -143,103 +154,113 @@ local function createHitboxes()
     end
 end
 
-
-WR_Tab:AddSlider({
-    Name = "Legit Mags V2 Power",
-    Min = 0,
-    Max = 20,
-    Default = 1,
-    Color = Color3.fromRGB(135, 206, 250),
-    Increment = 1,
-    ValueName = "Power",
-    Callback = function(Value)
-        footballSizeValue = Value * 0.20 + 1
-        print("Legit Mags V2 Distance:", footballSizeValue)
-        setFootballSize(footballSizeValue)
-    end
-})
+WR_Tab:AddSlider(
+    {
+        Name = "Legit Mags V2 Power",
+        Min = 0,
+        Max = 20,
+        Default = 1,
+        Color = Color3.fromRGB(135, 206, 250),
+        Increment = 1,
+        ValueName = "Power",
+        Callback = function(Value)
+            footballSizeValue = Value * 0.20 + 1
+            print("Legit Mags V2 Distance:", footballSizeValue)
+            setFootballSize(footballSizeValue)
+        end
+    }
+)
 
 setFootballSize(footballSizeValue)
 createHitboxes()
 
-RunService.Heartbeat:Connect(function()
-    if setFootballSizeEnabled then 
-        setFootballSize(footballSizeValue)
+RunService.Heartbeat:Connect(
+    function()
+        if setFootballSizeEnabled then
+            setFootballSize(footballSizeValue)
+        end
     end
-end)
+)
 
+WR_Tab:AddToggle(
+    {
+        Name = "Legit Mags V2 Mag Hitbox",
+        Default = false,
+        Callback = function(Value)
+            createHitboxesEnabled = Value
+            print("Legit Mags V2 Mag Hitbox Enabled:", Value)
 
-WR_Tab:AddToggle({
-    Name = "Legit Mags V2 Mag Hitbox",
-    Default = false,
-    Callback = function(Value)
-        createHitboxesEnabled = Value
-        print("Legit Mags V2 Mag Hitbox Enabled:", Value)
-        
-        if Value then
-            
-            createHitboxes()
-        else
-            
-            for _, hitbox in ipairs(Workspace:GetChildren()) do
-                if hitbox:IsA("BasePart") and hitbox.Name == "FootballHitbox" then
-                    hitbox:Destroy()
+            if Value then
+                createHitboxes()
+            else
+                for _, hitbox in ipairs(Workspace:GetChildren()) do
+                    if hitbox:IsA("BasePart") and hitbox.Name == "FootballHitbox" then
+                        hitbox:Destroy()
+                    end
                 end
             end
         end
-    end    
-})
+    }
+)
 
-
-Workspace.ChildAdded:Connect(function(child)
-    if createHitboxesEnabled and child:IsA("BasePart") and child.Name == "Football" then
-        createHitboxForFootball(child)
-
+Workspace.ChildAdded:Connect(
+    function(child)
+        if createHitboxesEnabled and child:IsA("BasePart") and child.Name == "Football" then
+            createHitboxForFootball(child)
+        end
     end
-end)
+)
 
-
-
-
-local DB_Tab = Window:MakeTab({
-    Name = "DB",
-    Icon = "rbxassetid://4483345998",
-    PremiumOnly = false
-})
+local DB_Tab =
+    Window:MakeTab(
+    {
+        Name = "DB",
+        Icon = "rbxassetid://4483345998",
+        PremiumOnly = false
+    }
+)
 
 local blatantMagsEnabled = false
 local maxBlatantMagDistance = 0
 local CatchRange = 10
 
-DB_Tab:AddToggle({
-    Name = "Blatant Mags",
-    Default = false,
-    Callback = function(Value)
-        blatantMagsEnabled = Value
-        print("Blatant Mags Enabled:", Value)
-    end
-})
+DB_Tab:AddToggle(
+    {
+        Name = "Blatant Mags",
+        Default = false,
+        Callback = function(Value)
+            blatantMagsEnabled = Value
+            print("Blatant Mags Enabled:", Value)
+        end
+    }
+)
 
-DB_Tab:AddSlider({
-    Name = "Blatant Mags Power",
-    Min = 0,
-    Max = 50,
-    Default = 0,
-    Color = Color3.fromRGB(135, 206, 250),
-    Increment = 1,
-    ValueName = "Power",
-    Callback = function(Value)
-        maxBlatantMagDistance = Value
-        print("Blatant Mags Distance:", Value)
-    end
-})
+DB_Tab:AddSlider(
+    {
+        Name = "Blatant Mags Power",
+        Min = 0,
+        Max = 50,
+        Default = 0,
+        Color = Color3.fromRGB(135, 206, 250),
+        Increment = 1,
+        ValueName = "Power",
+        Callback = function(Value)
+            maxBlatantMagDistance = Value
+            print("Blatant Mags Distance:", Value)
+        end
+    }
+)
 
 local function FootballMag()
-    if not blatantMagsEnabled or maxBlatantMagDistance == 0 then return end
+    if not blatantMagsEnabled or maxBlatantMagDistance == 0 then
+        return
+    end
 
     local player = Players.LocalPlayer
     local playerRoot = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
-    if not playerRoot then return end
+    if not playerRoot then
+        return
+    end
 
     for _, football in ipairs(Workspace:GetChildren()) do
         if football:IsA("BasePart") and football.Name == "Football" then
@@ -255,40 +276,48 @@ RunService.Heartbeat:Connect(FootballMag)
 
 local blatantMagsV2Enabled = false
 
-DB_Tab:AddToggle({
-    Name = "Blatant Mags V2",
-    Default = false,
-    Callback = function(Value)
-        blatantMagsV2Enabled = Value
-        print("Blatant Mags V2 Enabled:", Value)
-    end
-})
+DB_Tab:AddToggle(
+    {
+        Name = "Blatant Mags V2",
+        Default = false,
+        Callback = function(Value)
+            blatantMagsV2Enabled = Value
+            print("Blatant Mags V2 Enabled:", Value)
+        end
+    }
+)
 
-DB_Tab:AddSlider({
-    Name = "Blatant Mags V2 Power",
-    Min = 0,
-    Max = 50,
-    Default = 0,
-    Color = Color3.fromRGB(135, 206, 250),
-    Increment = 1,
-    ValueName = "Distance",
-    Callback = function(Value)
-        maxBlatantMagDistance = Value
-        print("Blatant Mags V2 Distance:", Value)
-    end
-})
+DB_Tab:AddSlider(
+    {
+        Name = "Blatant Mags V2 Power",
+        Min = 0,
+        Max = 50,
+        Default = 0,
+        Color = Color3.fromRGB(135, 206, 250),
+        Increment = 1,
+        ValueName = "Distance",
+        Callback = function(Value)
+            maxBlatantMagDistance = Value
+            print("Blatant Mags V2 Distance:", Value)
+        end
+    }
+)
 
 local function instantTeleport()
-    
-    if not blatantMagsV2Enabled or maxBlatantMagDistance == 0 then return end
+    if not blatantMagsV2Enabled or maxBlatantMagDistance == 0 then
+        return
+    end
 
     local plr = Players.LocalPlayer
     local plrs = game:GetService("Players")
     local LA = plr.Character and (plr.Character:FindFirstChild("Left Arm") or plr.Character:FindFirstChild("LeftHand"))
-    local RA = plr.Character and (plr.Character:FindFirstChild("Right Arm") or plr.Character:FindFirstChild("RightHand"))
+    local RA =
+        plr.Character and (plr.Character:FindFirstChild("Right Arm") or plr.Character:FindFirstChild("RightHand"))
     local l = plr.Character:FindFirstChild("Left Leg")
     local hrp = plr.Character and (plr.Character:FindFirstChild("HumanoidRootPart"))
-    if not LA and RA then return end
+    if not LA and RA then
+        return
+    end
 
     for _, football in ipairs(Workspace:GetChildren()) do
         if football:IsA("BasePart") and football.Name == "Football" then
@@ -298,86 +327,85 @@ local function instantTeleport()
                 football.CFrame = CFrame.new(RA.Position)
                 football.Position = CFrame.new(hrp.CFrame)
                 football.CFrame = CFrame.new(l.Position)
-               end
             end
         end
     end
+end
 
 RunService.Heartbeat:Connect(instantTeleport)
 
-    
-    
-    local setFootballSizeEnabled = false
-    local footballSizeValue = 1  
-    
-    
-    DB_Tab:AddToggle({
+local setFootballSizeEnabled = false
+local footballSizeValue = 1
+
+DB_Tab:AddToggle(
+    {
         Name = "Blatant Mags V3",
         Default = false,
         Callback = function(Value)
             setFootballSizeEnabled = Value
             print("Legit Mags V2 Enabled:", Value)
         end
-    })
-    
-    
-    
-    
-    local game = game
-    local Workspace = game.Workspace
-    local RunService = game:GetService("RunService")
-    
-    local footballSizeValue = 1 
-    
-    local function setFootballSize(Value)
-        for _, football in ipairs(Workspace:GetChildren()) do
-            if football.Name == "Football" and football:IsA("BasePart") then
-                football.Size = Vector3.new(Value, Value, Value)
-            end
+    }
+)
+
+local game = game
+local Workspace = game.Workspace
+local RunService = game:GetService("RunService")
+
+local footballSizeValue = 1
+
+local function setFootballSize(Value)
+    for _, football in ipairs(Workspace:GetChildren()) do
+        if football.Name == "Football" and football:IsA("BasePart") then
+            football.Size = Vector3.new(Value, Value, Value)
         end
     end
-    
-    local createHitboxesEnabled = false
-    
-    local function createHitboxForFootball(football)
-        local hitbox = Instance.new("Part")
-        hitbox.Name = "FootballHitbox"
-        hitbox.Anchored = true
-        hitbox.CanCollide = false
-        hitbox.Transparency = 0.6
-        hitbox.Size = football.Size
-        hitbox.Material = "Cardboard"
-        hitbox.Position = football.Position
-        hitbox.Parent = Workspace
-    
-        local connection
-        connection = RunService.Heartbeat:Connect(function()
+end
+
+local createHitboxesEnabled = false
+
+local function createHitboxForFootball(football)
+    local hitbox = Instance.new("Part")
+    hitbox.Name = "FootballHitbox"
+    hitbox.Anchored = true
+    hitbox.CanCollide = false
+    hitbox.Transparency = 0.6
+    hitbox.Size = football.Size
+    hitbox.Material = "Cardboard"
+    hitbox.Position = football.Position
+    hitbox.Parent = Workspace
+
+    local connection
+    connection =
+        RunService.Heartbeat:Connect(
+        function()
             if not createHitboxesEnabled then
                 hitbox:Destroy()
                 connection:Disconnect()
                 return
             end
-    
+
             if football.Parent then
                 hitbox.Size = football.Size
                 hitbox.Position = football.Position
             else
                 hitbox:Destroy()
                 connection:Disconnect()
-            end 
-        end)
-    end
-    
-    local function createHitboxes()
-        for _, football in ipairs(Workspace:GetChildren()) do
-            if football:IsA("BasePart") and football.Name == "Football" then
-                createHitboxForFootball(football)
             end
         end
+    )
+end
+
+local function createHitboxes()
+    for _, football in ipairs(Workspace:GetChildren()) do
+        if football:IsA("BasePart") and football.Name == "Football" then
+            createHitboxForFootball(football)
+        end
     end
-    
-    
-    DB_Tab:AddSlider({
+end
+
+DB_Tab:AddSlider(
+    {
         Name = "Blatant Mags V3 Power",
         Min = 0,
         Max = 20,
@@ -390,179 +418,192 @@ RunService.Heartbeat:Connect(instantTeleport)
             print("Blatant Mags V3 Distance:", footballSizeValue)
             setFootballSize(footballSizeValue)
         end
-    })
-    
-    setFootballSize(footballSizeValue)
-    createHitboxes()
-    
-    RunService.Heartbeat:Connect(function()
-        if setFootballSizeEnabled then 
+    }
+)
+
+setFootballSize(footballSizeValue)
+createHitboxes()
+
+RunService.Heartbeat:Connect(
+    function()
+        if setFootballSizeEnabled then
             setFootballSize(footballSizeValue)
         end
-    end)
-    
-    
-    DB_Tab:AddToggle({
+    end
+)
+
+DB_Tab:AddToggle(
+    {
         Name = "Blatant Mags V3 Mag Hitbox",
         Default = false,
         Callback = function(Value)
             createHitboxesEnabled = Value
             print("Blatant Mags V3 Mag Hitbox Enabled:", Value)
-            
+
             if Value then
-                
                 createHitboxes()
             else
-                
                 for _, hitbox in ipairs(Workspace:GetChildren()) do
                     if hitbox:IsA("BasePart") and hitbox.Name == "FootballHitbox" then
                         hitbox:Destroy()
                     end
                 end
             end
-        end    
-    })
-    
-    
-    Workspace.ChildAdded:Connect(function(child)
+        end
+    }
+)
+
+Workspace.ChildAdded:Connect(
+    function(child)
         if createHitboxesEnabled and child:IsA("BasePart") and child.Name == "Football" then
             createHitboxForFootball(child)
-    
         end
-    end)
-    
+    end
+)
 
-
-
-
-local QB_Tab = Window:MakeTab({
-    Name = "QB",
-    Icon = "rbxassetid://4483345998",
-    PremiumOnly = false
-})
+local QB_Tab =
+    Window:MakeTab(
+    {
+        Name = "QB",
+        Icon = "rbxassetid://4483345998",
+        PremiumOnly = false
+    }
+)
 
 local QBAimbotEnabled = false
 
-QB_Tab:AddToggle({
-    Name = "QB Aimbot",
-    Default = false,
-    Callback = function(Value)
-        QBAimbotEnabled = Value
-        print("QB Aimbot Enabled:", Value)
-    end
-})
+QB_Tab:AddToggle(
+    {
+        Name = "QB Aimbot",
+        Default = false,
+        Callback = function(Value)
+            QBAimbotEnabled = Value
+            print("QB Aimbot Enabled:", Value)
+        end
+    }
+)
 
-local Rusher_Tab = Window:MakeTab({
-    Name = "Rusher",
-    Icon = "rbxassetid://4483345998",
-    PremiumOnly = false
-})
+local Rusher_Tab =
+    Window:MakeTab(
+    {
+        Name = "Rusher",
+        Icon = "rbxassetid://4483345998",
+        PremiumOnly = false
+    }
+)
 
 local walkSpeedEnabled = false
 
-Rusher_Tab:AddToggle({
-    Name = "WalkSpeed",
-    Default = false,
-    Callback = function(Value)
-        walkSpeedEnabled = Value
-        print("WalkSpeed Enabled:", Value)
-    end
-})
+Rusher_Tab:AddToggle(
+    {
+        Name = "WalkSpeed",
+        Default = false,
+        Callback = function(Value)
+            walkSpeedEnabled = Value
+            print("WalkSpeed Enabled:", Value)
+        end
+    }
+)
 
-Rusher_Tab:AddSlider({
-    Name = "WalkSpeed",
-    Min = 16,
-    Max = 50,
-    Default = 20,
-    Color = Color3.fromRGB(135, 206, 250),
-    Increment = 1,
-    ValueName = "Speed",
-    Callback = function(Value)
-        if walkSpeedEnabled then
-            while true do
-            local player = Players.LocalPlayer
-            local character = player.Character
-            if character and character:FindFirstChild("Humanoid") then
-                character.Humanoid.WalkSpeed = Value
+Rusher_Tab:AddSlider(
+    {
+        Name = "WalkSpeed",
+        Min = 16,
+        Max = 50,
+        Default = 20,
+        Color = Color3.fromRGB(135, 206, 250),
+        Increment = 1,
+        ValueName = "Speed",
+        Callback = function(Value)
+            if walkSpeedEnabled then
+                while true do
+                    local player = Players.LocalPlayer
+                    local character = player.Character
+                    if character and character:FindFirstChild("Humanoid") then
+                        character.Humanoid.WalkSpeed = Value
+                    end
+                end
+                wait(1)
             end
         end
-        wait(1)
-    end
-end   
-
-})
+    }
+)
 
 local JP = false
 
-Rusher_Tab:AddToggle({
-    Name = "JumpPower",
-    Default = false,
-    Callback = function(Value)
-        JP = Value
-        print("JumpPower Enabled:", Value)
-    end
-})
+Rusher_Tab:AddToggle(
+    {
+        Name = "JumpPower",
+        Default = false,
+        Callback = function(Value)
+            JP = Value
+            print("JumpPower Enabled:", Value)
+        end
+    }
+)
 
-Rusher_Tab:AddSlider({
-    Name = "JumpPower",
-    Min = 50,
-    Max = 250,
-    Default = 50,
-    Color = Color3.fromRGB(135, 206, 250),
-    Increment = 1,
-    ValueName = "Power",
-    Callback = function(Value)
+Rusher_Tab:AddSlider(
+    {
+        Name = "JumpPower",
+        Min = 50,
+        Max = 250,
+        Default = 50,
+        Color = Color3.fromRGB(135, 206, 250),
+        Increment = 1,
+        ValueName = "Power",
+        Callback = function(Value)
+            local Players = game:GetService("Players")
 
-        local Players = game:GetService("Players")
+            local function AJP()
+                local plr = Players.LocalPlayer
+                local c = plr.Character
 
-        local function AJP()
-            local plr = Players.LocalPlayer
-            local c = plr.Character
-            
-            if c and c:FindFirstChild("Humanoid") then
-                c.Humanoid.JumpPower = Value
+                if c and c:FindFirstChild("Humanoid") then
+                    c.Humanoid.JumpPower = Value
+                end
             end
-        end
-        
-        local function onCharacterAdded(character)
-            AJP()  
-        end
-        
-        Players.LocalPlayer.CharacterAdded:Connect(onCharacterAdded)  
-        
-        
-        AJP()
-        
-        
-        local function ROR()
+
+            local function onCharacterAdded(character)
+                AJP()
+            end
+
+            Players.LocalPlayer.CharacterAdded:Connect(onCharacterAdded)
+
             AJP()
+
+            local function ROR()
+                AJP()
+            end
+
+            spawn(ROR)
         end
-        
-        spawn(ROR)  
+    }
+)
 
-    end 
-
-        
-})
-
-Rusher_Tab:AddBind({
-    Name = "Ball Carrier Lock",
-    Default = Enum.KeyCode.L,
-    Hold = false,
-    Callback = function()
-        print("Ball Carrier Lock Enabled")
-    end
-})
+Rusher_Tab:AddBind(
+    {
+        Name = "Ball Carrier Lock",
+        Default = Enum.KeyCode.L,
+        Hold = false,
+        Callback = function()
+            print("Ball Carrier Lock Enabled")
+        end
+    }
+)
 
 local teleportRange = 5
 
 local function TeleportForward()
     local player = Players.LocalPlayer
     local character = player.Character
-    if not character then return end
+    if not character then
+        return
+    end
 
     local rootPart = character:FindFirstChild("HumanoidRootPart")
-    if not rootPart then return end
+    if not rootPart then
+        return
+    end
 
     local teleportDirection = rootPart.CFrame.LookVector
     local teleportPosition = rootPart.Position + (teleportDirection * teleportRange)
@@ -578,22 +619,25 @@ local function TeleportForward()
     rootPart.CFrame = CFrame.new(teleportPosition)
 end
 
-Rusher_Tab:AddBind({
-    Name = "QuickTP",
-    Default = Enum.KeyCode.F,
-    Hold = false,
-    Callback = function()
-        TeleportForward()
-    end
-})
+Rusher_Tab:AddBind(
+    {
+        Name = "QuickTP",
+        Default = Enum.KeyCode.F,
+        Hold = false,
+        Callback = function()
+            TeleportForward()
+        end
+    }
+)
 
-local Extra_Tab = Window:MakeTab({
-    Name = "Extra Stuff",
-    Icon = "rbxassetid://4483345998",
-    PremiumOnly = false
-})
-
-
+local Extra_Tab =
+    Window:MakeTab(
+    {
+        Name = "Extra Stuff",
+        Icon = "rbxassetid://4483345998",
+        PremiumOnly = false
+    }
+)
 
 local pullVectorDistance = 0
 local pullVectorConnection
@@ -616,7 +660,9 @@ local function findNearestFootball()
 end
 
 local function teleportToFootball()
-    if pullVectorDistance == 0 then return end
+    if pullVectorDistance == 0 then
+        return
+    end
     local nearestFootball = findNearestFootball()
 
     if nearestFootball then
@@ -624,121 +670,124 @@ local function teleportToFootball()
     end
 end
 
-
-
-Extra_Tab:AddSlider({
-    Name = "Pullvector",
-    Min = 0,
-    Max = 20,
-    Default = 0,
-    Color = Color3.fromRGB(135, 206, 250),
-    Increment = 1,
-    ValueName = "Distance",
-    Callback = function(Value)
-        pullVectorDistance = Value 
-      if pullVectorConnection then
-            pullVectorConnection:Disconnect()
+Extra_Tab:AddSlider(
+    {
+        Name = "Pullvector",
+        Min = 0,
+        Max = 20,
+        Default = 0,
+        Color = Color3.fromRGB(135, 206, 250),
+        Increment = 1,
+        ValueName = "Distance",
+        Callback = function(Value)
+            pullVectorDistance = Value
+            if pullVectorConnection then
+                pullVectorConnection:Disconnect()
+            end
+            if pullVectorDistance > 0 then
+                pullVectorConnection = RunService.Heartbeat:Connect(teleportToFootball)
+            end
+            print("Pullvector Distance:", Value)
         end
-        if pullVectorDistance > 0 then
-            pullVectorConnection = RunService.Heartbeat:Connect(teleportToFootball)
-        end
-        print("Pullvector Distance:", Value)
-    end
-})
+    }
+)
 
 local armSize = 1
 
-Extra_Tab:AddSlider({
-    Name = "Increased Arm Size",
-    Min = 1,
-    Max = 10,
-    Default = 1,
-    Color = Color3.fromRGB(135, 206, 250),
-    Increment = 1,
-    ValueName = "Size",
-    Callback = function(Value)
-        armSize = Value
-        print("Increased Arm Size:", Value)
+Extra_Tab:AddSlider(
+    {
+        Name = "Increased Arm Size",
+        Min = 1,
+        Max = 10,
+        Default = 1,
+        Color = Color3.fromRGB(135, 206, 250),
+        Increment = 1,
+        ValueName = "Size",
+        Callback = function(Value)
+            armSize = Value
+            print("Increased Arm Size:", Value)
 
-        local RunService = game:GetService("RunService")
+            local RunService = game:GetService("RunService")
 
-        local player = Players.LocalPlayer
-        local character = player.Character
-        if character then
-            local leftArm = character:FindFirstChild("Left Arm") or character:FindFirstChild("LeftHand")
-            local rightArm = character:FindFirstChild("Right Arm") or character:FindFirstChild("RightHand")
-            if leftArm then
-                leftArm.Size = Vector3.new(leftArm.Size.X, armSize, armSize)
-                leftArm.Massless = true
-            end
-            if rightArm then
-                rightArm.Size = Vector3.new(rightArm.Size.X, armSize, armSize)
-                rightArm.Massless = true
+            local player = Players.LocalPlayer
+            local character = player.Character
+            if character then
+                local leftArm = character:FindFirstChild("Left Arm") or character:FindFirstChild("LeftHand")
+                local rightArm = character:FindFirstChild("Right Arm") or character:FindFirstChild("RightHand")
+                if leftArm then
+                    leftArm.Size = Vector3.new(leftArm.Size.X, armSize, armSize)
+                    leftArm.Massless = true
+                end
+                if rightArm then
+                    rightArm.Size = Vector3.new(rightArm.Size.X, armSize, armSize)
+                    rightArm.Massless = true
 
-                RunService.Heartbeat:Connect(armSize)
+                    RunService.Heartbeat:Connect(armSize)
+                end
             end
         end
-    end
-})
+    }
+)
 
 local armTransparency = 0
 
-Extra_Tab:AddSlider({
-    Name = "Arm Transparency",
-    Min = 0,
-    Max = 1,
-    Default = 0,
-    Color = Color3.fromRGB(135, 206, 250),
-    Increment = 0.1,
-    ValueName = "Transparency",
-    Callback = function(Value)
-        armTransparency = Value
-        print("Arm Transparency:", Value)
-        
-        local RunService = game:GetService("RunService")
-        local player = Players.LocalPlayer
-        local character = player.Character
-        if character then
-            local leftArm = character:FindFirstChild("Left Arm") 
-            local rightArm = character:FindFirstChild("Right Arm")
-            if leftArm then
-                for _, part in pairs(leftArm:GetDescendants()) do
-                    if part:IsA("BasePart") then
-                        part.Transparency = armTransparency
+Extra_Tab:AddSlider(
+    {
+        Name = "Arm Transparency",
+        Min = 0,
+        Max = 1,
+        Default = 0,
+        Color = Color3.fromRGB(135, 206, 250),
+        Increment = 0.1,
+        ValueName = "Transparency",
+        Callback = function(Value)
+            armTransparency = Value
+            print("Arm Transparency:", Value)
+
+            local RunService = game:GetService("RunService")
+            local player = Players.LocalPlayer
+            local character = player.Character
+            if character then
+                local leftArm = character:FindFirstChild("Left Arm")
+                local rightArm = character:FindFirstChild("Right Arm")
+                if leftArm then
+                    for _, part in pairs(leftArm:GetDescendants()) do
+                        if part:IsA("BasePart") then
+                            part.Transparency = armTransparency
+                        end
                     end
                 end
-            end
-            if rightArm then
-                for _, part in pairs(rightArm:GetDescendants()) do
-                    if part:IsA("BasePart") then
-                        part.Transparency = armTransparency
+                if rightArm then
+                    for _, part in pairs(rightArm:GetDescendants()) do
+                        if part:IsA("BasePart") then
+                            part.Transparency = armTransparency
 
-                        RunService.Heartbeat:Connect(armTransparency)
-                        
+                            RunService.Heartbeat:Connect(armTransparency)
+                        end
                     end
                 end
             end
         end
-    end
-})
-
+    }
+)
 
 local maxDistance = 0
 
-
-Extra_Tab:AddSlider({
-    Name = "AutoBoost",
-    Min = 0,
-    Max = 20,
-    Default = maxDistance,  
-    Color = Color3.fromRGB(135, 206, 250),
-    Increment = 1,  
-    ValueName = "bananas",
-    Callback = function(Value)
-        maxDistance = Value
-        print("New maxDistance set to:", maxDistance)
-    end    
-})
+Extra_Tab:AddSlider(
+    {
+        Name = "AutoBoost",
+        Min = 0,
+        Max = 20,
+        Default = maxDistance,
+        Color = Color3.fromRGB(135, 206, 250),
+        Increment = 1,
+        ValueName = "bananas",
+        Callback = function(Value)
+            maxDistance = Value
+            print("New maxDistance set to:", maxDistance)
+        end
+    }
+)
 
 local plrs = game:GetService("Players")
 local plr = plrs.LocalPlayer
@@ -753,7 +802,7 @@ local function moveToHead(nearestHead, maxDist)
             if hrp then
                 local distance = (nearestHead.Position - plr.Character.Head.Position).magnitude
                 if distance <= maxDist then
-                    hrp.CFrame = CFrame.new(nearestHead.Position + Vector3.new(0, 3, 0))  
+                    hrp.CFrame = CFrame.new(nearestHead.Position + Vector3.new(0, 3, 0))
                 else
                     print("Nearest head is too far away.")
                 end
@@ -791,25 +840,17 @@ local function findNearestHead()
     return nearesthead
 end
 
-game:GetService("RunService").Heartbeat:Connect(function()
-    nearesthead = findNearestHead()
-    moveToHead(nearesthead, maxDistance)
-end)
-
-
-
-
-
-
-
-
-
+game:GetService("RunService").Heartbeat:Connect(
+    function()
+        nearesthead = findNearestHead()
+        moveToHead(nearesthead, maxDistance)
+    end
+)
 
 local player = game.Players.LocalPlayer
 local humanoid = player.Character and player.Character:FindFirstChildOfClass("Humanoid")
 
-local sliderEnabled = false 
-
+local sliderEnabled = false
 
 local function updateHipHeight(value)
     if humanoid and sliderEnabled then
@@ -817,35 +858,32 @@ local function updateHipHeight(value)
     end
 end
 
+Extra_Tab:AddToggle(
+    {
+        Name = "HipHeight",
+        Default = false,
+        Callback = function(state)
+            sliderEnabled = state
+            print("HipHeight adjustment enabled: " .. tostring(state))
+        end
+    }
+)
 
-Extra_Tab:AddToggle({
-    Name = "HipHeight",
-    Default = false,
-    Callback = function(state)
-        sliderEnabled = state
-        print("HipHeight adjustment enabled: " .. tostring(state))
-    end
-})
-
-
-Extra_Tab:AddSlider({
-    Name = "HipHeight",
-    Min = 0,
-    Max = 10.0,
-    Default = 1,
-    Color = Color3.fromRGB(135, 206, 250),
-    Increment = 1,
-    ValueName = "Height",
-    Callback = function(value)
-        updateHipHeight(value)
-        print("HipHeight set to: " .. value)
-    end    
-})
-
-
-
-
-
+Extra_Tab:AddSlider(
+    {
+        Name = "HipHeight",
+        Min = 0,
+        Max = 10.0,
+        Default = 1,
+        Color = Color3.fromRGB(135, 206, 250),
+        Increment = 1,
+        ValueName = "Height",
+        Callback = function(value)
+            updateHipHeight(value)
+            print("HipHeight set to: " .. value)
+        end
+    }
+)
 
 local AJe = false
 
@@ -860,11 +898,12 @@ local function EAJ(c)
 end
 
 local function onCharacterAdded(plr)
-    plr.CharacterAdded:Connect(function(c)
-        EAJ(c)
-    end)
+    plr.CharacterAdded:Connect(
+        function(c)
+            EAJ(c)
+        end
+    )
 end
-
 
 local function enableAntiJam()
     for _, plr in ipairs(game:GetService("Players"):GetPlayers()) do
@@ -874,106 +913,111 @@ local function enableAntiJam()
     end
 end
 
-
 for _, plr in ipairs(game:GetService("Players"):GetPlayers()) do
     onCharacterAdded(plr)
 end
 
-
 game:GetService("Players").PlayerAdded:Connect(onCharacterAdded)
 
-
-
-
-Extra_Tab:AddToggle({
-    Name = "Anti Jam",
-    Default = false,
-    Callback = function(Value)
-        AJe = Value
-        enableAntiJam()
-    end
-})
-
+Extra_Tab:AddToggle(
+    {
+        Name = "Anti Jam",
+        Default = false,
+        Callback = function(Value)
+            AJe = Value
+            enableAntiJam()
+        end
+    }
+)
 
 enableAntiJam()
 
-
-
-
-
 local tackleReachDistance = 250
 
-Rusher_Tab:AddSlider({
-    Name = "Tackle Reach",
-    Min = 1,
-    Max = 50,
-    Default = 1,
-    Color = Color3.fromRGB(135, 206, 250),
-    Increment = 1,
-    ValueName = "Distance",
-    Callback = function(Value)
-        tackleReachDistance = Value
-        print("Tackle Reach Distance:", Value)
-        _G.reach = tackleReachDistance
-    end
-})
+Rusher_Tab:AddSlider(
+    {
+        Name = "Tackle Reach",
+        Min = 1,
+        Max = 50,
+        Default = 1,
+        Color = Color3.fromRGB(135, 206, 250),
+        Increment = 1,
+        ValueName = "Distance",
+        Callback = function(Value)
+            tackleReachDistance = Value
+            print("Tackle Reach Distance:", Value)
+            _G.reach = tackleReachDistance
+        end
+    }
+)
 
 local function resizeHumanoidRootPart(hrp, newSize)
     hrp.Size = Vector3.new(newSize.X, hrp.Size.Y, newSize.Z)
 end
 
-RunService.Stepped:Connect(function()
-    if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
-        local humanoidRootPart = LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+RunService.Stepped:Connect(
+    function()
+        if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+            local humanoidRootPart = LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
 
-        humanoidRootPart.CustomPhysicalProperties = PhysicalProperties.new(0, 0.3, 0.5, 0.3, 0.5)
+            humanoidRootPart.CustomPhysicalProperties = PhysicalProperties.new(0, 0.3, 0.5, 0.3, 0.5)
 
-        local newSize = Vector3.new(_G.reach, humanoidRootPart.Size.Y, _G.reach)
-        if humanoidRootPart.Size == newSize then
-            resizeHumanoidRootPart(humanoidRootPart, newSize)
+            local newSize = Vector3.new(_G.reach, humanoidRootPart.Size.Y, _G.reach)
+            if humanoidRootPart.Size == newSize then
+                resizeHumanoidRootPart(humanoidRootPart, newSize)
+            end
         end
     end
-end)
+)
 
-local League_Tab = Window:MakeTab({
-    Name = "LFG Main",
-    Icon = "rbxassetid://4483345998",
-    PremiumOnly = false
-})
+local League_Tab =
+    Window:MakeTab(
+    {
+        Name = "LFG Main",
+        Icon = "rbxassetid://4483345998",
+        PremiumOnly = false
+    }
+)
 
-local Section = League_Tab:AddSection({
-	Name = "League Mags V2"
-})
-
+local Section =
+    League_Tab:AddSection(
+    {
+        Name = "League Mags V2"
+    }
+)
 
 local hitboxSize = Vector3.new(5, 5, 5)
 local hitboxResizeEnabled = false
 
-League_Tab:AddToggle({
-    Name = "LFGV2",
-    Default = false,
-    Callback = function(Value)
-        hitboxResizeEnabled = Value
-        print("LFGV2 Toggle Enabled:", Value)
-    end
-})
-
-League_Tab:AddSlider({
-    Name = "LFGMagsV2",
-    Min = 1,
-    Max = 100,
-    Default = 1,
-    Color = Color3.fromRGB(	135, 206, 250),
-    Increment = 1,
-    ValueName = "Size",
-    Callback = function(Value)
-        hitboxSize = Vector3.new(Value, Value, Value)
-        if hitboxResizeEnabled then
-            resizeHitbox(hitboxSize)
+League_Tab:AddToggle(
+    {
+        Name = "LFGV2",
+        Default = false,
+        Callback = function(Value)
+            hitboxResizeEnabled = Value
+            print("LFGV2 Toggle Enabled:", Value)
         end
-        print("Hitbox Size:", hitboxSize)
-    end
-})
+    }
+)
+
+League_Tab:AddSlider(
+    {
+        Name = "LFGMagsV2",
+        Min = 1,
+        Max = 100,
+        Default = 1,
+        Color = Color3.fromRGB(135, 206, 250),
+        Increment = 1,
+        ValueName = "Size",
+        Callback = function(Value)
+            hitboxSize = Vector3.new(Value, Value, Value)
+            if hitboxResizeEnabled then
+                resizeHitbox(hitboxSize)
+            end
+            print("Hitbox Size:", hitboxSize)
+        end
+    }
+)
 
 local function resizeHitbox(newSize)
     local character = LocalPlayer.Character
@@ -997,73 +1041,79 @@ end
 
 spawn(resizeHitboxLoop)
 
+local Config_Tab =
+    Window:MakeTab(
+    {
+        Name = "Configs",
+        Icon = "rbxassetid://4483345998",
+        PremiumOnly = false
+    }
+)
 
-local Config_Tab = Window:MakeTab({
-	Name = "Configs",
-	Icon = "rbxassetid://4483345998",
-	PremiumOnly = false
-})
+local Section =
+    Config_Tab:AddSection(
+    {
+        Name = "Jerrick's Config"
+    }
+)
 
-local Section = Config_Tab:AddSection({
-	Name = "Jerrick's Config"
-})
+Config_Tab:AddToggle(
+    {
+        Name = "BigDaddyJerrick Config",
+        Default = false,
+        Callback = function(Value)
+            if Value then
+                pullVectorDistance = 7.5
+                pullVectorConnection = RunService.Heartbeat:Connect(teleportToFootball)
 
+                local Player = Players.LocalPlayer
+                local Character = Player.Character
+                if Character and Character:FindFirstChild("Humanoid") then
+                    Character.Humanoid.JumpPower = 60
+                end
+            else
+                pullVectorDistance = 0
+                if pullVectorConnection then
+                    pullVectorConnection:Disconnect()
+                    pullVectorConnection = nil
+                end
 
-Config_Tab:AddToggle({
-    Name = "BigDaddyJerrick Config",
-    Default = false,
-    Callback = function(Value)
-        if Value then
-            pullVectorDistance = 7.5
-            pullVectorConnection = RunService.Heartbeat:Connect(teleportToFootball)
-            
-            
-            local Player = Players.LocalPlayer
-            local Character = Player.Character
-            if Character and Character:FindFirstChild("Humanoid") then
-                Character.Humanoid.JumpPower = 60
-            end
-        else
-            pullVectorDistance = 0
-            if pullVectorConnection then
-                pullVectorConnection:Disconnect()
-                pullVectorConnection = nil
-            end
-
-           
-            local Player = Players.LocalPlayer
-            local Character = Player.Character
-            if Character and Character:FindFirstChild("Humanoid") then
-                Character.Humanoid.JumpPower = 50
+                local Player = Players.LocalPlayer
+                local Character = Player.Character
+                if Character and Character:FindFirstChild("Humanoid") then
+                    Character.Humanoid.JumpPower = 50
+                end
             end
         end
-    end
+    }
+)
 
-})
+Extra_Tab:AddToggle(
+    {
+        Name = "No Jump Cooldown",
+        Default = false,
+        Callback = function(Value)
+            print("No Jump Cooldown Enabled:", Value)
+        end
+    }
+)
 
-Extra_Tab:AddToggle({
-    Name = "No Jump Cooldown",
-    Default = false,
-    Callback = function(Value)
+local Section =
+    Config_Tab:AddSection(
+    {
+        Name = "For D1 Players"
+    }
+)
 
-        print("No Jump Cooldown Enabled:", Value)
-    end
-})
-
-local Section = Config_Tab:AddSection({
-	Name = "For D1 Players"
-})
-
-
-
-
-Config_Tab:AddToggle({
-    Name = "LFGMain Config",
-    Default = false,
-    Callback = function(Value)
-        print("LFG Config Enabled")
-    end
-})     
+Config_Tab:AddToggle(
+    {
+        Name = "LFGMain Config",
+        Default = false,
+        Callback = function(Value)
+            print("LFG Config Enabled")
+        end
+    }
+)
 
 local mags = Instance.new("Part")
 mags.Name = "Mags"
@@ -1076,71 +1126,76 @@ local t = game.Workspace:FindFirstChild("Torso")
 if t then
     mags.Size = t.Size
     mags.Position = t.Position
-    mags.Parent = game.Workspace  
+    mags.Parent = game.Workspace
+end
 
-    
+Config_Tab:AddToggle(
+    {
+        Name = "Blatant Config",
+        Default = false,
+        Callback = function(Value)
+            print("Blatant Config Enabled")
+        end
+    }
+)
 
-    end
+local Section =
+    Config_Tab:AddSection(
+    {
+        Name = "Fat Ahh"
+    }
+)
 
+Config_Tab:AddToggle(
+    {
+        Name = "XXL Config",
+        Default = false,
+        Callback = function(Value)
+            print("XXL Config Enabled")
+        end
+    }
+)
 
-
-
-
-
-
-Config_Tab:AddToggle({
-    Name = "Blatant Config",
-    Default = false,
-    Callback = function(Value)
-    print("Blatant Config Enabled")
-    end
-})    
-
-local Section = Config_Tab:AddSection({
-	Name = "Fat Ahh"
-})
-
-
-Config_Tab:AddToggle({
-    Name = "XXL Config",
-    Default = false,
-    Callback = function(Value)
-    print("XXL Config Enabled")
-    end
-})    
-
-local Mobile_Tab = Window:MakeTab({
-	Name = "Mobile Support",
-	Icon = "rbxassetid://4483345998",
-	PremiumOnly = false
-})
-
+local Mobile_Tab =
+    Window:MakeTab(
+    {
+        Name = "Mobile Support",
+        Icon = "rbxassetid://4483345998",
+        PremiumOnly = false
+    }
+)
 
 local maxFootballTeleportDistance = 12
 local legitMagEnabled = false
 
-Mobile_Tab:AddToggle({
-    Name = "Legit Magnets",
-    Default = false,
-    Callback = function(Value)
-        legitMagEnabled = Value
-        print("Legit Magnets Enabled:", Value)
-    end
-})
+Mobile_Tab:AddToggle(
+    {
+        Name = "Legit Magnets",
+        Default = false,
+        Callback = function(Value)
+            legitMagEnabled = Value
+            print("Legit Magnets Enabled:", Value)
+        end
+    }
+)
 
 local function TeleportTheFootball()
-    if not legitMagEnabled then return end
-    
+    if not legitMagEnabled then
+        return
+    end
+
     local LocalPlayer = Players.LocalPlayer
     local playerRoot = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-    if not playerRoot then return end
+    if not playerRoot then
+        return
+    end
 
     for _, football in ipairs(Workspace:GetChildren()) do
         if football:IsA("BasePart") and football.Name == "Football" then
             local distance = (football.Position - playerRoot.Position).Magnitude
 
             if distance <= maxFootballTeleportDistance then
-                football.CFrame = CFrame.new(playerRoot.Position + Vector3.new(0, 3, 0))  
+                football.CFrame = CFrame.new(playerRoot.Position + Vector3.new(0, 3, 0))
             end
         end
     end
@@ -1148,37 +1203,43 @@ end
 
 RunService.Heartbeat:Connect(TeleportTheFootball)
 
-Mobile_Tab:AddToggle({
-    Name = "Legit Mags V2",
-    Default = false,
-    Callback = function(Value)
-        legitMagEnabled = Value
-        print("Legit Mags V2 Enabled:", Value)
-    end
-})
-
-
+Mobile_Tab:AddToggle(
+    {
+        Name = "Legit Mags V2",
+        Default = false,
+        Callback = function(Value)
+            legitMagEnabled = Value
+            print("Legit Mags V2 Enabled:", Value)
+        end
+    }
+)
 
 local FootballMagEnabled = false
 local MaxTeleportDistance = 10
 local CatchRange = 10
 
-Mobile_Tab:AddToggle({
-    Name = "Blatant Magnets",
-    Default = false,
-    Callback = function(Value)
-        FootballMagEnabled = Value
-        print("Blatant Magnets Enabled:", Value)
-    end
-})
+Mobile_Tab:AddToggle(
+    {
+        Name = "Blatant Magnets",
+        Default = false,
+        Callback = function(Value)
+            FootballMagEnabled = Value
+            print("Blatant Magnets Enabled:", Value)
+        end
+    }
+)
 
 local function FootballMag()
-    if not FootballMagEnabled then return end
-    
+    if not FootballMagEnabled then
+        return
+    end
+
     local LocalPlayer = Players.LocalPlayer
     local catchLeft = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-    if not catchLeft then return end
-    
+    if not catchLeft then
+        return
+    end
+
     local targetPositionLeft = catchLeft.Position
 
     for _, football in ipairs(Workspace:GetChildren()) do
@@ -1196,26 +1257,30 @@ end
 
 RunService.Heartbeat:Connect(FootballMag)
 
-Mobile_Tab:AddToggle({
-    Name = "Blatant Mags V2",
-    Default = false,
-    Callback = function(Value)
-        FootballMagEnabled = Value
-        print("Blatant Mags V2 Enabled:", Value)
-    end
-})
-
-
+Mobile_Tab:AddToggle(
+    {
+        Name = "Blatant Mags V2",
+        Default = false,
+        Callback = function(Value)
+            FootballMagEnabled = Value
+            print("Blatant Mags V2 Enabled:", Value)
+        end
+    }
+)
 
 local teleportRange = 5
 
 local function TeleportForward()
     local Player = Players.LocalPlayer
     local character = Player.Character
-    if not character then return end
+    if not character then
+        return
+    end
 
     local rootPart = character:FindFirstChild("Head")
-    if not rootPart then return end
+    if not rootPart then
+        return
+    end
 
     local teleportDirection = rootPart.CFrame.LookVector
     local teleportPosition = rootPart.Position + (teleportDirection * teleportRange)
@@ -1230,27 +1295,29 @@ local function TeleportForward()
     rootPart.CFrame = CFrame.new(teleportPosition)
 end
 
-Mobile_Tab:AddToggle({
-    Name = "QuickTP",
-    Default = Enum.KeyCode.F,
-    Default = false,
-    Hold = false,
-    Callback = function()
-        TeleportForward()
-    end
-})
+Mobile_Tab:AddToggle(
+    {
+        Name = "QuickTP",
+        Default = Enum.KeyCode.F,
+        Default = false,
+        Hold = false,
+        Callback = function()
+            TeleportForward()
+        end
+    }
+)
 
-Mobile_Tab:AddToggle({
-    Name = "Ball Carrier Lock",
-    Default = Enum.KeyCode.L,
-    Default = false,
-    Hold = false,
-    Callback = function()
-        print("Ball Carrier Lock Enabled")
-    end
-})
-
-
+Mobile_Tab:AddToggle(
+    {
+        Name = "Ball Carrier Lock",
+        Default = Enum.KeyCode.L,
+        Default = false,
+        Hold = false,
+        Callback = function()
+            print("Ball Carrier Lock Enabled")
+        end
+    }
+)
 
 local pullVectorEnabled = false
 local pullVectorConnection
@@ -1274,7 +1341,9 @@ local function findNearestFootball()
 end
 
 local function teleportToFootball()
-    if not pullVectorEnabled then return end
+    if not pullVectorEnabled then
+        return
+    end
     local nearestFootball = findNearestFootball()
 
     if nearestFootball then
@@ -1282,22 +1351,24 @@ local function teleportToFootball()
     end
 end
 
-Mobile_Tab:AddToggle({
-    Name = "Pullvector",
-    Default = false,
-    Callback = function(Value)
-        pullVectorEnabled = Value
-        if pullVectorEnabled then
-            pullVectorConnection = RunService.Heartbeat:Connect(teleportToFootball)
-        else
-            if pullVectorConnection then
-                pullVectorConnection:Disconnect()
-                pullVectorConnection = nil
+Mobile_Tab:AddToggle(
+    {
+        Name = "Pullvector",
+        Default = false,
+        Callback = function(Value)
+            pullVectorEnabled = Value
+            if pullVectorEnabled then
+                pullVectorConnection = RunService.Heartbeat:Connect(teleportToFootball)
+            else
+                if pullVectorConnection then
+                    pullVectorConnection:Disconnect()
+                    pullVectorConnection = nil
+                end
             end
+            print("Pullvector Enabled:", Value)
         end
-        print("Pullvector Enabled:", Value)
-    end
-})
+    }
+)
 
 local biggerHandsEnabled = false
 
@@ -1325,41 +1396,45 @@ local function toggleBiggerHands(enabled)
     end
 end
 
-Mobile_Tab:AddToggle({
-    Name = "Bigger Hands",
-    Default = false,
-    Callback = toggleBiggerHands
-})
-
-
+Mobile_Tab:AddToggle(
+    {
+        Name = "Bigger Hands",
+        Default = false,
+        Callback = toggleBiggerHands
+    }
+)
 
 local customMagsEnabled = false
 
 local function getRandomPositionAround(part, minRadius, maxRadius)
     local randomDirection = Vector3.new(math.random() - 0.5, math.random() - 0.5, math.random() - 0.5).Unit
     local randomDistance = minRadius + math.random() * (maxRadius - minRadius)
-    return part.Position + randomDirection * randomDistance  
-    
+    return part.Position + randomDirection * randomDistance
 end
 
 local function instantTeleport()
-    if not customMagsEnabled then return end
+    if not customMagsEnabled then
+        return
+    end
 
     local TeleportDistance = 35
-    local MinRadius = 1  
-    local MaxRadius = 5  
+    local MinRadius = 1
+    local MaxRadius = 5
 
     local player = Players.LocalPlayer
     local leftArm = player.Character and player.Character:FindFirstChild("Left Arm")
     local rightArm = player.Character and player.Character:FindFirstChild("Right Arm")
 
-    if not leftArm then return end
+    if not leftArm then
+        return
+    end
 
     for _, football in ipairs(Workspace:GetChildren()) do
         if football.Name == "Football" and football:IsA("BasePart") then
-            local distance = (football.Position - leftArm.Position).Magnitude and (football.Position - rightArm.Position).Magnitude
+            local distance =
+                (football.Position - leftArm.Position).Magnitude and (football.Position - rightArm.Position).Magnitude
             if distance <= TeleportDistance then
-                local randomPosition = getRandomPositionAround(leftArm, MinRadius, MaxRadius) 
+                local randomPosition = getRandomPositionAround(leftArm, MinRadius, MaxRadius)
                 football.CFrame = CFrame.new(randomPosition)
             end
         end
@@ -1368,103 +1443,111 @@ end
 
 RunService.Heartbeat:Connect(instantTeleport)
 
-Mobile_Tab:AddToggle({
-    Name = "Custom Mags",
-    Default = false,
-    Callback = function(Value)
-        customMagsEnabled = Value
-        print("Custom Mags Enabled:", Value)
-    end
-})
+Mobile_Tab:AddToggle(
+    {
+        Name = "Custom Mags",
+        Default = false,
+        Callback = function(Value)
+            customMagsEnabled = Value
+            print("Custom Mags Enabled:", Value)
+        end
+    }
+)
 
-Mobile_Tab:AddToggle({
-    Name = "Tackle Reach",
-    Default = false,
-    Callback = function(Value)
-        print("Tackle Reach Enabled:", Value)
-    end
-})
+Mobile_Tab:AddToggle(
+    {
+        Name = "Tackle Reach",
+        Default = false,
+        Callback = function(Value)
+            print("Tackle Reach Enabled:", Value)
+        end
+    }
+)
 
+Mobile_Tab:AddToggle(
+    {
+        Name = "Block Reach",
+        Default = false,
+        Callback = function(Value)
+            print("Block Reach Enabled:", Value)
+        end
+    }
+)
 
-
-
-
-Mobile_Tab:AddToggle({
-    Name = "Block Reach",
-    Default = false,
-    Callback = function(Value)
-        print("Block Reach Enabled:", Value)
-    end
-})
-
-local Other_Tab = Window:MakeTab({
-	Name = "Other",
-	Icon = "rbxassetid://4483345998",
-	PremiumOnly = false
-})
+local Other_Tab =
+    Window:MakeTab(
+    {
+        Name = "Other",
+        Icon = "rbxassetid://4483345998",
+        PremiumOnly = false
+    }
+)
 
 local buttonEnabled = false
 
-Other_Tab:AddButton({
-    Name = "Anti Lag",
-    Callback = function()
-        buttonEnabled = not buttonEnabled
-        print("Button Clicked! Current State:", buttonEnabled)
-        
-        local decalsyeeted = true 
-local g = game
-local w = g.Workspace
-local l = g.Lighting
-local t = w.Terrain
-t.WaterWaveSize = 0
-t.WaterWaveSpeed = 0
-t.WaterReflectance = 0
-t.WaterTransparency = 0
-l.GlobalShadows = false
-l.FogEnd = 9e9
-l.Brightness = 0
-settings().Rendering.QualityLevel = "Level02"
-for i, v in pairs(g:GetDescendants()) do
-    if v:IsA("Part") or v:IsA("Union") or v:IsA("CornerWedgePart") or v:IsA("TrussPart") then
-        v.Material = "Plastic"
-        v.Reflectance = 0
-    elseif v:IsA("Decal") or v:IsA("Texture") and decalsyeeted then
-        v.Transparency = 1
-    elseif v:IsA("ParticleEmitter") or v:IsA("Trail") then
-        v.Lifetime = NumberRange.new(0)
-    elseif v:IsA("Explosion") then
-        v.BlastPressure = 1
-        v.BlastRadius = 1
-    elseif v:IsA("Fire") or v:IsA("SpotLight") or v:IsA("Smoke") then
-        v.Enabled = false
-    elseif v:IsA("MeshPart") then
-        v.Material = "Plastic"
-        v.Reflectance = 0
-        v.TextureID = 10385902758728957
-    end
-end
-for i, e in pairs(l:GetChildren()) do
-    if e:IsA("BlurEffect") or e:IsA("SunRaysEffect") or e:IsA("ColorCorrectionEffect") or e:IsA("BloomEffect") or e:IsA("DepthOfFieldEffect") then
-        e.Enabled = false
-    end
-end
+Other_Tab:AddButton(
+    {
+        Name = "Anti Lag",
+        Callback = function()
+            buttonEnabled = not buttonEnabled
+            print("Button Clicked! Current State:", buttonEnabled)
 
-    end
-
-
-})
+            local decalsyeeted = true
+            local g = game
+            local w = g.Workspace
+            local l = g.Lighting
+            local t = w.Terrain
+            t.WaterWaveSize = 0
+            t.WaterWaveSpeed = 0
+            t.WaterReflectance = 0
+            t.WaterTransparency = 0
+            l.GlobalShadows = false
+            l.FogEnd = 9e9
+            l.Brightness = 0
+            settings().Rendering.QualityLevel = "Level02"
+            for i, v in pairs(g:GetDescendants()) do
+                if v:IsA("Part") or v:IsA("Union") or v:IsA("CornerWedgePart") or v:IsA("TrussPart") then
+                    v.Material = "Plastic"
+                    v.Reflectance = 0
+                elseif v:IsA("Decal") or v:IsA("Texture") and decalsyeeted then
+                    v.Transparency = 1
+                elseif v:IsA("ParticleEmitter") or v:IsA("Trail") then
+                    v.Lifetime = NumberRange.new(0)
+                elseif v:IsA("Explosion") then
+                    v.BlastPressure = 1
+                    v.BlastRadius = 1
+                elseif v:IsA("Fire") or v:IsA("SpotLight") or v:IsA("Smoke") then
+                    v.Enabled = false
+                elseif v:IsA("MeshPart") then
+                    v.Material = "Plastic"
+                    v.Reflectance = 0
+                    v.TextureID = 10385902758728957
+                end
+            end
+            for i, e in pairs(l:GetChildren()) do
+                if
+                    e:IsA("BlurEffect") or e:IsA("SunRaysEffect") or e:IsA("ColorCorrectionEffect") or
+                        e:IsA("BloomEffect") or
+                        e:IsA("DepthOfFieldEffect")
+                 then
+                    e.Enabled = false
+                end
+            end
+        end
+    }
+)
 
 local be = false
 
-Other_Tab:AddButton({
-    Name = "No Blue Line Barrier",
-    Callback = function()
-        be = not be
-        print("Blue Line Barrier Removed", be)
-        
-    end
-})
-
+Other_Tab:AddButton(
+    {
+        Name = "No Blue Line Barrier",
+        Callback = function()
+            be = not be
+            print("Blue Line Barrier Removed", be)
+        end
+    }
+)
 
 local plr = game.Players.LocalPlayer
 local Workspace = game:GetService("Workspace")
@@ -1474,181 +1557,167 @@ l2.Name = "Line2"
 
 l2:Destroy()
 
-
-
 local function rj()
-
-    game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId,  game.JobId, Players.LocalPlayer)
-    
+    game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, game.JobId, Players.LocalPlayer)
 end
 
-Other_Tab:AddButton({
-    Name = "Rejoin",
-    Callback = function()
-        print("Rejoined The Game")
-        rj()
-    end
-})
+Other_Tab:AddButton(
+    {
+        Name = "Rejoin",
+        Callback = function()
+            print("Rejoined The Game")
+            rj()
+        end
+    }
+)
 
-Other_Tab:AddButton({
-    Name = "No OOB",
-    Default = false,
-    Callback = function(Value)
-     print("click it 3 times if your reading this", Value)
-    end
-})
+Other_Tab:AddButton(
+    {
+        Name = "No OOB",
+        Default = false,
+        Callback = function(Value)
+            print("click it 3 times if your reading this", Value)
+        end
+    }
+)
 
-    local plr = game.Players.LocalPlayer
-    local Workspace = game:GetService("Workspace")
-    local outofbounds = game.Workspace.OOB_Line
+local plr = game.Players.LocalPlayer
+local Workspace = game:GetService("Workspace")
+local outofbounds = game.Workspace.OOB_Line
 
-     if outofbounds then
-        outofbounds.Name = "OOB_Line"  
-        outofbounds:Destroy()
-    end
+if outofbounds then
+    outofbounds.Name = "OOB_Line"
+    outofbounds:Destroy()
+end
 
-    local followCarrierEnabled = false
+local followCarrierEnabled = false
 
-    Rusher_Tab:AddToggle({
+Rusher_Tab:AddToggle(
+    {
         Name = "Follow Football Carrier",
         Default = false,
         Callback = function(Value)
             followCarrierEnabled = Value
             print("Follow Football Carrier Enabled:", Value)
         end
-    })
-    
-    local Players = game:GetService("Players")
-    local RunService = game:GetService("RunService")
-    local Workspace = game:GetService("Workspace")
-    
-    local function findFootballCarrier()
-        for _, player in pairs(Players:GetPlayers()) do
-            if player.Character and player.Character:FindFirstChild("Football") then
-                return player
-            end
-        end
-        return nil
-    end
-    
-    local function followFootballCarrier()
-        if not followCarrierEnabled then return end
-        
-        local LocalPlayer = Players.LocalPlayer
-        local playerRoot = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-        if not playerRoot then return end
-    
-        local carrier = findFootballCarrier()
-        if carrier and carrier.Character then
-            local carrierRoot = carrier.Character:FindFirstChild("HumanoidRootPart")
-            if carrierRoot then
-                playerRoot.CFrame = playerRoot.CFrame:Lerp(carrierRoot.CFrame, 0.09) 
-            end
+    }
+)
+
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local Workspace = game:GetService("Workspace")
+
+local function findFootballCarrier()
+    for _, player in pairs(Players:GetPlayers()) do
+        if player.Character and player.Character:FindFirstChild("Football") then
+            return player
         end
     end
-    
-    RunService.Heartbeat:Connect(followFootballCarrier)
+    return nil
+end
 
-
-
-    local toggle = false
-    local noclip = false
-    
-    local uis = game:GetService("UserInputService")
-    
-    local function toggleclip()
-        noclip = not noclip
-        print("Noclip is now:", noclip)
+local function followFootballCarrier()
+    if not followCarrierEnabled then
+        return
     end
-    
-    uis.InputBegan:Connect(function(input, gameProcessedEvent)
+
+    local LocalPlayer = Players.LocalPlayer
+    local playerRoot = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+    if not playerRoot then
+        return
+    end
+
+    local carrier = findFootballCarrier()
+    if carrier and carrier.Character then
+        local carrierRoot = carrier.Character:FindFirstChild("HumanoidRootPart")
+        if carrierRoot then
+            playerRoot.CFrame = playerRoot.CFrame:Lerp(carrierRoot.CFrame, 0.09)
+        end
+    end
+end
+
+RunService.Heartbeat:Connect(followFootballCarrier)
+
+local toggle = false
+local noclip = false
+
+local uis = game:GetService("UserInputService")
+
+local function toggleclip()
+    noclip = not noclip
+    print("Noclip is now:", noclip)
+end
+
+uis.InputBegan:Connect(
+    function(input, gameProcessedEvent)
         if input.KeyCode == Enum.KeyCode.B and not gameProcessedEvent then
             toggleclip()
         end
-    end)
-    
-    Extra_Tab:AddToggle({
+    end
+)
+
+Extra_Tab:AddToggle(
+    {
         Name = "Noclip",
         Default = false,
         Callback = function(Value)
             toggle = Value
             toggleclip()
-        end    
-    })
-    
-    game:GetService("RunService").RenderStepped:Connect(function()
+        end
+    }
+)
+
+game:GetService("RunService").RenderStepped:Connect(
+    function()
         if noclip then
             game.Players.LocalPlayer.Character.Humanoid:ChangeState(11)
         end
-    end)
+    end
+)
 
 local togglev2 = false
 
-QB_Tab:AddToggle({
-     Name = "QB Aimbot",
-     Default = false,
-     Callback = function(Value)
-      togglev2 = Value
-      
-     end
-})
-
+QB_Tab:AddToggle(
+    {
+        Name = "QB Aimbot",
+        Default = false,
+        Callback = function(Value)
+            togglev2 = Value
+        end
+    }
+)
 
 local togglev3 = false
 
-Other_Tab:AddToggle({
-	Name = "Freeze",
-	Default = false,
-	Callback = function(Value)
-		print(Value)
-FREEZEBRO()
-
-	end    
-})
+Other_Tab:AddToggle(
+    {
+        Name = "Freeze",
+        Default = false,
+        Callback = function(Value)
+            print(Value)
+            FREEZEBRO()
+        end
+    }
+)
 
 if not togglev3 then
+    local plrs = game:GetService("Players")
+    local plr = plr.LocalPlayer
+    local c = plr.Character or plr.CharacterAdded:Wait()
 
-local plrs = game:GetService("Players")
-local plr = plr.LocalPlayer 
-local c - plr.Character or plr.CharacterAdded:Wait()
+    local h = c:WaitForChild("Humanoid")
 
-local h = c:WaitForChild("Humanoid")
+    local function FREEZEBRO()
+        if h then
+            h.WalkSpeed = 0
+            h.JumpPower = 0
 
-local function FREEZEBRO()
-
-if h then
-
-h.WalkSpeed = 0
-h.JumpPower = 0
-
-if togglev3 then
-
-h.WalkSpeed = 20
-h.JumpPower = 50
-
-
-
-
-   end
- end
+            if togglev3 then
+                h.WalkSpeed = 20
+                h.JumpPower = 50
+            end
+        end
+    end
 end
 
-
-
-
-
-
-
 OrionLib:Init()
-
-
-
-
-    
-
-
-    
-
-
-
-
