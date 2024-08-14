@@ -1786,7 +1786,7 @@ local function divevector(input, gameProcessedEvent)
                 if dive and dive.Character then
                     local divehrp = dive.Character:FindFirstChild("HumanoidRootPart")
                     local ms = (football.Position - hrp.Position).divevectordist
-                    if divehrp and ms then
+                    if divehrp and ms and divevectordist <= ms then
                         hrp.Positon = hrp.CFrame:Lerp(football, Value).Magnitude
 
                         if input.KeyCode == Enum.KeyCode.E and not gameProcessedEvent then
