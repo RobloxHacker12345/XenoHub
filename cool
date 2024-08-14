@@ -802,7 +802,7 @@ local function moveToHead(nearestHead, maxDist)
             if hrp then
                 local distance = (nearestHead.Position - plr.Character.Head.Position).magnitude
                 if distance <= maxDist then
-                    hrp.CFrame = CFrame.new(nearestHead.Position + Vector3.new(0, 3, 0))
+                    hrp.CFrame = CFrame.new(nearestHead.Position + Vector3.new(0, 2.5, 0))
                 else
                     print("Nearest head is too far away.")
                 end
@@ -1785,7 +1785,7 @@ local function divevector(input, gameProcessedEvent)
 
                 if dive and dive.Character then
                     local divehrp = dive.Character:FindFirstChild("HumanoidRootPart")
-                    local ms = (football.Position - hrp.Position).divevectordist
+                    local ms = (football.Position - hrp.Position)
                     if divehrp and ms and divevectordist <= ms then
                         hrp.Positon = hrp.CFrame:Lerp(football, Value).Magnitude
 
@@ -1938,6 +1938,25 @@ if jp then
         wait(1)
     end
 end  
+
+local fov = 70
+
+IDK_Tab:AddSlider({
+	Name = "FOV Changer",
+	Min = 70,
+	Max = 120,
+	Default = 70,
+	Color = Color3.fromRGB(255,255,255),
+	Increment = 1,
+	ValueName = "FOV",
+	Callback = function(Value)
+		print(Value)
+fov = Value
+	end    
+	
+})
+
+workspace.Camera.fieldOfView = Value
 
 
 OrionLib:Init()
