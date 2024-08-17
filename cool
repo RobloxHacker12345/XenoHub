@@ -1896,14 +1896,17 @@ local toggle = false
     end)
 
 
-local ws = false
+    local ws = false
 
-IDK_Tab:AddToggle({
-    Name = "Slient WS",
-    Default = false,
-    Callback = (Value)
-	 ws = Value
-})
+    IDK_Tab:AddToggle({
+        Name = "Silent WS",
+        Default = false,
+        Callback = function(Value)
+            ws = Value
+            print("Hello")
+        end
+    })
+    
 
 if ws then
             while true do
@@ -1915,7 +1918,6 @@ if ws then
         end
         wait(1)
     end
-end   
 
 local jp = false
 
@@ -1923,8 +1925,10 @@ local jp = false
 IDK_Tab:AddToggle({
     Name = "Slient JP",
     Default = false,
-    Callback = (Value)
-	 local jp = Value
+    Callback = function(Value)
+	 jp = Value
+
+   end 
 })
 
 if jp then
@@ -1937,7 +1941,7 @@ if jp then
         end
         wait(1)
     end
-end  
+
 
 local fov = 70
 
