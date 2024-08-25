@@ -258,7 +258,7 @@ WR_Tab:AddSlider(
         Increment = 1,
         ValueName = "Power",
         Callback = function(Value)
-            footballSizeValue = Value * 0.29 + 1
+            footballSizeValue = Value * 0.27 + 1
             print("Legit Mags V2 Distance:", footballSizeValue)
             setFootballSize(footballSizeValue)
         end
