@@ -1,50 +1,68 @@
-local plrs = game:GetService("Players")
-local RunService = game:GetService("RunService")
-local Workspace = game:GetService("Workspace")
 
-local function divevector2()
-    for _, football in ipairs(Workspace:GetChildren()) do
-        if football:IsA("BasePart") and football.Name == "Football" then
-            return football
-        end
+
+
+
+
+local function mousething()
+    local rs = game:GetService("RunService")
+    local plr = game.Players.LocalPlayer
+    local mouse = plr:GetMouse()
+    local mousepart = workspace.mousePart
+    local beam = Instance.new("Beam")
+    local Attachment0 = Instance.new("Attachment")
+    local Attachment1 = Instance.new("Attachment")
+    Attachment0.Parent = workspace.Beam
+    Attachment1.Parent = workspace.Beam
+    beam.Name = "prediction"
+    beam.Parent = Workspace
+    beam.Width0 = 2
+    beam.Width1 = 2
+    beam.CurveSize0 = 2
+    bea.CurveSize1 = 2
+    beam.Attachment0 = mouse
+    beam.Attachment1 = Terrain
+    local x, y, z = mouse.Hit.X, mouse.Hit.Y, mouse.Hit.Z
+    beam = Attachment0 * Attachement1 / math.cos(x, y, z)
+    beam.CFrame = CFrame.new(x, y, z)
+    mouse.TargetFilter = beam
+
+    rs.RenderStepped:Connect(mousething)
+end
+
+local function hightlight()
+    for _, player in ipairs(Players:GetPlayers()) do
+        local character = player.Character
     end
     return nil
 end
 
-local function divevector(input, gameProcessedEvent)
-    if not divevector then
-        return
-    end
+local mousedist = 25
+local plr = game.Players.LocalPlayer
+local c = plr.Character
 
-    local plr = plrs.LocalPlayer
-    local hrp = LocalPlayer.Character and plr.Character:FindFirstChild("HumanoidRootPart")
-    if not hrp then
-        return
-    end
+local light = Instance.new("Highlight")
+light.Adornee = player.character
+light.DepthMode = Enum.DepthMode.Occluded
+light.FillColor = Color3(255, 255, 255)
+light.FillTransparency = 1
+light.Name = "highlight"
+light.OutlineColor = Color3(255, 255, 255)
+light.OutlineTransparency = 0
+light.Parent = player.character
+c.football = hightlight()
 
-    local dive = divevector2()
+Players.PlayerAdded:Connect(highlight)
 
-    if dive and dive.Character then
-        local divehrp = dive.Character:FindFirstChild("HumanoidRootPart")
-        if divehrp then
-            hrp.CFrame = hrp.CFrame:Lerp(divehrp.CFrame, 0.09)
-
-            if divehrp >= divehrp then
-                uis.InputBegan:Connect(
-                    function(input, gameProcessedEvent)
-                        if input.KeyCode == Enum.KeyCode.E and not gameProcessedEvent then
-                            divehrp()
-
-                            if not input and gameProcessedEvent then
-                                uis.InputBegan:Disconnect( 
-                                    function(input, gameProcessedEvent)
-                                    end
-                                )
-                            end
-                        end
-                    end
-                )
-            end
+for _, player in ipairs(Players:GetPlayers()) do
+    local character = player.Character
+    if character then
+        local football = character:FindFirstChild("Football")
+        if football then
+            local bbg = Instance.new("BillBoardGui")
+            bbg.Text = player.Name
+            return player
         end
+        return nil
     end
 end
+
