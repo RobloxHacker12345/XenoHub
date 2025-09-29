@@ -1,0 +1,274 @@
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local Workspace = game:GetService("Workspace")
+
+local library = loadstring(game:HttpGet('https://raw.githubusercontent.com/cueshut/saves/main/criminality%20paste%20ui%20library'))()
+
+local window = library.new('XenoHub but for xeno executor', 'leadmarker')
+
+local tab = window.new_tab('rbxassetid://4483345998')
+local dbTab = window.new_tab('rbxassetid://4483345998')
+local dribbleglidetab = window.new_tab('rbxassetid://4483345998')
+
+local section = tab.new_section('Legit Mags')
+local sectorLeft = section.new_sector('Main Features', 'Left')
+local sectorRight = section.new_sector('V2 Settings', 'Right')
+
+local dbsection = dbTab.new_section('Blatant Mags')
+local dbLeftSector = dbsection.new_sector('Main Mags', 'Left')
+local dbRightSector = dbsection.new_sector('V2 / V3 Settings', 'Right')
+
+local dgsecton = dribbleglidetab.new_section('BasketBall')
+
+local legitMagsEnabled = false
+local maxFootballTeleportDistance = 0
+local setFootballSizeEnabled_legit = false
+local footballSizeValue_legit = 1
+local createHitboxesEnabled_legit = false
+
+local blatantMagsEnabled = false
+local blatantMagsV2Enabled = false
+local setFootballSizeEnabled_blatant = false
+local createHitboxesEnabled_blatant = false
+local maxBlatantMagDistance = 0
+local footballSizeValue_blatant = 1
+local CatchRange = 10
+
+local function TeleportTheFootball()
+    if not legitMagsEnabled then return end
+    local lp = Players.LocalPlayer
+    local root = lp.Character and lp.Character:FindFirstChild("HumanoidRootPart")
+    if not root then return end
+    for _, ball in ipairs(Workspace:GetChildren()) do
+        if ball:IsA("BasePart") and ball.Name == "Football" then
+            local dist = (ball.Position - root.Position).Magnitude
+            if dist <= maxFootballTeleportDistance then
+                ball.CFrame = CFrame.new(root.Position + Vector3.new(0, 3, 0))
+            end
+        end
+    end
+end
+
+local function setFootballSize_legit(val)
+    for _, ball in ipairs(Workspace:GetChildren()) do
+        if ball:IsA("BasePart") and ball.Name == "Football" then
+            ball.Size = Vector3.new(val, val, val)
+        end
+    end
+end
+
+local function createHitboxForFootball_legit(ball)
+    local hitbox = Instance.new("Part")
+    hitbox.Name = "FootballHitbox_Legit"
+    hitbox.Anchored = true
+    hitbox.CanCollide = false
+    hitbox.Transparency = 0.6
+    hitbox.Size = ball.Size
+    hitbox.Material = Enum.Material.SmoothPlastic
+    hitbox.Position = ball.Position
+    hitbox.Parent = Workspace
+    local conn
+    conn = RunService.Heartbeat:Connect(function()
+        if not createHitboxesEnabled_legit then
+            hitbox:Destroy()
+            conn:Disconnect()
+            return
+        end
+        if ball.Parent then
+            hitbox.Size = ball.Size
+            hitbox.Position = ball.Position
+        else
+            hitbox:Destroy()
+            conn:Disconnect()
+        end
+    end)
+end
+
+local function createHitboxes_legit()
+    for _, obj in ipairs(Workspace:GetChildren()) do
+        if obj:IsA("BasePart") and obj.Name == "Football" then
+            createHitboxForFootball_legit(obj)
+        end
+    end
+end
+
+sectorLeft.element('Toggle', 'Legit Mags', false, function(v)
+    legitMagsEnabled = v.Toggle
+end)
+
+sectorLeft.element('Slider', 'Legit Mags Power', {
+    default = {min = 0, max = 25, default = 10}
+}, function(v)
+    maxFootballTeleportDistance = v.Slider
+end)
+
+sectorRight.element('Toggle', 'Legit Mags V2 Mag Hitbox', false, function(v)
+    createHitboxesEnabled_legit = v.Toggle
+    if v.Toggle then
+        createHitboxes_legit()
+    else
+        for _, obj in ipairs(Workspace:GetChildren()) do
+            if obj:IsA("BasePart") and obj.Name == "FootballHitbox_Legit" then
+                obj:Destroy()
+            end
+        end
+    end
+end)
+
+sectorRight.element('Toggle', 'Legit Mags V2 Resize', false, function(v)
+    setFootballSizeEnabled_legit = v.Toggle
+end)
+
+sectorRight.element('Slider', 'Legit Mags V2 Power', {
+    default = {min = 0, max = 20, default = 1}
+}, function(v)
+    footballSizeValue_legit = v.Slider * 0.25 + 1
+end)
+
+local function FootballMag()
+    if not blatantMagsEnabled then return end
+    local player = Players.LocalPlayer
+    local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+    if not root then return end
+    for _, football in ipairs(Workspace:GetChildren()) do
+        if football:IsA("BasePart") and football.Name == "Football" then
+            local distance = (football.Position - root.Position).Magnitude
+            if distance <= maxBlatantMagDistance and distance <= CatchRange then
+                football.CFrame = CFrame.new(root.Position)
+            end
+        end
+    end
+end
+
+local function instantTeleport()
+    if not blatantMagsV2Enabled then return end
+    local plr = Players.LocalPlayer
+    local char = plr.Character
+    if not char then return end
+    local LA = char:FindFirstChild("Left Arm") or char:FindFirstChild("LeftHand")
+    local RA = char:FindFirstChild("Right Arm") or char:FindFirstChild("RightHand")
+    local hrp = char:FindFirstChild("HumanoidRootPart")
+    if not LA or not RA or not hrp then return end
+    for _, football in ipairs(Workspace:GetChildren()) do
+        if football:IsA("BasePart") and football.Name == "Football" then
+            local distance = (football.Position - LA.Position).Magnitude
+            if distance <= maxBlatantMagDistance then
+                football.CFrame = CFrame.new(hrp.Position)
+            end
+        end
+    end
+end
+
+local function setFootballSize_blatant(val)
+    for _, football in ipairs(Workspace:GetChildren()) do
+        if football:IsA("BasePart") and football.Name == "Football" then
+            football.Size = Vector3.new(val, val, val)
+        end
+    end
+end
+
+local function createHitboxForFootball_blatant(ball)
+    local hitbox = Instance.new("Part")
+    hitbox.Name = "FootballHitbox_Blatant"
+    hitbox.Anchored = true
+    hitbox.CanCollide = false
+    hitbox.Transparency = 0.6
+    hitbox.Size = ball.Size
+    hitbox.Material = Enum.Material.SmoothPlastic
+    hitbox.Position = ball.Position
+    hitbox.Parent = Workspace
+    local conn
+    conn = RunService.Heartbeat:Connect(function()
+        if not createHitboxesEnabled_blatant then
+            hitbox:Destroy()
+            conn:Disconnect()
+            return
+        end
+        if ball.Parent then
+            hitbox.Size = ball.Size
+            hitbox.Position = ball.Position
+        else
+            hitbox:Destroy()
+            conn:Disconnect()
+        end
+    end)
+end
+
+local function createHitboxes_blatant()
+    for _, ball in ipairs(Workspace:GetChildren()) do
+        if ball:IsA("BasePart") and ball.Name == "Football" then
+            createHitboxForFootball_blatant(ball)
+        end
+    end
+end
+
+dbLeftSector.element('Toggle', 'Blatant Mags', false, function(v)
+    blatantMagsEnabled = v.Toggle
+end)
+
+dbLeftSector.element('Slider', 'Blatant Mags Power', {
+    default = {min = 0, max = 50, default = 25}
+}, function(v)
+    maxBlatantMagDistance = v.Slider
+end)
+
+dbLeftSector.element('Toggle', 'Blatant Mags V2', false, function(v)
+    blatantMagsV2Enabled = v.Toggle
+end)
+
+dbRightSector.element('Toggle', 'Blatant Mags V3 Resize', false, function(v)
+    setFootballSizeEnabled_blatant = v.Toggle
+end)
+
+dbRightSector.element('Slider', 'Blatant Mags V3 Power', {
+    default = {min = 0, max = 20, default = 1}
+}, function(v)
+    footballSizeValue_blatant = v.Slider * 1.25 + 1
+end)
+
+dbRightSector.element('Toggle', 'Blatant Mags V3 Mag Hitbox', false, function(v)
+    createHitboxesEnabled_blatant = v.Toggle
+    if v.Toggle then
+        createHitboxes_blatant()
+    else
+        for _, obj in ipairs(Workspace:GetChildren()) do
+            if obj:IsA("BasePart") and obj.Name == "FootballHitbox_Blatant" then
+                obj:Destroy()
+            end
+        end
+    end
+end)
+
+Workspace.ChildAdded:Connect(function(child)
+    if child:IsA("BasePart") and child.Name == "Football" then
+        if createHitboxesEnabled_legit then
+            createHitboxForFootball_legit(child)
+        end
+        if createHitboxesEnabled_blatant then
+            createHitboxForFootball_blatant(child)
+        end
+    end
+end)
+
+RunService.Heartbeat:Connect(function()
+    TeleportTheFootball()
+    if setFootballSizeEnabled_legit then
+        setFootballSize_legit(footballSizeValue_legit)
+    end
+    FootballMag()
+    instantTeleport()
+    if setFootballSizeEnabled_blatant then
+        setFootballSize_blatant(footballSizeValue_blatant)
+    end
+end)
+
+setFootballSize_legit(footballSizeValue_legit)
+setFootballSize_blatant(footballSizeValue_blatant)
+
+if createHitboxesEnabled_legit then
+    createHitboxes_legit()
+end
+
+if createHitboxesEnabled_blatant then
+    createHitboxes_blatant()
+end
