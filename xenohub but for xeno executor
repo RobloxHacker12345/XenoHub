@@ -39,7 +39,7 @@ local footballSizeValue_blatant = 1
 local CatchRange = 10
 
 local dribbleGlideEnabled = false
-local dribbleglidepower = 0.2 -- default value for glide power
+local dribbleglidepower = 0.2 
 
 local function TeleportTheFootball()
     if not legitMagsEnabled then return end
@@ -282,7 +282,7 @@ end
 
 local g = getgenv()
 g.cframespeed = true
-g.cfv = 0
+g.cfv = 1.6
 g.glideDelay = 0.35
 
 local uis = game:GetService("UserInputService")
@@ -336,7 +336,7 @@ dgsector.element('Toggle', 'Dribble Glide', false, function(v)
 end)
 
 dgsector.element('Slider', 'Dribble Glide Power', {
-    default = {min = 0, max = 10, default = 0}
+    default = {min = 0, max = 10, default = 1.6}
 }, function(v)
     dribbleglidepower = v.Slider
 end)
@@ -345,33 +345,22 @@ local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
 
-local plr = game.Players.LocalPlayer
+local plr = Players.LocalPlayer
 local char = plr.Character or plr.CharacterAdded:Wait()
 local hrp = char:WaitForChild("HumanoidRootPart")
 local humanoid = char:WaitForChild("Humanoid")
 
 local glideshotenabled = false
-local glideshotspeed = 1
+local glideshotspeed = 6
 local cframeSpeedEnabled = false
-local glideDirection = nil
 
 UserInputService.InputBegan:Connect(function(input, gp)
     if gp then return end
-    
     if input.KeyCode == Enum.KeyCode.Q then
         glideshotenabled = not glideshotenabled
     end
-    
     if input.KeyCode == Enum.KeyCode.E then
         cframeSpeedEnabled = true
-    end
-    
-    if input.KeyCode == Enum.KeyCode.LeftBracket then
-        glideDirection = -hrp.CFrame.RightVector
-    end
-    
-    if input.KeyCode == Enum.KeyCode.RightBracket then
-        glideDirection = hrp.CFrame.RightVector
     end
 end)
 
@@ -383,10 +372,12 @@ UserInputService.InputEnded:Connect(function(input, gp)
 end)
 
 local function ApplyGlideShot()
-    if not glideshotenabled or not glideDirection then return end
-    if glideDirection.Magnitude > 0 then
-        local speed = math.floor(glideshotspeed * 10) / 100
-        local newPosition = hrp.Position + (glideDirection * speed)
+    if not glideshotenabled then return end
+    local velocity = hrp.Velocity
+    if velocity.Magnitude > 1 then
+        local moveDir = velocity.Unit
+        local speed = math.floor(glideshotspeed * 10) / 1000
+        local newPosition = hrp.Position + (moveDir * speed)
         hrp.CFrame = CFrame.new(newPosition, newPosition + hrp.CFrame.LookVector)
     end
 end
@@ -403,15 +394,17 @@ dgsector.element('Toggle', 'Glide Shot', false, function(v)
 end)
 
 dgsector.element('Slider', 'Glide Shot Speed', { 
-    default = {min = 1, max = 2, default = 1} 
+    default = {min = 0, max = 20, default = 6} 
 }, function(v)
     glideshotspeed = v.Slider
 end)
 
 
 
+
+
 local wse = false
-local ws = 16
+local ws = 19.6
 
 RunService.Heartbeat:Connect(function()
     if wse then
@@ -427,7 +420,7 @@ dgsector2.element('Toggle', 'Toggle WalkSpeed', false, function(v)
 end)
 
 dgsector2.element('Slider', 'WalkSpeed', {
-    default = {min = 10, max = 20, default = 16}
+    default = {min = 10, max = 20, default = 19.6}
 }, function(v)
     ws = v.Slider
 end)
