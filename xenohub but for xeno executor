@@ -282,7 +282,7 @@ end
 
 local g = getgenv()
 g.cframespeed = true
-g.cfv = 1.6
+g.cfv = 2
 g.glideDelay = 0.35
 
 local uis = game:GetService("UserInputService")
@@ -336,7 +336,7 @@ dgsector.element('Toggle', 'Dribble Glide', false, function(v)
 end)
 
 dgsector.element('Slider', 'Dribble Glide Power', {
-    default = {min = 0, max = 10, default = 1.6}
+    default = {min = 0, max = 10, default = 2.6}
 }, function(v)
     dribbleglidepower = v.Slider
 end)
@@ -351,7 +351,7 @@ local hrp = char:WaitForChild("HumanoidRootPart")
 local humanoid = char:WaitForChild("Humanoid")
 
 local glideshotenabled = false
-local glideshotspeed = 6
+local glideshotspeed = 7.5
 local cframeSpeedEnabled = false
 
 UserInputService.InputBegan:Connect(function(input, gp)
@@ -404,7 +404,7 @@ end)
 
 
 local wse = false
-local ws = 19.6
+local ws = 20
 
 RunService.Heartbeat:Connect(function()
     if wse then
@@ -420,7 +420,7 @@ dgsector2.element('Toggle', 'Toggle WalkSpeed', false, function(v)
 end)
 
 dgsector2.element('Slider', 'WalkSpeed', {
-    default = {min = 10, max = 20, default = 19.6}
+    default = {min = 10, max = 20, default = 20}
 }, function(v)
     ws = v.Slider
 end)
