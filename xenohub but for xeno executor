@@ -22,6 +22,7 @@ local dbRightSector = dbsection.new_sector('V2 / V3 Settings', 'Right')
 
 local dgsection = dribbleglidetab.new_section('BasketBall')
 local dgsector = dgsection.new_sector('Dribble Glide/Glide Shot', 'Left')
+
 local dgsector3 = dgsection.new_sector('Glitch Dribble Macros', 'Left')
 
 local dgsector2 = dgsection.new_sector('WalkSpeed', 'Right')
@@ -403,10 +404,6 @@ dgsector.element('Slider', 'Glide Shot Speed', {
     glideshotspeed = v.Slider
 end)
 
-
-
-
-
 local wse = false
 local ws = 20
 
@@ -453,6 +450,43 @@ dgsector2.element('Slider', 'Cframe WalkSpeed', {
 }, function(v)
     cf = v.Slider
 end)
+
+local gs = false
+local gss = 0
+
+local Players = game:GetService("Players")
+local rs = game:GetService("ReplicatedStorage")
+local uis = game:GetService("UserInputService")
+
+local player = Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+
+local humanoid = character:WaitForChild("Humanoid")
+local animator = humanoid:WaitForChild("Animator")
+
+local spinanimation = rs.Animations.Dribbling
+spinanimation.AnimationId = "rbxassetid://127191716181052"
+
+local spinanimation2 = rs.Animations.Dribbling
+spinanimation2.AnimationId =
+"rbxassetid://8961868526579"
+
+local spinanimationplay = animator:LoadAnimation(spinanimation)
+
+local spinanimationplay2 = animator:LoadAnimation(spinanimation)
+
+spinanimationplay:GetMarkerReachedSignal("KickEnd"):Connect(function(paramString)
+	print(paramString)
+end)
+
+spinanimationplay2:GetMarkerReachedSignal("KickEnd"):Connect(function(paramString)
+	print(paramString)
+end)
+
+task.wait(1)
+
+spinanimationplay:Play()
+spinanimationplay2:Play()
 
 dgsector3.element('Toggle', 'Toggle Glitchy Spin', false, function(v)
 gs = v.Toggle
