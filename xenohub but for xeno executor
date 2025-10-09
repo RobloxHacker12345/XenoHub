@@ -22,6 +22,8 @@ local dbRightSector = dbsection.new_sector('V2 / V3 Settings', 'Right')
 
 local dgsection = dribbleglidetab.new_section('BasketBall')
 local dgsector = dgsection.new_sector('Dribble Glide/Glide Shot', 'Left')
+local dgsector3 = dgsection.new_sector('Glitch Dribble Macros', 'Left')
+
 local dgsector2 = dgsection.new_sector('WalkSpeed', 'Right')
 
 local legitMagsEnabled = false
@@ -282,7 +284,7 @@ end
 
 local g = getgenv()
 g.cframespeed = true
-g.cfv = 2
+g.cfv = 2.6
 g.glideDelay = 0.35
 
 local uis = game:GetService("UserInputService")
@@ -292,7 +294,9 @@ local player = Players.LocalPlayer
 local DRIBBLE_DIRECTIONS = {
     [Enum.KeyCode.Z] = Vector3.new(-1, 0, 0),
     [Enum.KeyCode.X] = Vector3.new(0, 0, 5),
-    [Enum.KeyCode.C] = Vector3.new(1, 0, 0),
+    [Enum.KeyCode.C] = Vector3.new(1, 0, 0),     [Enum.KeyCode.DPadLeft] = Vector3.new(-1, 0, 0),
+    [Enum.KeyCode.DPadDown] = Vector3.new(0, 0, 5),
+    [Enum.KeyCode.DPadRight] = Vector3.new(1, 0, 0),
 }
 
 local DRIBBLE_GLIDE_TIME = 0.15
@@ -336,7 +340,7 @@ dgsector.element('Toggle', 'Dribble Glide', false, function(v)
 end)
 
 dgsector.element('Slider', 'Dribble Glide Power', {
-    default = {min = 0, max = 10, default = 2.6}
+    default = {min = 0, max = 10, default = 3.6}
 }, function(v)
     dribbleglidepower = v.Slider
 end)
@@ -359,14 +363,14 @@ UserInputService.InputBegan:Connect(function(input, gp)
     if input.KeyCode == Enum.KeyCode.Q then
         glideshotenabled = not glideshotenabled
     end
-    if input.KeyCode == Enum.KeyCode.E then
+    if input.KeyCode == Enum.KeyCode.E or Enum.KeyCode.ButtonX   then
         cframeSpeedEnabled = true
     end
 end)
 
 UserInputService.InputEnded:Connect(function(input, gp)
     if gp then return end
-    if input.KeyCode == Enum.KeyCode.E then
+    if input.KeyCode == Enum.KeyCode.E or Enum.KeyCode.ButtonX then
         cframeSpeedEnabled = false
     end
 end)
@@ -394,7 +398,7 @@ dgsector.element('Toggle', 'Glide Shot', false, function(v)
 end)
 
 dgsector.element('Slider', 'Glide Shot Speed', { 
-    default = {min = 0, max = 20, default = 6} 
+    default = {min = 0, max = 20, default = 4} 
 }, function(v)
     glideshotspeed = v.Slider
 end)
@@ -420,7 +424,7 @@ dgsector2.element('Toggle', 'Toggle WalkSpeed', false, function(v)
 end)
 
 dgsector2.element('Slider', 'WalkSpeed', {
-    default = {min = 10, max = 20, default = 20}
+    default = {min = 10, max = 20, default = 19.2}
 }, function(v)
     ws = v.Slider
 end)
@@ -450,3 +454,13 @@ dgsector2.element('Slider', 'Cframe WalkSpeed', {
     cf = v.Slider
 end)
 
+dgsector3.element('Toggle', 'Toggle Glitchy Spin', false, function(v)
+gs = v.Toggle
+end)
+
+dgsector3.element('Slider', 'Glitchy Spin Speed', {
+    default = {min =0, max = 5,
+default = 0}
+}, function(v)
+ gss = v.Slider
+end)
