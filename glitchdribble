@@ -1,0 +1,77 @@
+-- Universal Glitch Dribble Macros
+
+local gs = false
+local gss = 10
+
+local Players = game:GetService("Players")
+local rs = game:GetService("ReplicatedStorage")
+local uis = game:GetService("UserInputService")
+
+local player = Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+
+local humanoid = character:WaitForChild("Humanoid")
+local animator = humanoid:WaitForChild("Animator")
+
+local spinanimation = Instance.new("Animation")
+spinanimation.AnimationId = "rbxassetid://72441523222412"
+
+local spinanimation2 = Instance.new("Animation")
+spinanimation2.AnimationId = "rbxassetid://89618685265793"
+local spinanimationplay = animator:LoadAnimation(spinanimation)
+local spinanimationplay2 = animator:LoadAnimation(spinanimation2)
+
+spinanimationplay:GetMarkerReachedSignal("KickEnd"):Connect(function(paramString)
+	print("Animation 1 KickEnd:", paramString)
+end)
+
+spinanimationplay2:GetMarkerReachedSignal("KickEnd"):Connect(function(paramString)
+	print("Animation 2 KickEnd:", paramString)
+end)
+
+task.wait(1)
+
+local function updateAnimationSpeed()
+	if gs then
+		spinanimationplay:AdjustSpeed(gss)
+		spinanimationplay2:AdjustSpeed(gss)
+	else
+		spinanimationplay:AdjustSpeed(50) 
+		spinanimationplay2:AdjustSpeed(50)
+	end
+end
+
+local function toggleGlitchySpin()
+	gs = not gs
+	updateAnimationSpeed()
+	print("Glitchy Spin:", gs and "ON" or "OFF")
+end
+
+local function playAnimations()
+	spinanimationplay:Play()
+	spinanimationplay2:Play()
+	print("Playing glitchy spin animations")
+end
+
+local function stopAnimations()
+	spinanimationplay:Stop()
+	spinanimationplay2:Stop()
+	print("Stopped glitchy spin animations")
+end
+
+uis.InputBegan:Connect(function(input, gameProcessed)
+	if gameProcessed then return end
+	
+	if input.KeyCode == Enum.KeyCode.L then
+		toggleGlitchySpin()
+	elseif input.KeyCode == Enum.KeyCode.C or nput.KeyCode == Enum.KeyCode.DPadLeft then
+		if spinanimationplay.IsPlaying or spinanimationplay2.IsPlaying then
+			stopAnimations()
+		else
+			playAnimations()
+		end
+	end
+end)
+
+spinanimationplay:Play()
+spinanimationplay2:Play() 
