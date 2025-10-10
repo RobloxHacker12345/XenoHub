@@ -1,7 +1,7 @@
 -- Universal Glitch Dribble Macros
 
 local gs = true
-local gss = 0
+local gss = 1000000000
 
 local Players = game:GetService("Players")
 local rs = game:GetService("ReplicatedStorage")
@@ -17,7 +17,7 @@ local spinanimation = Instance.new("Animation")
 spinanimation.AnimationId = "rbxassetid://72441523222412"
 
 local spinanimation2 = Instance.new("Animation")
-spinanimation2.AnimationId = "rbxassetid://724415232224125"
+spinanimation2.AnimationId = "rbxassetid://82180315986108"
 local spinanimationplay = animator:LoadAnimation(spinanimation)
 local spinanimationplay2 = animator:LoadAnimation(spinanimation2)
 
@@ -29,7 +29,7 @@ spinanimationplay2:GetMarkerReachedSignal("KickEnd"):Connect(function(paramStrin
 	print("Animation 2 KickEnd:", paramString)
 end)
 
-task.wait(0.6)
+task.wait(0.01)
 
 local function updateAnimationSpeed()
 	if gs then
@@ -74,5 +74,4 @@ uis.InputBegan:Connect(function(input, gameProcessed)
 end)
 
 spinanimationplay:Play()
-
 spinanimationplay2:Play()
