@@ -14,10 +14,10 @@ local humanoid = character:WaitForChild("Humanoid")
 local animator = humanoid:WaitForChild("Animator")
 
 local spinanimation = Instance.new("Animation")
-spinanimation.AnimationId = "rbxassetid://72441523222412"
+spinanimation.AnimationId = "rbxassetid://121456684127706"
 
 local spinanimation2 = Instance.new("Animation")
-spinanimation2.AnimationId = "rbxassetid://82180315986108"
+spinanimation2.AnimationId = "rbxassetid://121456684127706"
 local spinanimationplay = animator:LoadAnimation(spinanimation)
 local spinanimationplay2 = animator:LoadAnimation(spinanimation2)
 
