@@ -493,7 +493,7 @@ gs = v.Toggle
 end)
 
 dgsector3.element('Slider', 'Glitchy Spin Speed', {
-    default = {min =0, max = 5,
+    default = {min = 0, max = 5,
 default = 0}
 }, function(v)
  gss = v.Slider
