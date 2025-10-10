@@ -17,7 +17,7 @@ local spinanimation = Instance.new("Animation")
 spinanimation.AnimationId = "rbxassetid://72441523222412"
 
 local spinanimation2 = Instance.new("Animation")
-spinanimation2.AnimationId = "rbxassetid://72441523222412"
+spinanimation2.AnimationId = "rbxassetid://724415232224125"
 local spinanimationplay = animator:LoadAnimation(spinanimation)
 local spinanimationplay2 = animator:LoadAnimation(spinanimation2)
 
@@ -29,7 +29,7 @@ spinanimationplay2:GetMarkerReachedSignal("KickEnd"):Connect(function(paramStrin
 	print("Animation 2 KickEnd:", paramString)
 end)
 
-task.wait(0.01)
+task.wait(0.6)
 
 local function updateAnimationSpeed()
 	if gs then
