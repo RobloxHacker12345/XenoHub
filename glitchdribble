@@ -15,18 +15,8 @@ local animator = humanoid:WaitForChild("Animator")
 
 local spinanimation = Instance.new("Animation")
 spinanimation.AnimationId = "rbxassetid://121456684127706"
-
-local spinanimation2 = Instance.new("Animation")
-spinanimation2.AnimationId = "rbxassetid://121456684127706"
-local spinanimationplay = animator:LoadAnimation(spinanimation)
-local spinanimationplay2 = animator:LoadAnimation(spinanimation2)
-
 spinanimationplay:GetMarkerReachedSignal("KickEnd"):Connect(function(paramString)
 	print("Animation 1 KickEnd:", paramString)
-end)
-
-spinanimationplay2:GetMarkerReachedSignal("KickEnd"):Connect(function(paramString)
-	print("Animation 2 KickEnd:", paramString)
 end)
 
 task.wait(0.01)
@@ -34,10 +24,8 @@ task.wait(0.01)
 local function updateAnimationSpeed()
 	if gs then
 		spinanimationplay:AdjustSpeed(gss)
-		spinanimationplay2:AdjustSpeed(gss)
 	else
 		spinanimationplay:AdjustSpeed(100000000) 
-		spinanimationplay2:AdjustSpeed(10000000)
 	end
 end
 
@@ -49,13 +37,11 @@ end
 
 local function playAnimations()
 	spinanimationplay:Play()
-	spinanimationplay2:Play()
 	print("Playing glitchy spin animations")
 end
 
 local function stopAnimations()
 	spinanimationplay:Stop()
-	spinanimationplay2:Stop()
 	print("Stopped glitchy spin animations")
 end
 
@@ -65,7 +51,7 @@ uis.InputBegan:Connect(function(input, gameProcessed)
 	if input.KeyCode == Enum.KeyCode.L or input.KeyCode == Enum.KeyCode.ButtonR1 then
 		toggleGlitchySpin()
 	elseif input.KeyCode == Enum.KeyCode.C or input.KeyCode == Enum.KeyCode.DPadLeft then
-		if spinanimationplay.IsPlaying or spinanimationplay2.IsPlaying then
+		if spinanimationplay.IsPlaying then
 			stopAnimations()
 		else
 			playAnimations()
@@ -74,4 +60,3 @@ uis.InputBegan:Connect(function(input, gameProcessed)
 end)
 
 spinanimationplay:Play()
-spinanimationplay2:Play()
