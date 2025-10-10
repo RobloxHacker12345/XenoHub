@@ -1,5 +1,3 @@
--- Universal Glitch Dribble Macros
-
 local gs = true
 local gss = 1000000000
 
@@ -15,48 +13,51 @@ local animator = humanoid:WaitForChild("Animator")
 
 local spinanimation = Instance.new("Animation")
 spinanimation.AnimationId = "rbxassetid://121456684127706"
-spinanimationplay:GetMarkerReachedSignal("KickEnd"):Connect(function(paramString)
-	print("Animation 1 KickEnd:", paramString)
+
+local spinanimationplay = animator:LoadAnimation(spinanimation)
+
+spinanimation:GetMarkerReachedSignal("KickEnd"):Connect(function(paramString)
+    print("Animation 1 KickEnd:", paramString)
 end)
 
 task.wait(0.01)
 
 local function updateAnimationSpeed()
-	if gs then
-		spinanimationplay:AdjustSpeed(gss)
-	else
-		spinanimationplay:AdjustSpeed(100000000) 
-	end
+    if gs then
+        spinanimationplay:AdjustSpeed(gss)
+    else
+        spinanimationplay:AdjustSpeed(100000000)
+    end
 end
 
 local function toggleGlitchySpin()
-	gs = not gs
-	updateAnimationSpeed()
-	print("Glitchy Spin:", gs and "ON" or "OFF")
+    gs = not gs
+    updateAnimationSpeed()
+    print("Glitchy Spin:", gs and "ON" or "OFF")
 end
 
 local function playAnimations()
-	spinanimationplay:Play()
-	print("Playing glitchy spin animations")
+    spinanimationplay:Play()
+    print("Playing glitchy spin animations")
 end
 
 local function stopAnimations()
-	spinanimationplay:Stop()
-	print("Stopped glitchy spin animations")
+    spinanimationplay:Stop()
+    print("Stopped glitchy spin animations")
 end
 
 uis.InputBegan:Connect(function(input, gameProcessed)
-	if gameProcessed then return end
-	
-	if input.KeyCode == Enum.KeyCode.L or input.KeyCode == Enum.KeyCode.ButtonR1 then
-		toggleGlitchySpin()
-	elseif input.KeyCode == Enum.KeyCode.C or input.KeyCode == Enum.KeyCode.DPadLeft then
-		if spinanimationplay.IsPlaying then
-			stopAnimations()
-		else
-			playAnimations()
-		end
-	end
+    if gameProcessed then return end
+    
+    if input.KeyCode == Enum.KeyCode.L or input.KeyCode == Enum.KeyCode.ButtonR1 then
+        toggleGlitchySpin()
+    elseif input.KeyCode == Enum.KeyCode.C or input.KeyCode == Enum.KeyCode.DPadLeft then
+        if spinanimationplay.IsPlaying then
+            stopAnimations()
+        else
+            playAnimations()
+        end
+    end
 end)
 
 spinanimationplay:Play()
