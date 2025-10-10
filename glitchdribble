@@ -1,5 +1,3 @@
--- Universal Glitch Dribble Macros
-
 local gs = false
 local gss = 10
 
@@ -74,4 +72,4 @@ uis.InputBegan:Connect(function(input, gameProcessed)
 end)
 
 spinanimationplay:Play()
-spinanimationplay2:Play() 
+spinanimationplay2:Play()
