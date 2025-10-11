@@ -1,5 +1,5 @@
-local gs = true
-local gss = 1000000000
+local gs = false
+local gss = 10000000000  -- Increased speed value
 
 local Players = game:GetService("Players")
 local rs = game:GetService("ReplicatedStorage")
@@ -11,22 +11,32 @@ local character = player.Character or player.CharacterAdded:Wait()
 local humanoid = character:WaitForChild("Humanoid")
 local animator = humanoid:WaitForChild("Animator")
 
-local spinanimation = Instance.new("Animation")
-spinanimation.AnimationId = "rbxassetid://121456684127706"
+local spinanimation1 = Instance.new("Animation")
+spinanimation1.AnimationId = "rbxassetid://121456684127706"
 
-local spinanimationplay = animator:LoadAnimation(spinanimation)
+local spinanimation2 = Instance.new("Animation")
+spinanimation2.AnimationId = "rbxassetid://896186852657936"
 
-spinanimation:GetMarkerReachedSignal("KickEnd"):Connect(function(paramString)
+local spinanimationplay1 = animator:LoadAnimation(spinanimation1)
+local spinanimationplay2 = animator:LoadAnimation(spinanimation2)
+
+spinanimationplay1:GetMarkerReachedSignal("KickEnd"):Connect(function(paramString)
     print("Animation 1 KickEnd:", paramString)
+end)
+
+spinanimationplay2:GetMarkerReachedSignal("KickEnd"):Connect(function(paramString)
+    print("Animation 2 KickEnd:", paramString)
 end)
 
 task.wait(0.01)
 
 local function updateAnimationSpeed()
     if gs then
-        spinanimationplay:AdjustSpeed(gss)
+        spinanimationplay1:AdjustSpeed(gss)
+        spinanimationplay2:AdjustSpeed(gss)
     else
-        spinanimationplay:AdjustSpeed(100000000)
+        spinanimationplay1:AdjustSpeed(1000000000000000000)
+        spinanimationplay2:AdjustSpeed(10000000000000)
     end
 end
 
@@ -36,28 +46,52 @@ local function toggleGlitchySpin()
     print("Glitchy Spin:", gs and "ON" or "OFF")
 end
 
-local function playAnimations()
-    spinanimationplay:Play()
-    print("Playing glitchy spin animations")
+local function playSpin1()
+    if not spinanimationplay1.IsPlaying then
+        spinanimationplay1:Play()
+        print("Playing Spin Animation 1")
+    end
 end
 
-local function stopAnimations()
-    spinanimationplay:Stop()
-    print("Stopped glitchy spin animations")
+local function stopSpin1()
+    if spinanimationplay1.IsPlaying then
+        spinanimationplay1:Stop()
+        print("Stopped Spin Animation 1")
+    end
+end
+
+local function playSpin2()
+    if not spinanimationplay2.IsPlaying then
+        spinanimationplay2:Play()
+        print("Playing Spin Animation 2")
+    end
+end
+
+local function stopSpin2()
+    if spinanimationplay2.IsPlaying then
+        spinanimationplay2:Stop()
+        print("Stopped Spin Animation 2")
+    end
 end
 
 uis.InputBegan:Connect(function(input, gameProcessed)
     if gameProcessed then return end
-    
+
     if input.KeyCode == Enum.KeyCode.L or input.KeyCode == Enum.KeyCode.ButtonR1 then
         toggleGlitchySpin()
+
     elseif input.KeyCode == Enum.KeyCode.C or input.KeyCode == Enum.KeyCode.DPadLeft then
-        if spinanimationplay.IsPlaying then
-            stopAnimations()
+        if spinanimationplay1.IsPlaying then
+            stopSpin1()
         else
-            playAnimations()
+            playSpin1()
+        end
+
+    elseif input.KeyCode == Enum.KeyCode.Z or input.KeyCode == Enum.KeyCode.DPadRight then
+        if spinanimationplay2.IsPlaying then
+            stopSpin2()
+        else
+            playSpin2()
         end
     end
 end)
-
-spinanimationplay:Play()
