@@ -87,7 +87,7 @@ uis.InputBegan:Connect(function(input, gameProcessed)
             playSpin1()
         end
 
-    elseif input.KeyCode == Enum.KeyCode.Z or input.KeyCode == Enum.KeyCode.DPadRight then
+    elseif input.KeyCode == Enum.KeyCode.N or input.KeyCode == Enum.KeyCode.DPadRight then
         if spinanimationplay2.IsPlaying then
             stopSpin2()
         else
