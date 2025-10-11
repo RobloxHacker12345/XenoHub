@@ -80,7 +80,7 @@ uis.InputBegan:Connect(function(input, gameProcessed)
     if input.KeyCode == Enum.KeyCode.L or input.KeyCode == Enum.KeyCode.ButtonR1 then
         toggleGlitchySpin()
 
-    elseif input.KeyCode == Enum.KeyCode.C or input.KeyCode == Enum.KeyCode.DPadLeft then
+    elseif input.KeyCode == Enum.KeyCode.Z or input.KeyCode == Enum.KeyCode.DPadLeft then
         if spinanimationplay1.IsPlaying then
             stopSpin1()
         else
