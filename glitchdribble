@@ -1,5 +1,5 @@
 local gs = false
-local gss = 10000000000  -- Increased speed value
+local gss = 10000000000  
 
 local Players = game:GetService("Players")
 local rs = game:GetService("ReplicatedStorage")
@@ -87,7 +87,7 @@ uis.InputBegan:Connect(function(input, gameProcessed)
             playSpin1()
         end
 
-    elseif input.KeyCode == Enum.KeyCode.N or input.KeyCode == Enum.KeyCode.DPadRight then
+    elseif input.KeyCode == Enum.KeyCode.C or input.KeyCode == Enum.KeyCode.DPadRight then
         if spinanimationplay2.IsPlaying then
             stopSpin2()
         else
