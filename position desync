@@ -1,0 +1,53 @@
+--[[
+	WARNING: Heads up! This script has not been verified by ScriptBlox. Use at your own risk!
+]]
+
+getgenv().DesyncEnabled = true
+
+
+local function clearUnwantedScripts(character)
+    for _, v in pairs(character:GetChildren()) do
+        if v:IsA("Script") and v.Name ~= "Health" and v.Name ~= "Sound" and v:FindFirstChild("LocalScript") then
+            v:Destroy()
+        end
+    end
+end
+
+
+game.Players.LocalPlayer.CharacterAdded:Connect(function(char)
+    repeat task.wait() until char 
+    clearUnwantedScripts(char)
+    
+    char.ChildAdded:Connect(function(child)
+        if child:IsA("Script") and child:FindFirstChild("LocalScript") then
+            task.wait(0.25) 
+            child.LocalScript:FireServer() 
+        end
+    end)
+end)
+
+
+game:GetService("RunService").Heartbeat:Connect(function()
+    if getgenv().DesyncEnabled then
+        local hrp = game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character.HumanoidRootPart
+        if hrp then
+            local currentVelocity = hrp.Velocity
+            
+            hrp.CFrame = hrp.CFrame * CFrame.Angles(0, math.rad(0.0001), 0)
+        
+            hrp.AssemblyLinearVelocity = Vector3.new(math.random(2000, 4000), math.random(2000, 4000), math.random(2000, 4000))
+            game:GetService("RunService").RenderStepped:Wait() 
+            hrp.Velocity = currentVelocity 
+        end
+    end
+end)
+
+local UserInputService = game:GetService("UserInputService")
+local toggleKey = Enum.KeyCode.M or Enum.KeyCode.LeftBumper -- Change this to any key
+
+UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
+    if not gameProcessedEvent and input.KeyCode == toggleKey then
+        getgenv().DesyncEnabled = not getgenv().DesyncEnabled
+        print("Desync " .. (getgenv().DesyncEnabled and "Enabled" or "Disabled"))
+    end
+end)
