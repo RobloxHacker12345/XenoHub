@@ -1,5 +1,5 @@
 local gs = false
-local gss = 10000000000  
+local gss = 0.001 
 
 local Players = game:GetService("Players")
 local rs = game:GetService("ReplicatedStorage")
@@ -15,7 +15,7 @@ local spinanimation1 = Instance.new("Animation")
 spinanimation1.AnimationId = "rbxassetid://121456684127706"
 
 local spinanimation2 = Instance.new("Animation")
-spinanimation2.AnimationId = "rbxassetid://896186852657936"
+spinanimation2.AnimationId = "rbxassetid://103141541058780"
 
 local spinanimationplay1 = animator:LoadAnimation(spinanimation1)
 local spinanimationplay2 = animator:LoadAnimation(spinanimation2)
@@ -32,45 +32,41 @@ task.wait(0.01)
 
 local function updateAnimationSpeed()
     if gs then
-        spinanimationplay1:AdjustSpeed(gss)
-        spinanimationplay2:AdjustSpeed(gss)
+        local speed = math.clamp(gss, 0.001, 0.001)
+        spinanimationplay1:AdjustSpeed(speed)
+        spinanimationplay2:AdjustSpeed(speed)
     else
-        spinanimationplay1:AdjustSpeed(1000000000000000000)
-        spinanimationplay2:AdjustSpeed(10000000000000)
+        spinanimationplay1:AdjustSpeed(0.001)
+        spinanimationplay2:AdjustSpeed(0.001)
     end
 end
 
 local function toggleGlitchySpin()
     gs = not gs
     updateAnimationSpeed()
-    print("Glitchy Spin:", gs and "ON" or "OFF")
 end
 
 local function playSpin1()
     if not spinanimationplay1.IsPlaying then
         spinanimationplay1:Play()
-        print("Playing Spin Animation 1")
     end
 end
 
 local function stopSpin1()
     if spinanimationplay1.IsPlaying then
         spinanimationplay1:Stop()
-        print("Stopped Spin Animation 1")
     end
 end
 
 local function playSpin2()
     if not spinanimationplay2.IsPlaying then
         spinanimationplay2:Play()
-        print("Playing Spin Animation 2")
     end
 end
 
 local function stopSpin2()
     if spinanimationplay2.IsPlaying then
         spinanimationplay2:Stop()
-        print("Stopped Spin Animation 2")
     end
 end
 
@@ -79,15 +75,13 @@ uis.InputBegan:Connect(function(input, gameProcessed)
 
     if input.KeyCode == Enum.KeyCode.L or input.KeyCode == Enum.KeyCode.ButtonR1 then
         toggleGlitchySpin()
-
-    elseif input.KeyCode == Enum.KeyCode.Z or input.KeyCode == Enum.KeyCode.DPadLeft then
+    elseif input.KeyCode == Enum.KeyCode.C or input.KeyCode == Enum.KeyCode.DPadLeft then
         if spinanimationplay1.IsPlaying then
             stopSpin1()
         else
             playSpin1()
         end
-
-    elseif input.KeyCode == Enum.KeyCode.C or input.KeyCode == Enum.KeyCode.DPadRight then
+    elseif input.KeyCode == Enum.KeyCode.Z or input.KeyCode == Enum.KeyCode.DPadRight then
         if spinanimationplay2.IsPlaying then
             stopSpin2()
         else
