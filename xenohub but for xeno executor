@@ -323,7 +323,7 @@ local function ApplyDribbleGlide(direction)
 
             local newPos = hrp.Position + (moveDir * g.cfv)
             local _, y, _ = hrp.CFrame:ToEulerAnglesYXZ()
-            hrp.CFrame = hrp.CFrame:Lerp(CFrame.new(newPos) * CFrame.Angles(0, y, 0), 0.025)
+            hrp.CFrame = hrp.CFrame:Lerp(CFrame.new(newPos) * CFrame.Angles(0, y, 0), 0.1)
         end)
     end)
 end
