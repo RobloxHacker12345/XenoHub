@@ -50,10 +50,11 @@ end)
 
 --// Toggle Key Setup
 local UserInputService = game:GetService("UserInputService")
-local toggleKey = Enum.KeyCode.ButtonL1 or Enum.KeyCode.M -- Left Bumper on controller
+local toggleKey = Enum.KeyCode.ButtonL1 -- Left Bumper on controller
+local rkey = Enum.KeyCode.M 
 
 UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
-	if not gameProcessedEvent and input.KeyCode == toggleKey then
+	if not gameProcessedEvent and input.KeyCode == toggleKey or input.KeyCode == rkey then
 		getgenv().DesyncEnabled = not getgenv().DesyncEnabled
 		print("Desync " .. (getgenv().DesyncEnabled and "Enabled" or "Disabled"))
 	end
