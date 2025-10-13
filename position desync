@@ -1,53 +1,107 @@
+--// CONFIGURATION
+local P1000ToggleKey = Enum.KeyCode.ButtonL1 -- Left Bumper (Controller)
+
 --[[
-	WARNING: Heads up! This script has not been verified by ScriptBlox. Use at your own risk!
-]]
 
-getgenv().DesyncEnabled = true
+	Standing still will trick the hitbox, you won't be able to get hit.
+
+	DO NOT EDIT BEYOND THIS POINT IF YOU DON'T UNDERSTAND WHAT IS GOING ON.
+
+	ORIGINAL SOURCE PUT INTO SKID FRIENDLY FORMAT. TAKE WHAT YOU LIKE AND MAKE MANY MORE OBLIVITIES CLONES WITH THIS OR EVEN YOUR VERY OWN DIY OBLIVITY!
+
+	AND REMEMBER TO SAY, SO LOOOOONG OBLIVITYYYYYY!!!
+
+--]]
 
 
-local function clearUnwantedScripts(character)
-    for _, v in pairs(character:GetChildren()) do
-        if v:IsA("Script") and v.Name ~= "Health" and v.Name ~= "Sound" and v:FindFirstChild("LocalScript") then
-            v:Destroy()
-        end
-    end
+--// Services
+checkcaller = checkcaller
+newcclosure = newcclosure
+hookmetamethod = hookmetamethod
+
+local RunService = game:GetService("RunService")
+local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
+local TeleportService = game:GetService("TeleportService")
+
+local LocalPlayer = Players.LocalPlayer
+local Mouse = LocalPlayer:GetMouse()
+
+--// Variables
+local PastedSources = false
+local DesyncTypes = {}
+
+--// Input Handler
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+	if gameProcessed then return end
+
+	-- Toggle P1000 on Left Bumper press
+	if input.KeyCode == P1000ToggleKey then
+		pcall(function()
+			PastedSources = not PastedSources
+			if PastedSources then
+				print("Enabled P1000")
+			else
+				print("Disabled P1000")
+			end
+		end)
+
+	-- Teleport on "=" key (keyboard)
+	elseif input.KeyCode == Enum.KeyCode.Equals then
+		TeleportService:Teleport(game.PlaceId, LocalPlayer)
+	end
+end)
+
+--// Random Number/Vector Functions
+function RandomNumberRange(a)
+	return math.random(-a * 100, a * 100) / 100
 end
 
+function RandomVectorRange(a, b, c)
+	return Vector3.new(RandomNumberRange(a), RandomNumberRange(b), RandomNumberRange(c))
+end
 
-game.Players.LocalPlayer.CharacterAdded:Connect(function(char)
-    repeat task.wait() until char 
-    clearUnwantedScripts(char)
-    
-    char.ChildAdded:Connect(function(child)
-        if child:IsA("Script") and child:FindFirstChild("LocalScript") then
-            task.wait(0.25) 
-            child.LocalScript:FireServer() 
-        end
-    end)
+--// Heartbeat Desync Logic
+RunService.Heartbeat:Connect(function()
+	if PastedSources == true and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+		local HRP = LocalPlayer.Character.HumanoidRootPart
+
+		DesyncTypes[1] = HRP.CFrame
+		DesyncTypes[2] = HRP.AssemblyLinearVelocity
+
+		local SpoofThis = HRP.CFrame
+		SpoofThis = SpoofThis * CFrame.new(Vector3.new(0, 0, 0))
+		SpoofThis = SpoofThis * CFrame.Angles(
+			math.rad(RandomNumberRange(180)),
+			math.rad(RandomNumberRange(180)),
+			math.rad(RandomNumberRange(180))
+		)
+
+		HRP.CFrame = SpoofThis
+		HRP.AssemblyLinearVelocity = Vector3.new(1, 1, 1) * 16384
+
+		RunService.RenderStepped:Wait()
+
+		HRP.CFrame = DesyncTypes[1]
+		HRP.AssemblyLinearVelocity = DesyncTypes[2]
+	end
 end)
 
+--// Metamethod Hook for CFrame Spoofing
+local OldIndex
+OldIndex = hookmetamethod(game, "__index", newcclosure(function(self, key)
+	if PastedSources == true and not checkcaller() then
+		if key == "CFrame" and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") and LocalPlayer.Character:FindFirstChild("Humanoid") and LocalPlayer.Character.Humanoid.Health > 0 then
+			local HRP = LocalPlayer.Character.HumanoidRootPart
+			local Head = LocalPlayer.Character:FindFirstChild("Head")
 
-game:GetService("RunService").Heartbeat:Connect(function()
-    if getgenv().DesyncEnabled then
-        local hrp = game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character.HumanoidRootPart
-        if hrp then
-            local currentVelocity = hrp.Velocity
-            
-            hrp.CFrame = hrp.CFrame * CFrame.Angles(0, math.rad(0.0001), 0)
-        
-            hrp.AssemblyLinearVelocity = Vector3.new(math.random(2000, 4000), math.random(2000, 4000), math.random(2000, 4000))
-            game:GetService("RunService").RenderStepped:Wait() 
-            hrp.Velocity = currentVelocity 
-        end
-    end
-end)
+			if self == HRP then
+				return DesyncTypes[1] or CFrame.new()
+			elseif self == Head then
+				return DesyncTypes[1] and DesyncTypes[1] + Vector3.new(0, HRP.Size.Y / 2 + 0.5, 0) or CFrame.new()
+			end
+		end
+	end
 
-local UserInputService = game:GetService("UserInputService")
-local toggleKey = Enum.KeyCode.M or Enum.KeyCode.LeftBumper -- Change this to any key
-
-UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
-    if not gameProcessedEvent and input.KeyCode == toggleKey then
-        getgenv().DesyncEnabled = not getgenv().DesyncEnabled
-        print("Desync " .. (getgenv().DesyncEnabled and "Enabled" or "Disabled"))
-    end
-end)
+	return OldIndex(self, key)
+end))
