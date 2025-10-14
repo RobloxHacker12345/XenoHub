@@ -1,31 +1,33 @@
 local rs = game:GetService("ReplicatedStorage")
 local uis = game:GetService("UserInputService")
 local plrs = game:GetService("Players")
+
 local plr = plrs.LocalPlayer
 local c = plr.Character or plr.CharacterAdded:Wait()
-local h = c:FindFirstChildOfClass("Humanoid")
-local hrp = c:FindFirstChild("HumanoidRootPart")
+local h = c:WaitForChild("Humanoid")
+local hrp = c:WaitForChild("HumanoidRootPart")
 
-if h and hrp then
+local threshold = 0.6
+local hevent = rs:WaitForChild("hevent")
+
+local iseKeypressed = false
+local holdtime = 0
+
+task.spawn(function()
+    if h and hrp then
         while true do
             h.HipHeight = 1
             hrp.Size = Vector3.new(0, 4.5, 0)
             c:SetAttribute("Sprinting", true)
             c:SetAttribute("SpeedBoost", 5)
-            wait(0.1) 
+            task.wait(0.1)
         end
-    end)
-end
-
-local hevent = rs:WaitForChild("hevent")
-
-local iseKeypressed = false
-local holdtime = 0
-local threshold = 3 
+    end
+end)
 
 uis.InputBegan:Connect(function(input, gpe)
     if gpe then return end
-    if input.KeyCode == Enum.KeyCode.E then
+    if input.KeyCode == Enum.KeyCode.E or input.KeyCode == Enum.KeyCode.ButtonX then
         iseKeypressed = true
         holdtime = tick()
     end
@@ -33,7 +35,7 @@ end)
 
 uis.InputEnded:Connect(function(input, gpe)
     if gpe then return end
-    if input.KeyCode == Enum.KeyCode.E then
+    if input.KeyCode == Enum.KeyCode.E or input.KeyCode == Enum.KeyCode.ButtonX then
         iseKeypressed = false
         local holddur = tick() - holdtime
         if holddur >= threshold then
