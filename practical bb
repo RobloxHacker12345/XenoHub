@@ -1,0 +1,20 @@
+local plrs = game:GetService("Players")
+local plr = plrs.LocalPlayer
+local ws = game:GetService("Workspace")
+local charactersFolder = ws:WaitForChild("Characters")
+local char = charactersFolder:WaitForChild(plr.Name)  
+local h = char:WaitForChild("Humanoid")
+local hrp = char:WaitForChild("HumanoidRootPart")
+
+while true do
+    if char and char:FindFirstChild("SetAttribute") then
+        char:SetAttribute("Sprinting", true)
+    end
+
+    if h and hrp then
+        h.HipHeight = 1
+        hrp.Size = Vector3.new(0, 4, 0)
+    end
+
+    wait(0.1)  
+end
