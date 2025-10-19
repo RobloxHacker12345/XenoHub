@@ -1,0 +1,45 @@
+local g = getgenv()
+g.cframespeed = true
+g.cfv = 0.08
+g.glideDelay = 0.3
+
+local uis = game:GetService("UserInputService")
+local rs = game:GetService("RunService")
+local player = game.Players.LocalPlayer
+
+local DRIBBLE_DIRECTIONS = {
+	[Enum.KeyCode.Z] = Vector3.new(-1, 0, 0),
+	[Enum.KeyCode.X] = Vector3.new(0, 0, 5),
+	[Enum.KeyCode.C] = Vector3.new(1, 0, 0)
+}
+
+local DRIBBLE_GLIDE_TIME = 0.15
+
+local function ApplyDribbleGlide(direction)
+	task.delay(g.glideDelay, function()
+		local char = player.Character
+		if not char then return end
+		local hrp = char:FindFirstChild("HumanoidRootPart")
+		local humanoid = char:FindFirstChildWhichIsA("Humanoid")
+		if not hrp or not humanoid then return end
+		local moveDir = (hrp.CFrame:VectorToWorldSpace(direction)).Unit
+		local start = tick()
+		rs:BindToRenderStep("DribbleGlide", Enum.RenderPriority.Character.Value + 1, function()
+			if tick() - start > DRIBBLE_GLIDE_TIME then
+				rs:UnbindFromRenderStep("DribbleGlide")
+				return
+			end
+			local newPos = hrp.Position + (moveDir * g.cfv)
+			local _, y, _ = hrp.CFrame:ToEulerAnglesYXZ()
+			hrp.CFrame = hrp.CFrame:Lerp(CFrame.new(newPos) * CFrame.Angles(0, y, 0), 0.25)
+		end)
+	end)
+end
+
+uis.InputBegan:Connect(function(input, gpe)
+	if gpe then return end
+	if DRIBBLE_DIRECTIONS[input.KeyCode] then
+		local dir = DRIBBLE_DIRECTIONS[input.KeyCode]
+		ApplyDribbleGlide(dir)
+	end
+end)
