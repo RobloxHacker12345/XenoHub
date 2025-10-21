@@ -1,0 +1,83 @@
+-- for controller, and mobile
+
+local g = getgenv()
+g.cframespeed = true
+g.cfv = 0.29
+g.glideDelay = 0.3
+
+local uis = game:GetService("UserInputService")
+local rs = game:GetService("RunService")
+local plr = game.Players.LocalPlayer
+
+local DRIBBLE_DIRECTIONS = {
+
+	[Enum.KeyCode.DPadLeft] = Vector3.new(-1, 0, 0),
+	[Enum.KeyCode.DPadDown] = Vector3.new(0, 0, 5),
+	[Enum.KeyCode.DPadRight] = Vector3.new(1, 0, 0)
+}
+
+local DRIBBLE_GLIDE_TIME = 0.15
+
+local function ApplyDribbleGlide(direction)
+	task.delay(g.glideDelay, function()
+		local c = plr.Character
+		if not c then return end
+		local hrp = c:FindFirstChild("HumanoidRootPart")
+		local h = c:FindFirstChildWhichIsA("Humanoid")
+		if not hrp or not h then return end
+		local moveDir = (hrp.CFrame:VectorToWorldSpace(direction)).Unit
+		local start = tick()
+		rs:BindToRenderStep("DribbleGlide", Enum.RenderPriority.Character.Value + 1, function()
+			if tick() - start > DRIBBLE_GLIDE_TIME then
+				rs:UnbindFromRenderStep("DribbleGlide")
+				return
+			end
+			local newPos = hrp.Position + (moveDir * g.cfv)
+			local _, y, _ = hrp.CFrame:ToEulerAnglesYXZ()
+			hrp.CFrame = hrp.CFrame:Lerp(CFrame.new(newPos) * CFrame.Angles(0, y, 0), 0.25)
+		end)
+	end)
+end
+
+local gui = game:GetService("ScreenGui")
+local btnZ = Instance.new("TextButton")
+local btnX = Instance.new("TextButton")
+local btnC = Instance.new("TextButton")
+
+
+btnZ.Parent = gui
+btnZ.Text = "Z"
+btnZ.Size = Vector3.new(10, 10, 10)
+btnZ.Position = UDim2.new(0.2, 0, 0.5, 0)
+
+btnX.Parent = gui
+btnX.Text = "X"
+btnX.Size = Vector3.new(10, 10, 10)
+btnX.Position = UDim2.new(0.4, 0, 0.5, 0)
+
+btnC.Parent = gui
+btnC.Text = "C"
+btnC.Size = Vector3.new(10, 10, 10)
+btnC.Position = UDim2.new(0.6, 0, 0.5, 0)
+
+
+btnZ.MouseButton1Click:Connect(function()
+  ApplyDribbleGlide(DRIBBLE_DIRECTIONS[Enum.KeyCode.Z])
+end)
+
+btnX.MouseButton1Click:Connect(function()
+ ApplyDribbleGlide(DRIBBLE_DIRECTIONS[Enum.KeyCode.X])
+end)
+
+btnC.MouseButton1Click:Connect(function()
+ ApplyDribbleGlide(DRIBBLE_DIRECTIONS[Enum.KeyCode.C])
+end)
+
+uis.InputBegan:Connect(function(input, gpe)
+	if gpe then return end
+	if DRIBBLE_DIRECTIONS[input.KeyCode] then
+		local dir = DRIBBLE_DIRECTIONS[input.KeyCode]
+		ApplyDribbleGlide(dir)
+	end
+end)
+ 
