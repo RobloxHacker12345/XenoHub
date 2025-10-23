@@ -1,6 +1,6 @@
 local g = getgenv()
 g.cframespeed = true
-g.cfv = 0.11
+g.cfv = 0.12
 g.glideDelay = 0.3
 
 local uis = game:GetService("UserInputService")
@@ -10,7 +10,10 @@ local player = game.Players.LocalPlayer
 local DRIBBLE_DIRECTIONS = {
 	[Enum.KeyCode.Z] = Vector3.new(-1, 0, 0),
 	[Enum.KeyCode.X] = Vector3.new(0, 0, 5),
-	[Enum.KeyCode.C] = Vector3.new(1, 0, 0)
+	[Enum.KeyCode.C] = Vector3.new(1, 0, 0),
+	[Enum.KeyCode.DPadLeft] = Vector3.new(-1, 0, 0),
+	[Enum.KeyCode.DPadDown] = Vector3.new(0, 0, 5),
+	[Enum.KeyCode.DPadRight] = Vector3.new(1, 0, 0)
 }
 
 local DRIBBLE_GLIDE_TIME = 0.15
