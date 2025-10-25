@@ -1,6 +1,6 @@
 local g = getgenv()
 g.cframespeed = true
-g.cfv = 0.14
+g.cfv = 0.16
 g.glideDelay = 0.3
 
 local uis = game:GetService("UserInputService")
