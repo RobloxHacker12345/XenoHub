@@ -16,7 +16,7 @@ local DRIBBLE_DIRECTIONS = {
 	[Enum.KeyCode.DPadRight] = Vector3.new(1, 0, 0)
 }
 
-local DRIBBLE_GLIDE_TIME = 0.15
+local DRIBBLE_GLIDE_TIME = 0.2
 
 local function ApplyDribbleGlide(direction)
 	task.delay(g.glideDelay, function()
