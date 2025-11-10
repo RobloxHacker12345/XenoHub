@@ -7,9 +7,9 @@ local sprintActive = false
 local sprintBoost = 0.03
 
 Input.InputBegan:Connect(function(key)
-    if key.KeyCode == Enum.KeyCode.LeftShift or key.KeyCode == Enum.KeyCode.ButtonR2 or key.KeyCode == Enum.KeyCode.RightBracket then
+    if key.KeyCode == Enum.KeyCode.LeftShift or key.KeyCode == Enum.KeyCode.ButtonR2 then
         sprintActive = true
-    elseif key.KeyCode == Enum.KeyCode.DPadUp then
+    elseif key.KeyCode == Enum.KeyCode.DPadUp or key.KeyCode == Enum.KeyCode.RightBracket then
         sprintBoost = sprintBoost + 0.01
     elseif key.KeyCode == Enum.KeyCode.DPadDown or key.KeyCode == Enum.KeyCode.LeftBracket then
         sprintBoost = sprintBoost - 0.01
