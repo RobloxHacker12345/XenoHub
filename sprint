@@ -1,0 +1,33 @@
+local Players = game:GetService("Players")
+local Input = game:GetService("UserInputService")
+local Heartbeat = game:GetService("RunService").Heartbeat
+
+local player = Players.LocalPlayer
+local sprintActive = false
+local sprintBoost = 0.03
+
+Input.InputBegan:Connect(function(key)
+	if key.KeyCode == Enum.KeyCode.LeftShift or key.KeyCode == Enum.KeyCode.ButtonR2 then
+		sprintActive = true
+	end
+end)
+
+Input.InputEnded:Connect(function(key)
+	if key.KeyCode == Enum.KeyCode.LeftShift or key.KeyCode == Enum.KeyCode.ButtonR2 then
+		sprintActive = false
+	end
+end)
+
+Heartbeat:Connect(function()
+	local character = player.Character
+	if not character then return end
+
+	local rootPart = character:FindFirstChild("HumanoidRootPart")
+	local humanoid = character:FindFirstChildOfClass("Humanoid")
+	if not rootPart or not humanoid then return end
+
+	if sprintActive and humanoid.MoveDirection.Magnitude > 0 then
+		local offset = humanoid.MoveDirection.Unit * sprintBoost
+		rootPart.CFrame = rootPart.CFrame + offset
+	end
+end)
