@@ -80,14 +80,9 @@ Input.InputBegan:Connect(function(input, gameProcessed)
 
 	if input.KeyCode == Enum.KeyCode.RightShift then
 		uiVisible = not uiVisible
-		if uiVisible then
-			Rayfield:Toggle(true)
-		else
-			Rayfield:Toggle(false)
-		end
+		Rayfield:Toggle(uiVisible)
 	end
-
-Input.InputBegan:Connect(function(input)
+	
 	if input.KeyCode == Enum.KeyCode.LeftShift or input.KeyCode == Enum.KeyCode.ButtonR2 then
 		sprintActive = true
 	end
@@ -99,7 +94,6 @@ Input.InputEnded:Connect(function(input)
 	end
 end)
 
-
 RunService.Heartbeat:Connect(function()
 	local character = player.Character
 	if not character then return end
@@ -110,6 +104,6 @@ RunService.Heartbeat:Connect(function()
 
 	if spe and sprintActive and humanoid.MoveDirection.Magnitude > 0 then
 		local offset = humanoid.MoveDirection.Unit * sp
-		rootPart.CFrame = rootPart.CFrame + offset
+		rootPart.CFrame += offset
 	end
 end)
