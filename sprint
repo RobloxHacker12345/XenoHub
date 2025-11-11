@@ -1,4 +1,4 @@
-local Rayfield = loadstring(game:HttpGet('https://raw.githubusercontent.com/UI-Interface/CustomFIeld/main/RayField.lua'))()
+local Rayfield = loadstring(game:HttpGet("https://raw.githubusercontent.com/UI-Interface/CustomFIeld/main/RayField.lua"))()
 
 Rayfield:Notify({
 	Title = "intro",
@@ -16,23 +16,23 @@ Rayfield:Notify({
 })
 
 local Window = Rayfield:CreateWindow({
-   Name = "idk a window",
-   LoadingTitle = "Rayfield Interface Suite",
-   LoadingSubtitle = "by kia",
-   ConfigurationSaving = {
-      Enabled = true,
-      FileName = "SprintHub"
-   },
-   KeySystem = true,
-   KeySettings = {
-      Title = "hub",
-      Subtitle = "Key System",
-      Note = "Join the discord (discord.gg/sirius)",
-      FileName = "SiriusKey",
-      SaveKey = true,
-      GrabKeyFromSite = false,
-      Key = "kia"
-   }
+	Name = "idk a window",
+	LoadingTitle = "Rayfield Interface Suite",
+	LoadingSubtitle = "by kia",
+	ConfigurationSaving = {
+		Enabled = true,
+		FileName = "SprintHub"
+	},
+	KeySystem = true,
+	KeySettings = {
+		Title = "hub",
+		Subtitle = "Key System",
+		Note = "Join the discord (discord.gg/sirius)",
+		FileName = "SiriusKey",
+		SaveKey = true,
+		GrabKeyFromSite = false,
+		Key = "kia"
+	}
 })
 
 local Tab = Window:CreateTab("Player", 4483362458)
@@ -41,40 +41,59 @@ local spe = false
 local sp = 0.03
 
 local Toggle = Tab:CreateToggle({
-   Name = "Toggle Sprint",
-   CurrentValue = false,
-   Flag = "SprintToggle",
-   Callback = function(Value)
-      spe = Value
-   end,
+	Name = "Toggle Sprint",
+	CurrentValue = false,
+	Flag = "SprintToggle",
+	Callback = function(Value)
+		spe = Value
+	end,
 })
 
 local Slider = Tab:CreateSlider({
-   Name = "Sprint Speed",
-   Range = {0.01, 0.30},
-   Increment = 0.01,
-   CurrentValue = 0.01,
-   Flag = "SprintSpeed",
-   Callback = function(Value)
-      sp = Value
-   end,
+	Name = "Sprint Speed",
+	Range = {0.01, 0.30},
+	Increment = 0.01,
+	CurrentValue = 0.03,
+	Flag = "SprintSpeed",
+	Callback = function(Value)
+		sp = Value
+	end,
 })
 
 local Players = game:GetService("Players")
 local Input = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
+local VirtualInputManager = game:GetService("VirtualInputManager")
 
 local player = Players.LocalPlayer
 local sprintActive = false
+local uiVisible = true
 
-Input.InputBegan:Connect(function(key)
-	if key.KeyCode == Enum.KeyCode.LeftShift or key.KeyCode == Enum.KeyCode.ButtonR2 then
+Input.InputBegan:Connect(function(input, gameProcessed)
+	if gameProcessed then return end
+
+	if input.KeyCode == Enum.KeyCode.ButtonStart then
+		VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.RightShift, false, game)
+		task.wait(0.05)
+		VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.RightShift, false, game)
+	end
+
+	if input.KeyCode == Enum.KeyCode.RightShift then
+		uiVisible = not uiVisible
+		if uiVisible then
+			Rayfield:Toggle(true)
+		else
+			Rayfield:Toggle(false)
+		end
+	end
+
+	if input.KeyCode == Enum.KeyCode.LeftShift or input.KeyCode == Enum.KeyCode.ButtonR2 then
 		sprintActive = true
 	end
 end)
 
-Input.InputEnded:Connect(function(key)
-	if key.KeyCode == Enum.KeyCode.LeftShift or key.KeyCode == Enum.KeyCode.ButtonR2 then
+Input.InputEnded:Connect(function(input)
+	if input.KeyCode == Enum.KeyCode.LeftShift or input.KeyCode == Enum.KeyCode.ButtonR2 then
 		sprintActive = false
 	end
 end)
