@@ -53,7 +53,7 @@ local Slider = Tab:CreateSlider({
 	Name = "Sprint Speed",
 	Range = {0.01, 0.30},
 	Increment = 0.01,
-	CurrentValue = 0.03,
+	CurrentValue = 0.01,
 	Flag = "SprintSpeed",
 	Callback = function(Value)
 		sp = Value
@@ -87,6 +87,7 @@ Input.InputBegan:Connect(function(input, gameProcessed)
 		end
 	end
 
+Input.InputBegan:Connect(function(input)
 	if input.KeyCode == Enum.KeyCode.LeftShift or input.KeyCode == Enum.KeyCode.ButtonR2 then
 		sprintActive = true
 	end
@@ -97,6 +98,7 @@ Input.InputEnded:Connect(function(input)
 		sprintActive = false
 	end
 end)
+
 
 RunService.Heartbeat:Connect(function()
 	local character = player.Character
