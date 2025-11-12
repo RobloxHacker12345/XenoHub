@@ -53,7 +53,7 @@ local Slider = Tab:CreateSlider({
 	Name = "Sprint Speed",
 	Range = {0.01, 0.30},
 	Increment = 0.01,
-	CurrentValue = 0.01,
+	CurrentValue = 0.03,
 	Flag = "SprintSpeed",
 	Callback = function(Value)
 		sp = Value
@@ -71,18 +71,18 @@ local uiVisible = true
 
 Input.InputBegan:Connect(function(input, gameProcessed)
 	if gameProcessed then return end
-
 	if input.KeyCode == Enum.KeyCode.ButtonStart then
 		VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.RightShift, false, game)
 		task.wait(0.05)
 		VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.RightShift, false, game)
 	end
-
 	if input.KeyCode == Enum.KeyCode.RightShift then
 		uiVisible = not uiVisible
 		Rayfield:Toggle(uiVisible)
 	end
-	
+end)
+
+Input.InputBegan:Connect(function(input)
 	if input.KeyCode == Enum.KeyCode.LeftShift or input.KeyCode == Enum.KeyCode.ButtonR2 then
 		sprintActive = true
 	end
@@ -97,13 +97,11 @@ end)
 RunService.Heartbeat:Connect(function()
 	local character = player.Character
 	if not character then return end
-
 	local rootPart = character:FindFirstChild("HumanoidRootPart")
 	local humanoid = character:FindFirstChildOfClass("Humanoid")
 	if not rootPart or not humanoid then return end
-
 	if spe and sprintActive and humanoid.MoveDirection.Magnitude > 0 then
 		local offset = humanoid.MoveDirection.Unit * sp
-		rootPart.CFrame += offset
+		rootPart.CFrame = rootPart.CFrame + offset
 	end
 end)
