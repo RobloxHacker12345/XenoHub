@@ -1,0 +1,23 @@
+local disabledAC = false
+local remotesFolder = game.ReplicatedStorage.Remotes
+local AnticheatRemote = remotesFolder.Kick
+    if disabledAC then return end
+
+    AnticheatRemote.Name = ""
+
+    Instance.new("RemoteEvent", remotesFolder).Name = "Kick"
+
+    disabledAC = true
+
+local lplr = game:GetService("Players").LocalPlayer
+local c = lplr.Character
+
+if c then
+     c:SetAttribute("SprintSpeed", 22)
+         task.wait(0.1)
+    end
+    
+ local H = Instance.new("Highlight")
+        H.Parent = game.CoreGui
+            H.Adornee = workspace:WaitForChild("Mutant")
+            H.FillTransparency = 1
