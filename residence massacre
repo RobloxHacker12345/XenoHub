@@ -11,13 +11,21 @@ local AnticheatRemote = remotesFolder.Kick
 
 local lplr = game:GetService("Players").LocalPlayer
 local c = lplr.Character
+local H = Instance.new("Highlight")
 
-if c then
-     c:SetAttribute("SprintSpeed", 22)
-         task.wait(0.1)
-    end
-    
- local H = Instance.new("Highlight")
-        H.Parent = game.CoreGui
-            H.Adornee = workspace:WaitForChild("Mutant")
-            H.FillTransparency = 1
+H.Parent = game.CoreGui
+H.Adornee = workspace:WaitForChild("Mutant")
+H.FillTransparency = 1
+
+c.Sprint.Stam:SetAttribute("Max", 10)
+c.Sprint.Stam.Value = 10
+   
+   while true do
+     c:SetAttribute("SprintSpeed", 19)
+	 c.Temperature.Enabled = false
+	 wait(0.1)
+	    end
+
+
+
+ 
