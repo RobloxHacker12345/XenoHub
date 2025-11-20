@@ -17,7 +17,7 @@ c.Sprint.Stam.Value = 5
 
 rs.Heartbeat:Connect(function(dt)
     if c.Sprint.Stam.Value < 10 then
-        c.Sprint.Stam.Value = math.clamp(c.Sprint.Stam.Value + 0.2 * dt, 0, 10)
+        c.Sprint.Stam.Value = math.clamp(c.Sprint.Stam.Value + 0.3 * dt, 0, 10)
     end
 end)
 
