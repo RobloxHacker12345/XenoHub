@@ -1,0 +1,37 @@
+local remotesFolder = game.ReplicatedStorage.Remotes
+local AnticheatRemote = remotesFolder.Kick
+if disabledAC then return end
+
+AnticheatRemote.Name = ""
+Instance.new("RemoteEvent", remotesFolder).Name = "Kick"
+
+disabledAC = true
+
+local tcs = game:GetService("TextChatService")
+tcs.OnIncomingMessage = function(msg)
+
+local t = msg.Text:lower()
+
+ local name = msg.TextSource.Name
+    local plr = game.Players:FindFirstChild(name)
+	local c = plr.Character or plr.CharacterAdded:Wait()
+	 if not plr then return end
+
+local cmd, args = t:match("^/(%S+)%s*(.*)$")
+    if not cmd then return end
+
+
+    if cmd == "sprintspeed" then
+        local speed = tonumber(args)
+        if speed then 
+		 c:SetAttribute("SprintSpeed", speed)
+		 end
+		  end
+		end 
+    elseif cmd == "max" then
+        local max = tonumber(args)
+        if max then 
+		 c.Sprint.Stam:SetAttribute("Max", max)
+		 end
+		  end
+		end 
