@@ -1,31 +1,30 @@
 local disabledAC = false
 local remotesFolder = game.ReplicatedStorage.Remotes
 local AnticheatRemote = remotesFolder.Kick
-    if disabledAC then return end
+if disabledAC then return end
 
-    AnticheatRemote.Name = ""
+AnticheatRemote.Name = ""
+Instance.new("RemoteEvent", remotesFolder).Name = "Kick"
 
-    Instance.new("RemoteEvent", remotesFolder).Name = "Kick"
+disabledAC = true
 
-    disabledAC = true
-
+local rs = game:GetService("RunService")
 local lplr = game:GetService("Players").LocalPlayer
 local c = lplr.Character
-local H = Instance.new("Highlight")
 
+c.Sprint.Stam:SetAttribute("Max", 5)
+c.Sprint.Stam.Value = 5
+
+rs.Heartbeat:Connect(function(dt)
+    if c.Sprint.Stam.Value < 10 then
+        c.Sprint.Stam.Value = math.clamp(c.Sprint.Stam.Value + 0.2 * dt, 0, 10)
+    end
+end)
+
+local H = Instance.new("Highlight")
 H.Parent = game.CoreGui
 H.Adornee = workspace:WaitForChild("Mutant")
 H.FillTransparency = 1
 
-c.Sprint.Stam:SetAttribute("Max", 10)
-c.Sprint.Stam.Value = 10
-   
-   while true do
-     c:SetAttribute("SprintSpeed", 19)
-	 c.Temperature.Enabled = false
-	 wait(0.1)
-	    end
-
-
-
- 
+c:SetAttribute("SprintSpeed", 19)
+c.Temperature.Enabled = true
