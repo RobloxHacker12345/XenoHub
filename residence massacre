@@ -15,10 +15,10 @@ local c = lplr.Character
 
 rs.Heartbeat:Connect(function(dt)
     if c.Sprint.Stam.Value < 10 then
-        c.Sprint.Stam.Value = math.clamp(c.Sprint.Stam.Value + 0.45 * dt, 0, 5)
+        c.Sprint.Stam.Value = math.clamp(c.Sprint.Stam.Value + 0.5 * dt, 0, 5)
 
 c:SetAttribute("SprintSpeed", 20)
-c.Sprint.Stam:SetAttribute("Max", 2.5)
+c.Sprint.Stam:SetAttribute("Max", 2.25)
     
        end
 end)
