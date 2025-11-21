@@ -1,42 +1,29 @@
-local rf = game.ReplicatedStorage.Remotes
-local acr = rf.Kick
-if dac then return end
+local disabledAC = false
+local remotesFolder = game.ReplicatedStorage.Remotes
+local AnticheatRemote = remotesFolder.Kick
+if disabledAC then return end
 
-acr.Name = ""
-Instance.new("RemoteEvent", rf).Name = "Kick"
+AnticheatRemote.Name = ""
+Instance.new("RemoteEvent", remotesFolder).Name = "Kick"
 
-dac = true
+disabledAC = true
 
-local tcs = game:GetService("TextChatService")
-tcs.OnIncomingMessage = function(msg)
-
-local t = msg.Text:lower()
-
- local n = msg.TextSource.Name
-    local plr = game.Players:FindFirstChild(n)
-	local c = plr.Character or plr.CharacterAdded:Wait()
-	 if not plr then return end
-
-local cmd, args = t:match("^/(%S+)%s*(.*)$")
-    if not cmd then return end
+local rs = game:GetService("RunService")
+local lplr = game:GetService("Players").LocalPlayer
+local c = lplr.Character
 
 
-    if cmd == "sprintspeed" or "ss" then
-        local txt = tonumber(args)
-        if txt then 
-		 c:SetAttribute("SprintSpeed", txt)
-		 end
-	  end
-	end 
- if cmd == "max" or "m" then
-        if txt then 
-		 c.Sprint.Stam:SetAttribute("Max", txt)
-		 end
-      end
-	end 
- if cmd == "temp" or "t" then
-        if txt then 
-		 c.Temperature.Enabled = txt
-		 end
-      end
-	end  
+rs.Heartbeat:Connect(function(dt)
+    if c.Sprint.Stam.Value < 10 then
+        c.Sprint.Stam.Value = math.clamp(c.Sprint.Stam.Value + 0.5 * dt, 0, 5)
+
+c:SetAttribute("SprintSpeed", 20)
+c.Sprint.Stam:SetAttribute("Max", 2.25)
+    
+       end
+end)
+
+local H = Instance.new("Highlight")
+H.Parent = game.CoreGui
+H.Adornee = workspace:WaitForChild("Mutant")
+H.FillTransparency = 1
