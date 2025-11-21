@@ -1,5 +1,5 @@
 local rf = game.ReplicatedStorage.Remotes
-local acr = remotesFolder.Kick
+local acr = rf.Kick
 if dac then return end
 
 acr.Name = ""
@@ -39,4 +39,4 @@ local cmd, args = t:match("^/(%S+)%s*(.*)$")
 		 c.Temperature.Enabled = txt
 		 end
       end
-	end 
+	end  
