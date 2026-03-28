@@ -1,42 +1,568 @@
-local rf = game.ReplicatedStorage.Remotes
-local acr = rf.Kick
-if dac then return end
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local Lighting = game:GetService("Lighting")
+local player = Players.LocalPlayer
 
-acr.Name = ""
-Instance.new("RemoteEvent", rf).Name = "Kick"
+local gui = Instance.new("ScreenGui")
+gui.Name = "CommandPrompt"
+gui.ResetOnSpawn = false
+gui.Parent = player:WaitForChild("PlayerGui")
 
-dac = true
+local box = Instance.new("TextBox")
+box.Size = UDim2.new(0, 0, 0, 0)
+box.Position = UDim2.new(0, 0, 0, 0)
+box.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+box.TextColor3 = Color3.new(0, 0, 0)
+box.PlaceholderText = ""
+box.ClearTextOnFocus = false
+box.Parent = gui
 
-local tcs = game:GetService("TextChatService")
-tcs.OnIncomingMessage = function(msg)
+local headsizeConnection
+local hrpConnection
+local _GSpeed = 0.3
+local _GSpeedEnabled = false
+local _GSpeedConnection = nil
+local flyspeed = 200
+local flying = false
+local flyConn
+local flyBV, flyBG
 
-local t = msg.Text:lower()
+getgenv().aimAssistEnabled = false
+getgenv().aimAssistStrength = 0.05
+getgenv().aimAssistFOV = 0.5
+local currentCamera = workspace.CurrentCamera
 
- local n = msg.TextSource.Name
-    local plr = game.Players:FindFirstChild(n)
-	local c = plr.Character or plr.CharacterAdded:Wait()
-	 if not plr then return end
-          
-local cmd, args = t:match("^/(%S+)%s*(.*)$")
-    if not cmd then return end 
-          
+local targetSize = 50
+local hrpActive = false
 
-    if cmd == "sprintspeed" or "ss" then
-        local txt = tonumber(args)
-        if txt then 
-		 c:SetAttribute("SprintSpeed", txt)
-		 end
-	  end
-	end 
- if cmd == "max" or "m" then
-        if txt then 
-		 c.Sprint.Stam:SetAttribute("Max", txt)
-		 end
-      end
-	end 
- if cmd == "temp" or "t" then
-        if txt then 
-		 c.Temperature.Enabled = txt
-		 end
-      end
-	end  
+local nolagEnabled = false
+local nolagConn
+
+local function optimizeInstance(obj)
+    if obj:IsA("Decal") or obj:IsA("Texture") then
+    elseif obj:IsA("BasePart") then
+        if obj.Material ~= Enum.Material.Neon then
+            obj.Material = Enum.Material.SmoothPlastic
+        end
+        obj.Reflectance = 0
+    elseif obj:IsA("MeshPart") then
+        obj.Material = Enum.Material.SmoothPlastic
+    end
+end
+
+local function enhanceLighting()
+    Lighting.GlobalShadows = false
+    Lighting.Brightness = 1
+    Lighting.ExposureCompensation = 0.5
+    Lighting.Ambient = Color3.fromRGB(200,160,200)
+    Lighting.OutdoorAmbient = Color3.fromRGB(180,180,220)
+    Lighting.FogEnd = 1e9
+    Lighting.FogStart = 0
+
+    local atm = Lighting:FindFirstChildOfClass("Atmosphere")
+    if atm then atm:Destroy() end
+
+    local cc = Lighting:FindFirstChildOfClass("ColorCorrectionEffect")
+    if not cc then
+        cc = Instance.new("ColorCorrectionEffect")
+        cc.Parent = Lighting
+    end
+
+    cc.Brightness = 0.1
+    cc.Contrast = 0.2
+    cc.Saturation = 1.2
+    cc.TintColor = Color3.fromRGB(255,235,255)
+end
+
+local function enableNoLag()
+    if nolagEnabled then return end
+    nolagEnabled = true
+
+    for _,obj in ipairs(workspace:GetDescendants()) do
+        optimizeInstance(obj)
+    end
+
+    nolagConn = workspace.DescendantAdded:Connect(optimizeInstance)
+    enhanceLighting()
+end
+
+local function disableNoLag()
+    nolagEnabled = false
+    if nolagConn then
+        nolagConn:Disconnect()
+        nolagConn = nil
+    end
+end
+
+local function stopSpeed()
+    if _GSpeedConnection then
+        _GSpeedConnection:Disconnect()
+        _GSpeedConnection = nil
+    end
+end
+
+local function startSpeed()
+    stopSpeed()
+    local character = player.Character
+    if not character then return end
+    local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+    local lastPos = humanoidRootPart.Position
+    _GSpeedConnection = RunService.RenderStepped:Connect(function()
+        if character and character:FindFirstChild("HumanoidRootPart") then
+            local currentPos = humanoidRootPart.Position
+            local moveVector = currentPos - lastPos
+            if moveVector.Magnitude > 0.05 then
+                humanoidRootPart.CFrame = humanoidRootPart.CFrame + moveVector.Unit * (_GSpeed / 10)
+            end
+            lastPos = humanoidRootPart.Position
+        end
+    end)
+end
+
+local function isTargetInFOV(target)
+    if not currentCamera then return false end
+    local direction = (target.Position - currentCamera.CFrame.Position).Unit
+    local angle = math.deg(math.acos(currentCamera.CFrame.LookVector:Dot(direction)))
+    return angle <= getgenv().aimAssistFOV
+end
+
+local function isVisible(targetPart)
+    if not targetPart then return false end
+    local raycastParams = RaycastParams.new()
+    raycastParams.FilterType = Enum.RaycastFilterType.Blacklist
+    raycastParams.FilterDescendantsInstances = {player.Character, currentCamera}
+    local result = workspace:Raycast(currentCamera.CFrame.Position, targetPart.Position - currentCamera.CFrame.Position, raycastParams)
+    return result == nil or result.Instance:IsDescendantOf(targetPart.Parent)
+end
+
+local function findClosestTarget()
+    local closestTarget, closestDistance = nil, math.huge
+    for _, plr in ipairs(Players:GetPlayers()) do
+        if plr ~= player and plr.Character and plr.Character:FindFirstChild("Humanoid") then
+            local head = plr.Character:FindFirstChild("Head")
+            if head then
+                local distance = (head.Position - currentCamera.CFrame.Position).Magnitude
+                if distance < closestDistance and isTargetInFOV(head) and isVisible(head) then
+                    closestTarget = head
+                    closestDistance = distance
+                end
+            end
+        end
+    end
+    return closestTarget
+end
+
+local function applyAimAssist(dt)
+    if not currentCamera or not getgenv().aimAssistEnabled then return end
+    local target = findClosestTarget()
+    if target then
+        local cameraPos = currentCamera.CFrame.Position
+        local targetDirection = (target.Position - cameraPos).Unit
+        local adjustedLookVector = currentCamera.CFrame.LookVector:Lerp(targetDirection, getgenv().aimAssistStrength)
+        currentCamera.CFrame = CFrame.new(cameraPos, cameraPos + adjustedLookVector)
+    end
+end
+
+RunService.RenderStepped:Connect(applyAimAssist)
+
+local function setupHRPClone(character)
+	if not character or character == player.Character then return end
+
+	local hrp = character:WaitForChild("UpperTorso", 5)
+	if not hrp or not hrp:IsA("BasePart") then return end
+
+	cleanupHRP(character)
+
+	local clone = hrp:Clone()
+	clone.Name = "HRP_Hitbox"
+	clone.CanCollide = false
+	clone.Size = Vector3.new(1.4523327350616455, 1.7731729745864868, 1.110215663909912)
+	clone.Transparency = 0
+	clone.Massless = true
+	clone.Anchored = false
+	clone.CFrame = hrp.CFrame
+
+	clone.AssemblyLinearVelocity = Vector3.zero
+	clone.AssemblyAngularVelocity = Vector3.zero
+
+	clone.Parent = character
+
+	local weld = Instance.new("WeldConstraint")
+	weld.Part0 = hrp
+	weld.Part1 = clone
+	weld.Parent = clone
+
+	clonedHRPs[character] = clone
+end
+
+
+
+local function setHRPSize(size)
+    targetSize = size
+end
+
+local function toggleHRPSize(enable)
+    hrpActive = enable
+    if not hrpActive then
+        if hrpConnection then
+            hrpConnection:Disconnect()
+            hrpConnection = nil
+        end
+    else
+        if hrpConnection then hrpConnection:Disconnect() end
+        hrpConnection = RunService.Heartbeat:Connect(function()
+            for _, v in pairs(Players:GetPlayers()) do
+                if v ~= player and v.Character then
+                    pcall(function()
+                        local hrp = v.Character:FindFirstChild("HumanoidRootPart")
+                        if hrp then
+                            hrp.Size = Vector3.new(targetSize, targetSize, targetSize)
+                            hrp.CanCollide = false
+                            hrp.Massless = false
+                            hrp.Transparency = 0.999999
+                        end
+                    end)
+                end
+            end
+        end)
+    end
+end
+
+local function stopFly()
+    flying = false
+    if flyConn then 
+        flyConn:Disconnect() 
+        flyConn = nil 
+    end
+    local character = player.Character
+    if character then
+        local hum = character:FindFirstChildOfClass("Humanoid")
+        local hrp = character:FindFirstChild("HumanoidRootPart")
+        if hum then 
+            hum.PlatformStand = false 
+        end
+        if flyBV then 
+            flyBV:Destroy() 
+            flyBV = nil 
+        end
+        if flyBG then 
+            flyBG:Destroy() 
+            flyBG = nil 
+        end
+    end
+end
+
+local function handleCommand(text)
+    local t = text:lower()
+    local cmd, args = t:match("^;(%S+)%s*(.*)$")
+    if not cmd then return end
+
+    local c = player.Character
+    if not c then player.CharacterAdded:Wait(); c = player.Character end
+    local hum = c:FindFirstChildWhichIsA("Humanoid")
+    local hrp = c:FindFirstChild("HumanoidRootPart")
+
+    if cmd == "sprintspeed" or cmd == "ss" then
+        local val = tonumber(args)
+        if val then c:SetAttribute("SprintSpeed", val) end
+    elseif cmd == "max" or cmd == "m" then
+        local val = tonumber(args)
+        if val and c:FindFirstChild("Sprint") and c.Sprint:FindFirstChild("Stam") then
+            c.Sprint.Stam:SetAttribute("Max", val)
+        end
+    elseif cmd == "temp" or cmd == "t" then
+        local a = args:lower()
+        local val = a == "true" or a == "1" or a == "on"
+        if c:FindFirstChild("Temperature") then
+            c.Temperature.Enabled = val
+        end
+    elseif cmd == "h" then
+
+	   local Players = game:GetService("Players")
+local localPlayer = Players.LocalPlayer
+
+local clonedHeads = {}
+
+local function cleanupCharacter(character)
+	if clonedHeads[character] then
+		clonedHeads[character]:Destroy()
+		clonedHeads[character] = nil
+	end
+end
+
+local function setupHeadClone(character)
+	if not character or character == localPlayer.Character then
+		return
+	end
+
+	local head = character:WaitForChild("Head", 5)
+	if not head or not head:IsA("BasePart") then return end
+
+	cleanupCharacter(character)
+
+	local clone = head:Clone()
+	clone.Name = "ResizedHead"
+
+	clone.Size = Vector3.new(
+		1.1755210161209106,
+		1.2015399932861328,
+		1.2028709650039673
+	)
+
+	clone.CanCollide = false
+	clone.Massless = true
+	clone.Anchored = false
+	clone.Transparency = 0
+	clone.CFrame = head.CFrame
+
+	-- Safety for special heads
+	clone.AssemblyLinearVelocity = Vector3.zero
+	clone.AssemblyAngularVelocity = Vector3.zero
+
+	clone.Parent = character
+
+	local weld = Instance.new("WeldConstraint")
+	weld.Part0 = head
+	weld.Part1 = clone
+	weld.Parent = clone
+
+	clonedHeads[character] = clone
+end
+
+local function onPlayerAdded(player)
+	if player == localPlayer then return end
+
+	player.CharacterAdded:Connect(setupHeadClone)
+	player.CharacterRemoving:Connect(cleanupCharacter)
+
+	if player.Character then
+		setupHeadClone(player.Character)
+	end
+end
+
+for _, player in ipairs(Players:GetPlayers()) do
+	onPlayerAdded(player)
+end
+
+Players.PlayerAdded:Connect(onPlayerAdded)
+
+Players.PlayerRemoving:Connect(function(player)
+	if player.Character then
+		cleanupCharacter(player.Character)
+	end
+end)
+
+	
+
+        local val = tonumber(args)
+        if val then
+            if headsizeConnection then headsizeConnection:Disconnect() end
+            headsizeConnection = RunService.Heartbeat:Connect(function()
+                for _, plr in pairs(Players:GetPlayers()) do
+                    if plr ~= player then
+                        local h = plr.Character and plr.Character:FindFirstChild("Head")
+                        if h then
+                            h.Size = Vector3.new(val, val, val)
+                            h.Transparency = 0.999993
+                            h.CanCollide = false
+h.Massless = true
+                            for _, obj in ipairs(h:GetDescendants()) do
+	                        if obj:IsA("Decal") and obj.Face == Enum.NormalId.Front then
+	                     	obj:Destroy()
+	                               end
+                                end
+							 end
+                        end
+                    end
+               end)
+        end
+    elseif cmd == "stopheadsize" then
+        if headsizeConnection then headsizeConnection:Disconnect() headsizeConnection=nil end
+    elseif cmd == "hrp" then
+        local size = tonumber(args)
+        if size then
+            setHRPSize(size)
+            toggleHRPSize(true)
+            print("HRP size set to " .. size)
+        end
+    elseif cmd == "stophrp" then
+        toggleHRPSize(false)
+        print("HRP resize stopped")
+    elseif cmd == "speed" then
+        local val = tonumber(args)
+        if val then _GSpeed = val _GSpeedEnabled = true startSpeed() end
+    elseif cmd == "stopspeed" then
+        _GSpeedEnabled = false
+        stopSpeed()
+    elseif cmd == "fly" and hrp and hum then
+        stopFly()
+        flying = true
+        hum.PlatformStand = true
+        flyBV = Instance.new("BodyVelocity")
+        flyBG = Instance.new("BodyGyro")
+        flyBV.MaxForce = Vector3.new(9e4,9e4,9e4)
+        flyBG.MaxTorque = Vector3.new(9e4,9e4,9e4)
+        flyBG.P = 9e4
+        flyBV.Parent = hrp
+        flyBG.Parent = hrp
+        local move = {F=0,B=0,L=0,R=0,U=0,D=0}
+        flyConn = RunService.Stepped:Connect(function()
+            if flying and hrp and hrp.Parent then
+                flyBV.Velocity = workspace.CurrentCamera.CFrame.LookVector*((move.F-move.B)*flyspeed) +
+                              workspace.CurrentCamera.CFrame.RightVector*((move.R-move.L)*flyspeed) +
+                              workspace.CurrentCamera.CFrame.UpVector*((move.U-move.D)*flyspeed)
+                flyBG.CFrame = workspace.CurrentCamera.CFrame
+            else
+                stopFly()
+            end
+        end)
+        local moveConnections = {}
+        moveConnections.began = UserInputService.InputBegan:Connect(function(input,g)
+            if g then return end
+            local k = input.KeyCode
+            if k==Enum.KeyCode.W then move.F=1 elseif k==Enum.KeyCode.S then move.B=1
+            elseif k==Enum.KeyCode.A then move.L=1 elseif k==Enum.KeyCode.D then move.R=1
+            elseif k==Enum.KeyCode.Space then move.U=1 elseif k==Enum.KeyCode.Q then move.D=1 end
+        end)
+        moveConnections.ended = UserInputService.InputEnded:Connect(function(input)
+            local k = input.KeyCode
+            if k==Enum.KeyCode.W then move.F=0 elseif k==Enum.KeyCode.S then move.B=0
+            elseif k==Enum.KeyCode.A then move.L=0 elseif k==Enum.KeyCode.D then move.R=0
+            elseif k==Enum.KeyCode.Space then move.U=0 elseif k==Enum.KeyCode.Q then move.D=0 end
+        end)
+    elseif cmd == "unfly" then
+        stopFly()
+    elseif cmd == "flyspeed" then
+        local val = tonumber(args)
+        if val and val>0 then flyspeed=val end
+    elseif cmd == "ws" and hum then
+        local val=tonumber(args)
+        if val then hum.WalkSpeed=val end
+    elseif cmd == "gravity" then
+        local val=tonumber(args)
+        if val then workspace.Gravity=val end
+    elseif cmd == "sit" and hum then hum.Sit=true
+    elseif cmd == "stand" and hum then hum.Sit=false
+    elseif cmd=="tp" or cmd=="lbring" then
+        local targetName=args:lower()
+        for _,plr in ipairs(Players:GetPlayers()) do
+            if plr.Name:lower():sub(1,#targetName)==targetName then
+                local thrp = plr.Character and plr.Character:FindFirstChild("HumanoidRootPart")
+                if hrp and thrp then
+                    if cmd=="tp" then hrp.CFrame = thrp.CFrame + Vector3.new(0,2,0)
+                    else thrp.CFrame = hrp.CFrame + Vector3.new(0,2,0) end
+                end
+            end
+        end
+    elseif cmd=="aa" then
+        if args=="on" then 
+            getgenv().aimAssistEnabled=true
+            print("Aimassist On!")
+        elseif args=="off" then 
+            getgenv().aimAssistEnabled=false
+            print("Aimassist Off!")
+        end
+    elseif cmd=="aas" then
+        local val=tonumber(args)
+        if val then 
+            getgenv().aimAssistStrength=val
+            print("Aimassist Strength:", val) 
+        end
+    elseif cmd=="aaf" then
+        local val=tonumber(args)
+        if val then 
+            getgenv().aimAssistFOV=val 
+            print("Aimassist FOV:", val)
+        end
+    elseif cmd=="desync" then
+        if args=="on" then player:SetAttribute("DesyncEnabled",true)
+        elseif args=="off" then player:SetAttribute("DesyncEnabled",false)
+        else
+            local nums={}
+            for n in args:gmatch("[+-]?%d+%.?%d*") do table.insert(nums,tonumber(n)) end
+            if #nums==3 then
+                player:SetAttribute("DesyncX",nums[1])
+                player:SetAttribute("DesyncY",nums[2])
+                player:SetAttribute("DesyncZ",nums[3])
+            end
+        end
+    elseif cmd == "nolag" then
+        if args == "off" then
+            disableNoLag()
+        else
+            enableNoLag()
+        end
+    elseif cmd=="dupe" then
+        local Character = player.Character or player.CharacterAdded:Wait()
+        local Backpack = player:WaitForChild("Backpack")
+        local Tool = Character:FindFirstChildOfClass("Tool")
+        if not Tool then return end
+        Tool.Parent = Backpack
+        task.wait(0.5)
+        local ToolName = Tool.Name
+        local ToolId
+        local function getPing()
+            local success,result=pcall(function() return tonumber(string.match(player:GetNetworkPing(), "%d+")) end)
+            if success and result then return result end
+            return 100
+        end
+        local ping = getPing()
+        local delay = 0.25 + ((math.clamp(ping,0,300)/300)*0.03)
+        local marketconnection
+        marketconnection = ReplicatedStorage.MarketItems.ChildAdded:Connect(function(item)
+            if item.Name==ToolName then
+                local owner=item:WaitForChild("owner",3)
+                if owner and owner.Value==player.Name then
+                    ToolId=item:GetAttribute("SpecialId")
+                end
+            end
+        end)
+        task.spawn(function() ReplicatedStorage.ListWeaponRemote:FireServer(ToolName,999999) end)
+        task.wait(delay)
+        task.spawn(function() ReplicatedStorage.BackpackRemote:InvokeServer("Store",ToolName) end)
+        task.wait(1.8)
+        if ToolId then task.spawn(function() ReplicatedStorage.BuyItemRemote:FireServer(ToolName,"Remove",ToolId) end) end
+        task.spawn(function() ReplicatedStorage.BackpackRemote:InvokeServer("Grab",ToolName) end)
+        marketconnection:Disconnect()
+    elseif cmd == "skybox" then
+        local sky = game.Lighting:FindFirstChildOfClass("Sky")
+        if not sky then
+            sky = Instance.new("Sky")
+            sky.Parent = game.Lighting
+        end
+        
+        local skyboxIDs = {
+            ["1"] = "4837059359",
+            ["2"] = "128415603056471", 
+            ["3"] = "9570747704",
+			["4"] = "82988835868087"
+        }
+        
+        local skyboxID = skyboxIDs[args] or args
+        local decalUrl = "rbxassetid://" .. skyboxID
+        
+        sky.SkyboxBk = decalUrl
+        sky.SkyboxDn = decalUrl
+        sky.SkyboxFt = decalUrl
+        sky.SkyboxLf = decalUrl
+        sky.SkyboxRt = decalUrl
+        sky.SkyboxUp = decalUrl
+        
+        print("Skybox set to ID: " .. skyboxID)
+    end
+end
+
+UserInputService.InputBegan:Connect(function(input,gpe)
+    if gpe then return end
+    if input.KeyCode == Enum.KeyCode.DPadDown then box:CaptureFocus() end
+end)
+
+box.FocusLost:Connect(function(enterPressed)
+    if not enterPressed then return end
+    local text = box.Text
+    box.Text = ""
+    handleCommand(text)
+end)
+
